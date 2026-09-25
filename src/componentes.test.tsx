@@ -29,8 +29,7 @@ describe('EntradaApp', () => {
     expect(sessionStorage.getItem(ENTRADA_PENDENTE)).toBeNull();
   });
 
-  it('sem marca e com a aba já vista, não aparece', () => {
-    sessionStorage.setItem('tailor_entrada_vista', '1');
+  it('sem login (sem marca pendente), não aparece — nem na primeira visita da aba', () => {
     const { container } = render(<EntradaApp />);
     expect(container.querySelector('[data-tailor-entrada]')).toBeNull();
     expect(document.documentElement.dataset.entrada).toBeUndefined();

@@ -146,6 +146,9 @@ npm run build    # dist/: index.es.js, index.umd.js, types/, style.css, theme.cs
 
 ## Mudanças
 
+### 0.1.2
+- `EntradaApp` toca sempre depois de um login e só depois de um login (marca pendente). Saiu o disparo na primeira visita da aba: reload e link direto entram sem o preto. A `CinematicIntro` segue sendo uma vez só, por cookie no app.
+
 ### 0.1.1
 - A entrada em sequência (`data-tailor-entrada-alvo`) começa em 1,5s, enquanto o preto da `EntradaApp` recolhe. Na 0.1.0 os blocos terminavam de entrar ainda cobertos. Quem sobrescreveu `animation-delay` no app pode tirar a sobrescrita.
 - `TailorLoader`: variante `caixa` (régua numa caixa de 377px com fundo e borda, para chat e painéis estreitos) e prop `semRespiro`.

@@ -4,11 +4,11 @@ import { PontoMalha } from './PontoMalha';
 
 /*
  * Transição login → app. O login marca a entrada pendente (sessionStorage) ao
- * enviar e desmarca no erro; o app logado consome a marca. Sem login (reload,
- * link direto), vale a primeira visita da aba.
+ * enviar e desmarca no erro; o app logado consome a marca. Acontece sempre depois
+ * de um login e só depois de um login: reload e link direto entram sem o preto.
+ * (A CinematicIntro é outra coisa: uma vez só, controlada por cookie no app.)
  */
 export const ENTRADA_PENDENTE = 'tailor_entrada_pendente';
-const ENTRADA_VISTA = 'tailor_entrada_vista';
 const EASE = [0.65, 0, 0.35, 1] as const;
 
 /** Marca que o próximo app logado deve tocar a entrada. Chame no submit do login. */
@@ -31,7 +31,7 @@ export function limparEntradaPendente() {
 
 const deveEntrar = (): boolean => {
   try {
-    return sessionStorage.getItem(ENTRADA_PENDENTE) === '1' || sessionStorage.getItem(ENTRADA_VISTA) !== '1';
+    return sessionStorage.getItem(ENTRADA_PENDENTE) === '1';
   } catch {
     return false;
   }
@@ -88,7 +88,6 @@ export function EntradaApp() {
     if (!ativa) return;
     try {
       sessionStorage.removeItem(ENTRADA_PENDENTE);
-      sessionStorage.setItem(ENTRADA_VISTA, '1');
     } catch {
       // sem storage: a transição pode se repetir, sem prejuízo
     }

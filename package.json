@@ -1,7 +1,7 @@
 {
   "name": "@ffid-br/tailor-ui",
   "private": false,
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Primitivos de marca Tailor.ia em React: loader, intro, transição de login e lockup.",
   "type": "module",
   "main": "dist/index.umd.js",
