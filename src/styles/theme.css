@@ -1,0 +1,14 @@
+/*
+ * Tailor.ia — tokens para o Tailwind v4 do app consumidor.
+ * Importe no CSS de entrada, depois de `@import "tailwindcss";`.
+ * Gera as classes nomeadas usadas pelos componentes: bg-tailor-green,
+ * text-tailor-ink, fill-tailor-green, font-tailor, font-tailor-num...
+ */
+@theme {
+  --color-tailor-green: #90F208;
+  --color-tailor-green-hover: #7FD909;
+  --color-tailor-ink: #3C6600;
+  --color-tailor-black: #000000;
+  --font-tailor: "Raleway", "Roboto", system-ui, sans-serif;
+  --font-tailor-num: "Roboto", "Raleway", system-ui, sans-serif;
+}

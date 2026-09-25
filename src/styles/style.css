@@ -1,0 +1,76 @@
+/*
+ * @ffid-br/tailor-ui — CSS do pacote.
+ * Só tokens de marca e as animações dos componentes. Nada de preflight nem de
+ * utilitários do Tailwind: quem gera as classes é o Tailwind do app, via
+ * `@source` (ver README e ffid-br/account-selector-component#2).
+ */
+
+:root {
+  --tailor-white: #FFFFFF;
+  --tailor-black: #000000;
+  --tailor-green: #90F208;
+  --tailor-green-hover: #7FD909;
+  --tailor-ink: #3C6600;
+  --tailor-font: "Raleway", "Roboto", system-ui, sans-serif;
+  --tailor-font-num: "Roboto", "Raleway", system-ui, sans-serif;
+  /* Curvas do manual */
+  --tailor-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --tailor-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* TailorLoader — a fita métrica. Ciclo de φ (1,618s): o verde mede a fita e recolhe. */
+.tailor-fita__medida {
+  width: 0;
+  animation: tailor-medir 1.618s var(--tailor-ease-in-out) infinite;
+}
+@keyframes tailor-medir {
+  0%    { width: 0;    left: 0; }
+  61.8% { width: 100%; left: 0; }
+  100%  { width: 0;    left: 100%; }
+}
+.tailor-fita__reticencias::after {
+  content: '';
+  animation: tailor-reticencias 1.618s steps(4, end) infinite;
+}
+@keyframes tailor-reticencias {
+  0%  { content: ''; }
+  25% { content: '.'; }
+  50% { content: '..'; }
+  75% { content: '...'; }
+}
+
+/* PontoMalha — o ponto que pisca no preto: ciclo de φ, liga e desliga seco, sem fade. */
+.tailor-ponto-pisca { animation: tailor-pisca 1.618s steps(1, end) infinite; }
+@keyframes tailor-pisca {
+  0%, 61.8%    { opacity: 1; }
+  61.81%, 100% { opacity: 0.15; }
+}
+
+/* CinematicIntro — escurece o centro para a marca ler sobre a malha. */
+.tailor-intro__vinheta {
+  background: radial-gradient(circle at 50% 38.2%, rgb(0 0 0 / 0.85) 0%, rgb(0 0 0 / 0.4) 38.2%, transparent 61.8%);
+}
+
+/* EntradaApp — enquanto <html data-entrada> existe, os filhos do contêiner
+   marcado com `data-tailor-entrada-alvo` sobem 21px e aparecem em sequência. */
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-entrada] [data-tailor-entrada-alvo] > * {
+    animation: tailor-entrada 0.618s var(--tailor-ease-out) both;
+  }
+  :root[data-entrada] [data-tailor-entrada-alvo] > *:nth-child(1) { animation-delay: 0.5s; }
+  :root[data-entrada] [data-tailor-entrada-alvo] > *:nth-child(2) { animation-delay: 0.62s; }
+  :root[data-entrada] [data-tailor-entrada-alvo] > *:nth-child(3) { animation-delay: 0.74s; }
+  :root[data-entrada] [data-tailor-entrada-alvo] > *:nth-child(4) { animation-delay: 0.86s; }
+  :root[data-entrada] [data-tailor-entrada-alvo] > *:nth-child(n+5) { animation-delay: 0.98s; }
+}
+@keyframes tailor-entrada {
+  from { opacity: 0; transform: translateY(21px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Menos movimento: a informação continua, o movimento sai. */
+@media (prefers-reduced-motion: reduce) {
+  .tailor-fita__medida { animation: none; width: 61.8%; }
+  .tailor-fita__reticencias::after { animation: none; content: '...'; }
+  .tailor-ponto-pisca { animation: none; }
+}
