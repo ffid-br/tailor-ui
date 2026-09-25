@@ -57,11 +57,12 @@
   :root[data-entrada] [data-tailor-entrada-alvo] > * {
     animation: tailor-entrada 0.618s var(--tailor-ease-out) both;
   }
-  :root[data-entrada] [data-tailor-entrada-alvo] > *:nth-child(1) { animation-delay: 0.5s; }
-  :root[data-entrada] [data-tailor-entrada-alvo] > *:nth-child(2) { animation-delay: 0.62s; }
-  :root[data-entrada] [data-tailor-entrada-alvo] > *:nth-child(3) { animation-delay: 0.74s; }
-  :root[data-entrada] [data-tailor-entrada-alvo] > *:nth-child(4) { animation-delay: 0.86s; }
-  :root[data-entrada] [data-tailor-entrada-alvo] > *:nth-child(n+5) { animation-delay: 0.98s; }
+  /* Os blocos sobem enquanto o preto da EntradaApp recolhe (1,618s parado + 0,618s). */
+  :root[data-entrada] [data-tailor-entrada-alvo] > *:nth-child(1) { animation-delay: 1.5s; }
+  :root[data-entrada] [data-tailor-entrada-alvo] > *:nth-child(2) { animation-delay: 1.62s; }
+  :root[data-entrada] [data-tailor-entrada-alvo] > *:nth-child(3) { animation-delay: 1.74s; }
+  :root[data-entrada] [data-tailor-entrada-alvo] > *:nth-child(4) { animation-delay: 1.86s; }
+  :root[data-entrada] [data-tailor-entrada-alvo] > *:nth-child(n+5) { animation-delay: 1.98s; }
 }
 @keyframes tailor-entrada {
   from { opacity: 0; transform: translateY(21px); }

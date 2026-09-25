@@ -23,7 +23,15 @@ export type TailorLoaderProps = {
   label?: string;
   /** Linha de apoio abaixo do rótulo (o que está sendo carregado, ou quanto falta). */
   detail?: string;
-  variant?: 'inline' | 'overlay' | 'compact';
+  /**
+   * `inline`: no lugar do conteúdo. `overlay`: tela inteira, bloqueia.
+   * `compact`: uma linha (fio curto + rótulo), para botões e listas.
+   * `caixa`: a régua numa caixa própria de 377px, com fundo e borda — para painéis
+   * estreitos e fundos com estampa (chat), onde o inline ficaria transparente.
+   */
+  variant?: 'inline' | 'overlay' | 'compact' | 'caixa';
+  /** Tira o respiro externo do `inline`/`caixa` (quem chama já tem espaçamento). */
+  semRespiro?: boolean;
   className?: string;
 };
 
@@ -74,6 +82,7 @@ export const TailorLoader: React.FC<TailorLoaderProps> = ({
   label = 'Tirando as medidas',
   detail,
   variant = 'inline',
+  semRespiro = false,
   className,
 }) => {
   if (variant === 'compact') {
@@ -110,8 +119,27 @@ export const TailorLoader: React.FC<TailorLoaderProps> = ({
     </div>
   );
 
+  if (variant === 'caixa') {
+    return (
+      <div className={cn('flex w-full items-center justify-center', !semRespiro && 'px-[13px] py-[34px]')}>
+        <div
+          role="status"
+          aria-live="polite"
+          className={cn('w-full max-w-[377px] border border-neutral-200 bg-white p-[21px] text-black dark:border-white/10 dark:bg-neutral-950 dark:text-white', className)}
+        >
+          <Fita onDark={false} />
+          <p className="mt-[21px] text-base font-medium leading-[1.382]">
+            {label}
+            <span className="tailor-fita__reticencias" aria-hidden="true" />
+          </p>
+          {detail && <p className="mt-[8px] text-[13px] text-neutral-600 dark:text-neutral-400">{detail}</p>}
+        </div>
+      </div>
+    );
+  }
+
   if (!overlay) {
-    return <div className="flex w-full items-center justify-center px-[21px] py-[89px]">{corpo}</div>;
+    return <div className={cn('flex w-full items-center justify-center', !semRespiro && 'px-[21px] py-[89px]')}>{corpo}</div>;
   }
   return (
     <div className="fixed inset-0 z-[1000] flex cursor-wait items-center justify-center bg-black/90 px-[21px]" aria-modal="true" role="dialog">

@@ -13,6 +13,12 @@ export type TailorBrandMarkProps = {
    * a troca claro/escuro segue a variante `dark:` do app.
    */
   onDark?: boolean;
+  /**
+   * Superfície onde a marca aparece. `auto` (padrão) segue o `dark:` do app;
+   * `clara`/`escura` travam a versão — ex.: login que é sempre branco, mesmo com
+   * o app no tema escuro. `onDark` equivale a `escura`.
+   */
+  superficie?: 'auto' | 'clara' | 'escura';
   /** Logo para fundo claro (whitelabel). Padrão: wordmark Tailor.ia. */
   logoClaro?: string;
   /** Logo para fundo escuro (whitelabel). Padrão: wordmark Tailor.ia branco. */
@@ -29,11 +35,13 @@ export const TailorBrandMark: React.FC<TailorBrandMarkProps> = ({
   produto,
   compact = false,
   onDark = false,
+  superficie = 'auto',
   logoClaro,
   logoEscuro,
   className,
 }) => {
   const personalizada = Boolean(logoClaro || logoEscuro);
+  const modo = onDark ? 'escura' : superficie;
   const claro = logoClaro ?? logoEscuro ?? logoPadraoClaro;
   const escuro = logoEscuro ?? logoClaro ?? logoPadraoEscuro;
   const palavra = (
@@ -41,7 +49,7 @@ export const TailorBrandMark: React.FC<TailorBrandMarkProps> = ({
       className={cn(
         'font-tailor font-semibold leading-none tracking-tight',
         compact ? 'text-sm' : 'text-lg',
-        onDark ? 'text-white' : 'text-tailor-ink dark:text-white',
+        modo === 'escura' ? 'text-white' : modo === 'clara' ? 'text-tailor-ink' : 'text-tailor-ink dark:text-white',
       )}
     >
       {produto}
@@ -51,8 +59,10 @@ export const TailorBrandMark: React.FC<TailorBrandMarkProps> = ({
   const img = 'h-[21px] w-auto max-w-[144px] object-contain';
   return (
     <span className={cn('inline-flex items-center gap-2', className)} aria-label={personalizada ? produto : `Tailor.ia ${produto}`}>
-      {onDark ? (
+      {modo === 'escura' ? (
         <img src={escuro} alt="" className={img} />
+      ) : modo === 'clara' ? (
+        <img src={claro} alt="" className={img} />
       ) : (
         <>
           <img src={claro} alt="" className={cn(img, 'dark:hidden')} />

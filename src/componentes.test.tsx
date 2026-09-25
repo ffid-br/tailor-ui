@@ -63,3 +63,24 @@ describe('TailorBrandMark', () => {
     expect(screen.getByText('Genius')).toBeInTheDocument();
   });
 });
+
+describe('0.1.1', () => {
+  it('loader em caixa tem fundo próprio e role=status', () => {
+    render(<TailorLoader variant="caixa" label="Carregando mensagens" />);
+    const s = screen.getByRole('status');
+    expect(s.className).toContain('bg-white');
+    expect(s.textContent).toContain('Carregando mensagens');
+  });
+
+  it('semRespiro tira o padding externo do inline', () => {
+    const { container } = render(<TailorLoader semRespiro />);
+    expect((container.firstChild as HTMLElement).className).not.toContain('py-[89px]');
+  });
+
+  it('superficie clara trava a versão clara, sem variante dark', () => {
+    const { container } = render(<TailorBrandMark produto="Genius" superficie="clara" />);
+    expect(container.querySelectorAll('img')).toHaveLength(1);
+    expect(container.innerHTML).not.toContain('dark:');
+    expect(screen.getByLabelText('Tailor.ia Genius')).toBeTruthy();
+  });
+});

@@ -142,3 +142,11 @@ npm install
 npm test         # vitest + testing-library
 npm run build    # dist/: index.es.js, index.umd.js, types/, style.css, theme.css, logos
 ```
+
+
+## Mudanças
+
+### 0.1.1
+- A entrada em sequência (`data-tailor-entrada-alvo`) começa em 1,5s, enquanto o preto da `EntradaApp` recolhe. Na 0.1.0 os blocos terminavam de entrar ainda cobertos. Quem sobrescreveu `animation-delay` no app pode tirar a sobrescrita.
+- `TailorLoader`: variante `caixa` (régua numa caixa de 377px com fundo e borda, para chat e painéis estreitos) e prop `semRespiro`.
+- `TailorBrandMark`: prop `superficie` (`auto` | `clara` | `escura`) para travar a versão da marca sem depender do `dark:` do app.
