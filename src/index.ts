@@ -15,3 +15,18 @@ export {
 } from './components/entrada';
 export type { EntrarOverlayProps } from './components/entrada';
 export { logoTailor, logoTailorBranco } from './logos';
+export { TailorSidebar, SidebarGroup, SidebarItem, TailorUserMenu, TailorMobileBar } from './components/TailorSidebar';
+export type {
+  TailorSidebarProps,
+  TailorSidebarItem,
+  TailorSidebarGrupo,
+  TailorSidebarLinkProps,
+  TailorSidebarRenderLink,
+  SuperficieSidebar,
+  BreakpointSidebar,
+  SidebarGroupProps,
+  SidebarItemProps,
+  TailorUserMenuProps,
+  TailorUserMenuAcao,
+  TailorMobileBarProps,
+} from './components/TailorSidebar';
