@@ -14,7 +14,7 @@ describe('TailorLoader', () => {
 
   it('usa o rótulo padrão e mostra o detalhe', () => {
     render(<TailorLoader detail="3 de 5" />);
-    expect(screen.getByRole('status')).toHaveTextContent('Tirando as medidas');
+    expect(screen.getByRole('status')).toHaveTextContent('Carregando');
     expect(screen.getByText('3 de 5')).toBeInTheDocument();
   });
 });

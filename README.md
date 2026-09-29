@@ -1,6 +1,6 @@
 # @ffid-br/tailor-ui
 
-Primitivos de marca da Tailor.ia em React: a fita métrica de carregamento, a abertura cinematográfica, o ponto com a malha Fibonacci, a transição login → app, o lockup do produto e a barra lateral padrão dos apps. Antes, cada app mantinha uma cópia desses componentes. Agora todos vêm deste pacote.
+Primitivos de marca da Tailor.ia em React: o loader com o ponto verde e a malha Fibonacci, a abertura cinematográfica, o ponto com a malha Fibonacci, a transição login → app, o lockup do produto e a barra lateral padrão dos apps. Antes, cada app mantinha uma cópia desses componentes. Agora todos vêm deste pacote.
 
 ## Instalação
 
@@ -17,7 +17,7 @@ No CSS de entrada do app, logo depois de `@import "tailwindcss";`:
 ```css
 @import "tailwindcss";
 @import "@ffid-br/tailor-ui/theme.css";   /* tokens: tailor-green, tailor-ink, font-tailor... */
-@import "@ffid-br/tailor-ui/style.css";   /* animações: fita, ponto, entrada */
+@import "@ffid-br/tailor-ui/style.css";   /* animações: loader, ponto, entrada */
 @source "../node_modules/@ffid-br/tailor-ui/dist";
 ```
 
@@ -32,7 +32,7 @@ A fonte Raleway (e a Roboto, para números) é carregada pelo app.
 ### `TailorLoader`
 
 ```tsx
-<TailorLoader />                                        {/* inline: "Tirando as medidas..." */}
+<TailorLoader />                                        {/* inline: "Carregando..." */}
 <TailorLoader variant="overlay" label="Entrando" />     {/* tela inteira, bloqueia a interação */}
 <TailorLoader variant="compact" label="Salvando" />     {/* uma linha, para botão ou célula */}
 <TailorLoader detail="3 de 5 contas" />
