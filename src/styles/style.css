@@ -18,17 +18,19 @@
   --tailor-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
-/* TailorLoader — a fita métrica. Ciclo de φ (1,618s): o verde mede a fita e recolhe. */
-.tailor-fita__medida {
-  width: 0;
-  animation: tailor-medir 1.618s var(--tailor-ease-in-out) infinite;
+/* TailorLoader — a malha pequena se desenha a partir do ponto e some, em 2φ (3,236s). */
+.tailor-malha__linha {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: tailor-malha 3.236s var(--tailor-ease-in-out) infinite;
 }
-@keyframes tailor-medir {
-  0%    { width: 0;    left: 0; }
-  61.8% { width: 100%; left: 0; }
-  100%  { width: 0;    left: 100%; }
+@keyframes tailor-malha {
+  0%    { stroke-dashoffset: 1; opacity: 1; }
+  38.2% { stroke-dashoffset: 0; opacity: 1; }
+  80%   { stroke-dashoffset: 0; opacity: 1; }
+  100%  { stroke-dashoffset: 0; opacity: 0; }
 }
-.tailor-fita__reticencias::after {
+.tailor-loader__reticencias::after {
   content: '';
   animation: tailor-reticencias 1.618s steps(4, end) infinite;
 }
@@ -71,7 +73,7 @@
 
 /* Menos movimento: a informação continua, o movimento sai. */
 @media (prefers-reduced-motion: reduce) {
-  .tailor-fita__medida { animation: none; width: 61.8%; }
-  .tailor-fita__reticencias::after { animation: none; content: '...'; }
+  .tailor-malha__linha { animation: none; stroke-dashoffset: 0; }
+  .tailor-loader__reticencias::after { animation: none; content: '...'; }
   .tailor-ponto-pisca { animation: none; }
 }
