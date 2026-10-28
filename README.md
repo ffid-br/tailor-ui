@@ -79,6 +79,26 @@ Lockup: wordmark com 21px de arte e o nome do produto em 18px semibold (tailor-i
 
 `logoTailor` e `logoTailorBranco` também são exportados (data URI) para outros usos.
 
+### `AgenteMascote`
+
+```tsx
+<AgenteMascote agente="desk" nome="Alfred" estado="esperando" selo={4} />
+<AgenteMascote agente="pm" nome="PM" estado="desligado" mostrarEstado celula={6} />
+```
+
+Personagem 8x8 de cada agente (`desk`, `pergunte`, `pm`, `diretor`), com um único ponto verde. `estado`: `analisando`, `esperando`, `feito` (padrão), `subiu`, `desligado`. O estado vai no rótulo acessível e, com `mostrarEstado`, aparece como ponto quadrado + texto. `celula` é o lado de cada quadradinho em px (padrão 4). Anima em degraus; com menos movimento, para.
+
+### `EquipeDock`
+
+```tsx
+<EquipeDock agentes={[
+  { chave: 'desk', nome: 'Alfred', estado: 'esperando', selo: 4, conteudo: <FeedDoDesk /> },
+  { chave: 'pergunte', nome: 'Pergunte' },   // sem conteúdo: "Em breve."
+]} />
+```
+
+Botão fixo no canto com o mascote do primeiro agente e a soma dos selos. Abre um painel com uma aba por agente.
+
 ### `TailorSidebar`
 
 Barra lateral padrão do accounts, CRM, BI e Pilot. **Uma lista de itens desenha as duas formas**: a barra fixa a partir do breakpoint (expandida com 288px ou recolhida em trilho de 80px, só ícones) e a gaveta no celular. O app não mantém mais uma nav para o `<aside>` e outra para o drawer.
@@ -232,6 +252,9 @@ npm run build    # dist/: index.es.js, index.umd.js, types/, style.css, theme.cs
 
 
 ## Mudanças
+
+### 0.4.0
+- `AgenteMascote` e `EquipeDock`: mascotes 8x8 dos agentes e o painel da equipe (QD-0426).
 
 ### 0.2.0
 - `TailorSidebar`: barra lateral padrão (marca, seletor de contas + apps, grupos, badges, subitens, trilho recolhido, gaveta no celular com a mesma lista, superfície `auto`/`clara`/`escura`, `renderLink` para o roteador).
