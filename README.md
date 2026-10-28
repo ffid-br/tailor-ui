@@ -88,6 +88,24 @@ Lockup: wordmark com 21px de arte e o nome do produto em 18px semibold (tailor-i
 
 Personagem 8x8 de cada agente (`desk`, `pergunte`, `pm`, `diretor`), com um único ponto verde. `estado`: `analisando`, `esperando`, `feito` (padrão), `subiu`, `desligado`. O estado vai no rótulo acessível e, com `mostrarEstado`, aparece como ponto quadrado + texto. `celula` é o lado de cada quadradinho em px (padrão 4). Anima em degraus; com menos movimento, para.
 
+#### Estilo vetor
+
+```tsx
+<AgenteMascote agente="desk" nome="Alfred" estilo="vetor" estado="parado" tamanho={96} />
+<AgenteMascote agente="sdr" nome="SDR" estado="falando" fala="Achei 3 leads quentes." tamanho={96} />
+<AgenteMascote agente="pm" nome="PM" estilo="vetor" estado="parado" expressao="bravo" />
+<AgenteMascote agente="pilot" nome="Pilot" estado="analisando" tema="natal" />
+```
+
+O companheiro animado: olha o cursor, pisca e muda de movimento por estado. Expressão só nos olhos, sem boca nem braços.
+
+- Agentes: `desk`, `pergunte`, `pm`, `diretor` (também em pixel) e `sdr`, `cred`, `score`, `pilot`, `flow`, `bi`, `rh` (só vetor: saem em vetor mesmo sem `estilo`).
+- Estados: os cinco do pixel e mais `parado`, `cumprimentando`, `falando`, `erro`. No vetor, `analisando` pensa, `feito` fala, `subiu` comemora, `desligado` dorme.
+- `expressao`: `neutro`, `feliz`, `piscando`, `surpreso`, `bravo`, `triste`, `desconfiado`, `sonolento`, `tonto`. Sem ela, vale o olhar do estado.
+- `tema` veste acessório + objeto: `natal`, `pascoa`, `aniversario`, `halloween`, `copa`, `galaxia`, `premiacao`. Ou solto: `acessorio` (`gorro`, `orelhas`, `festa`, `bruxa`, `bone`, `capacete`, `coroa`) e `objeto` (`presente`, `ovo`, `bolo`, `abobora`, `bola`, `sabre`, `trofeu`).
+- `fala` aparece num balão preto (a partir de 48px) e entra no rótulo acessível.
+- `tamanho` é a largura em px (padrão `celula * 8`). `superficie`: `auto` segue o `dark:` do app; `clara`/`escura` travam.
+
 ### `EquipeDock`
 
 ```tsx
@@ -97,7 +115,9 @@ Personagem 8x8 de cada agente (`desk`, `pergunte`, `pm`, `diretor`), com um úni
 ]} />
 ```
 
-Botão fixo no canto com o mascote do primeiro agente e a soma dos selos. Abre um painel com uma aba por agente.
+Botão fixo no canto com o mascote do primeiro agente e a soma dos selos. Abre um painel com uma aba por agente. `estilo="vetor"` vale para todos os mascotes do dock.
+
+Equipe trabalhando: quem está na ativa (`analisando`, `falando`, `esperando`, `erro`) aparece no botão ao lado do principal, até três e depois `+N`. Ex.: o assistente do CRM como primeiro agente e os especialistas que ele acionou.
 
 ### `TailorSidebar`
 
@@ -255,6 +275,11 @@ Página pública: https://ffid-br.github.io/tailor-ui/ (publicada pelo workflow 
 
 
 ## Mudanças
+
+### 0.5.0
+- `AgenteMascote` `estilo="vetor"`: 11 agentes, olhar que segue o cursor, 9 expressões nos olhos, temas de datas, acessórios, objetos e balão de fala. Estados novos: `parado`, `cumprimentando`, `falando`, `erro`.
+- `EquipeDock`: prop `estilo` e equipe trabalhando no botão.
+- Página de exemplos publicada em https://ffid-br.github.io/tailor-ui/.
 
 ### 0.4.0
 - `AgenteMascote` e `EquipeDock`: mascotes 8x8 dos agentes e o painel da equipe (QD-0426).

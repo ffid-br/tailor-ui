@@ -17,6 +17,29 @@ describe('AgenteMascote', () => {
   });
 });
 
+describe('AgenteMascote estilo vetor', () => {
+  it('desenha em SVG, com o olhar do estado e a fala no rótulo', () => {
+    const { container } = render(<AgenteMascote agente="desk" nome="Alfred" estilo="vetor" estado="falando" fala="Achei 3 leads." />);
+    expect(container.querySelector('.tailor-mascote__pixel')).toBeNull();
+    expect(container.querySelector('.tailor-mv--falando svg')).not.toBeNull();
+    expect(container.querySelectorAll('.tailor-mv__pupila')).toHaveLength(2);
+    expect(screen.getByRole('img')).toHaveAttribute('aria-label', 'Alfred: Falando. Achei 3 leads.');
+  });
+
+  it('agente sem mapa 8x8 sai em vetor; tema veste acessório e objeto; dormindo fecha os olhos', () => {
+    const { container } = render(<AgenteMascote agente="sdr" nome="SDR" estado="desligado" tema="natal" />);
+    expect(container.querySelector('.tailor-mv--dormindo')).not.toBeNull();
+    expect(container.querySelectorAll('.tailor-mv__pupila')).toHaveLength(0);
+    expect(container.querySelector('.tailor-mv__zzz')).not.toBeNull();
+    expect(container.querySelectorAll('.tailor-mv__corpo > g[transform]')).toHaveLength(2);
+  });
+
+  it('expressão sobrescreve o olhar do estado', () => {
+    const { container } = render(<AgenteMascote agente="pm" nome="PM" estilo="vetor" estado="parado" expressao="tonto" />);
+    expect(container.querySelectorAll('.tailor-mv__pupila')).toHaveLength(0);
+  });
+});
+
 describe('EquipeDock', () => {
   const agentes = [
     { chave: 'desk' as const, nome: 'Alfred', estado: 'esperando' as const, selo: 3, conteudo: <p>feed do Alfred</p> },
@@ -31,6 +54,17 @@ describe('EquipeDock', () => {
     expect(botao).toHaveAttribute('aria-expanded', 'true');
     expect(screen.getAllByRole('tab')).toHaveLength(2);
     expect(screen.getByText('feed do Alfred')).toBeInTheDocument();
+  });
+
+  it('mostra quem está trabalhando junto do principal', () => {
+    render(<EquipeDock estilo="vetor" agentes={[
+      { chave: 'desk', nome: 'Alfred', estado: 'analisando' },
+      { chave: 'sdr', nome: 'SDR', estado: 'falando' },
+      { chave: 'cred', nome: 'Cred', estado: 'analisando' },
+      { chave: 'bi', nome: 'BI', estado: 'desligado' },
+    ]} />);
+    const botao = screen.getByRole('button', { name: 'Abrir equipe, 3 trabalhando' });
+    expect(botao.querySelectorAll('[role="img"]')).toHaveLength(3);
   });
 
   it('aba sem conteúdo diz "Em breve"', () => {

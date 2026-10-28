@@ -58,6 +58,7 @@ const SECOES = [
   { id: 'ponto', rotulo: 'PontoMalha', icone: Circulo },
   { id: 'marca', rotulo: 'TailorBrandMark', icone: Quadrado },
   { id: 'mascote', rotulo: 'AgenteMascote', icone: Pessoa, badge: 3 },
+  { id: 'vetor', rotulo: 'Mascote vetor', icone: Pessoa },
   { id: 'equipe', rotulo: 'EquipeDock', icone: Pessoa },
   { id: 'sidebar', rotulo: 'TailorSidebar', icone: Menu },
   { id: 'entrada', rotulo: 'Login → app', icone: Sair },
@@ -220,13 +221,64 @@ function App() {
             </Exemplo>
           </Secao>
 
-          <Secao id="equipe" titulo="EquipeDock" descricao="Botão fixo no canto inferior da tela (veja ali embaixo) com a soma dos selos.">
+          <Secao id="vetor" titulo="AgenteMascote vetor" descricao="O companheiro animado: olha o cursor, pisca e muda de movimento por estado. Expressão só nos olhos.">
+            <Exemplo
+              titulo="estados"
+              codigo={`
+<AgenteMascote agente="desk" nome="Alfred" estilo="vetor" tamanho={96} estado="parado" />
+<AgenteMascote agente="sdr" nome="SDR" estado="falando" fala="Achei 3 leads quentes." tamanho={96} />
+<AgenteMascote agente="cred" nome="Cred" estado="analisando" tamanho={96} />
+<AgenteMascote agente="score" nome="Score" estado="subiu" tamanho={96} />
+<AgenteMascote agente="bi" nome="BI" estado="desligado" tamanho={96} />`}
+            >
+              <div className="flex flex-wrap items-end gap-10 pt-16">
+                <AgenteMascote agente="desk" nome="Alfred" estilo="vetor" tamanho={96} estado="parado" mostrarEstado />
+                <AgenteMascote agente="sdr" nome="SDR" estado="falando" fala="Achei 3 leads quentes." tamanho={96} mostrarEstado />
+                <AgenteMascote agente="cred" nome="Cred" estado="analisando" tamanho={96} mostrarEstado />
+                <AgenteMascote agente="score" nome="Score" estado="subiu" tamanho={96} mostrarEstado />
+                <AgenteMascote agente="bi" nome="BI" estado="desligado" tamanho={96} mostrarEstado />
+              </div>
+            </Exemplo>
+            <Exemplo
+              titulo="equipe"
+              codigo={`{(['desk', 'pergunte', 'pm', 'diretor', 'sdr', 'cred', 'score', 'pilot', 'flow', 'bi', 'rh'] as const).map((a) => (
+  <AgenteMascote key={a} agente={a} nome={a} estilo="vetor" estado="parado" tamanho={64} />
+))}`}
+            >
+              <div className="flex flex-wrap items-end gap-6">
+                {(['desk', 'pergunte', 'pm', 'diretor', 'sdr', 'cred', 'score', 'pilot', 'flow', 'bi', 'rh'] as const).map((a) => (
+                  <AgenteMascote key={a} agente={a} nome={a} estilo="vetor" estado="parado" tamanho={64} />
+                ))}
+              </div>
+            </Exemplo>
+            <Exemplo
+              titulo="olhares e temas"
+              codigo={`
+<AgenteMascote agente="pm" nome="PM" estilo="vetor" estado="parado" expressao="bravo" tamanho={72} />
+<AgenteMascote agente="rh" nome="RH" estado="parado" expressao="feliz" tamanho={72} />
+<AgenteMascote agente="pilot" nome="Pilot" estado="parado" tema="natal" tamanho={72} />
+<AgenteMascote agente="flow" nome="Flow" estado="parado" tema="pascoa" tamanho={72} />
+<AgenteMascote agente="diretor" nome="Diretor" estilo="vetor" estado="parado" tema="galaxia" tamanho={72} />`}
+            >
+              <div className="flex flex-wrap items-end gap-10 pt-10">
+                <AgenteMascote agente="pm" nome="PM" estilo="vetor" estado="parado" expressao="bravo" tamanho={72} />
+                <AgenteMascote agente="rh" nome="RH" estado="parado" expressao="feliz" tamanho={72} />
+                <AgenteMascote agente="pilot" nome="Pilot" estado="parado" tema="natal" tamanho={72} />
+                <AgenteMascote agente="flow" nome="Flow" estado="parado" tema="pascoa" tamanho={72} />
+                <AgenteMascote agente="diretor" nome="Diretor" estilo="vetor" estado="parado" tema="galaxia" tamanho={72} />
+              </div>
+            </Exemplo>
+          </Secao>
+
+          <Secao id="equipe" titulo="EquipeDock" descricao="Botão fixo no canto da tela (veja ali embaixo). Quando a equipe trabalha, quem está na ativa aparece junto do principal.">
             <Exemplo
               titulo="painel da equipe"
               codigo={`
-<EquipeDock agentes={[
-  { chave: 'desk', nome: 'Alfred', estado: 'esperando', selo: 4, conteudo: <p>Feed do desk</p> },
-  { chave: 'pergunte', nome: 'Pergunte' },   // sem conteúdo: "Em breve."
+<EquipeDock estilo="vetor" agentes={[
+  { chave: 'desk', nome: 'Alfred', estado: 'analisando', selo: 4, conteudo: <p>Feed do desk</p> },
+  { chave: 'sdr', nome: 'SDR', estado: 'falando' },      // na ativa: aparece no botão
+  { chave: 'cred', nome: 'Cred', estado: 'analisando' },
+  { chave: 'bi', nome: 'BI', estado: 'desligado' },       // sem conteúdo: "Em breve."
 ]} />`}
             >
               <p className="text-sm text-neutral-600 dark:text-neutral-400">O dock desta página está no canto da tela.</p>
@@ -270,9 +322,12 @@ function App() {
       </div>
 
       <EquipeDock
+        estilo="vetor"
         agentes={[
-          { chave: 'desk', nome: 'Alfred', estado: 'esperando', selo: 4, conteudo: <p className="p-4 text-sm">Feed do desk</p> },
-          { chave: 'pergunte', nome: 'Pergunte' },
+          { chave: 'desk', nome: 'Alfred', estado: 'analisando', selo: 4, conteudo: <p className="text-sm">Feed do desk</p> },
+          { chave: 'sdr', nome: 'SDR', estado: 'falando' },
+          { chave: 'cred', nome: 'Cred', estado: 'analisando' },
+          { chave: 'bi', nome: 'BI', estado: 'desligado' },
         ]}
       />
     </div>

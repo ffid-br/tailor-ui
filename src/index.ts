@@ -31,6 +31,12 @@ export type {
   TailorMobileBarProps,
 } from './components/TailorSidebar';
 export { AgenteMascote, ROTULO_DO_ESTADO } from './components/AgenteMascote';
-export type { AgenteMascoteProps, ChaveDoMascote, EstadoDoMascote } from './components/AgenteMascote';
+export type { AgenteMascoteProps, ChaveDoMascote, ChaveDoAgente, EstadoDoMascote } from './components/AgenteMascote';
+export type {
+  ExpressaoDoMascote,
+  TemaDoMascote,
+  AcessorioDoMascote,
+  ObjetoDoMascote,
+} from './components/MascoteVetor';
 export { EquipeDock } from './components/EquipeDock';
 export type { EquipeDockProps, AgenteDaEquipe } from './components/EquipeDock';
