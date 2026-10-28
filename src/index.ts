@@ -46,3 +46,7 @@ export { TailorMarca, temaParaVariaveis, temaDoWhitelabel, contraste } from './c
 export type { TailorMarcaProps, TailorTema, WhitelabelDoCliente } from './components/TailorMarca';
 export { TailorTabela, formatarValor, somar } from './components/TailorTabela';
 export type { TailorTabelaProps, TailorTabelaColuna, TailorTabelaOrdem, TipoDaColuna } from './components/TailorTabela';
+export { TailorEsqueleto } from './components/TailorEsqueleto';
+export type { TailorEsqueletoProps } from './components/TailorEsqueleto';
+export { TailorAvisos, avisar, fecharAviso } from './components/TailorAvisos';
+export type { TipoDoAviso, OpcoesDoAviso } from './components/TailorAvisos';

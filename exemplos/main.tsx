@@ -9,6 +9,9 @@ import {
   PontoMalha,
   TailorBrandMark,
   TailorLoader,
+  TailorEsqueleto,
+  TailorAvisos,
+  avisar,
   TailorMarca,
   TailorMobileBar,
   TailorPageHeader,
@@ -129,6 +132,38 @@ function SucessoDemo() {
   );
 }
 
+/** Salvar: loader no botão, depois o sucesso no lugar do formulário e o aviso. */
+function FormularioDemo() {
+  const [fase, setFase] = useState<'editando' | 'salvando' | 'salvo'>('editando');
+  const [nome, setNome] = useState('Maria Souza');
+  const salvar = (e: React.FormEvent) => {
+    e.preventDefault();
+    setFase('salvando');
+    setTimeout(() => { setFase('salvo'); avisar.sucesso('Contato salvo', { detalhe: nome }); }, 1618);
+  };
+  if (fase === 'salvo') {
+    return (
+      <div className="grid justify-items-center gap-4">
+        <TailorLoader sucesso label="Contato salvo" detail={nome} semRespiro />
+        <button type="button" className="border border-black px-3 py-2 text-xs font-medium dark:border-white" onClick={() => setFase('editando')}>Editar de novo</button>
+      </div>
+    );
+  }
+  return (
+    <form onSubmit={salvar} className="grid max-w-sm gap-3">
+      <label className="grid gap-2 text-[13px] font-medium">
+        Nome
+        <input value={nome} onChange={(e) => setNome(e.target.value)} disabled={fase === 'salvando'}
+          className="h-10 border border-neutral-400 bg-transparent px-3 text-sm font-normal focus:border-black focus:outline-none dark:focus:border-white" />
+      </label>
+      <button type="submit" disabled={fase === 'salvando'}
+        className="flex h-10 items-center justify-center bg-tailor-green px-4 text-sm font-medium text-black disabled:cursor-wait">
+        {fase === 'salvando' ? <TailorLoader variant="compact" label="Salvando" className="text-black dark:text-black [--tailor-loader-ponto:#000]" /> : 'Salvar'}
+      </button>
+    </form>
+  );
+}
+
 function Exemplo({ titulo, codigo, children, escuro }: { titulo: string; codigo: string; children: React.ReactNode; escuro?: boolean }) {
   return (
     <div className="overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-800">
@@ -157,6 +192,7 @@ const SECOES = [
   { id: 'cabecalho', rotulo: 'TailorPageHeader', icone: Quadrado },
   { id: 'tabela', rotulo: 'TailorTabela', icone: Quadrado },
   { id: 'loader', rotulo: 'TailorLoader', icone: Circulo },
+  { id: 'feedback', rotulo: 'Avisos e esqueleto', icone: Circulo },
   { id: 'intro', rotulo: 'CinematicIntro', icone: Quadrado },
   { id: 'ponto', rotulo: 'PontoMalha', icone: Circulo },
   { id: 'marca', rotulo: 'TailorBrandMark', icone: Quadrado },
@@ -323,6 +359,27 @@ const colunas: TailorTabelaColuna<Corretor>[] = [
             <Exemplo titulo="overlay" codigo={`<TailorLoader variant="overlay" label="Entrando" />`}>
               <button type="button" className={botao} onClick={() => setOverlay(true)}>Mostrar por 2s</button>
               {overlay && <TailorLoader variant="overlay" label="Entrando" />}
+            </Exemplo>
+          </Secao>
+
+          <Secao id="feedback" titulo="Avisos, esqueleto e formulário" descricao="O mesmo retorno em todo app: esqueleto enquanto chega, loader no botão, sucesso que se vê de longe.">
+            <Exemplo titulo="TailorAvisos + avisar" codigo={`// uma vez, perto da raiz\n<TailorAvisos />\n\n// em qualquer lugar, até fora de componente\navisar.sucesso('Contato salvo', { detalhe: 'Maria Souza entrou no funil Vendas' });\navisar.erro('Não deu para salvar', { detalhe: 'Sem conexão. Tente de novo.' });\navisar.info('Sincronizando contatos');`}>
+              <div className="flex flex-wrap gap-2">
+                <button type="button" className={botao} onClick={() => avisar.sucesso('Contato salvo', { detalhe: 'Maria Souza entrou no funil Vendas' })}>Sucesso</button>
+                <button type="button" className={botao} onClick={() => avisar.erro('Não deu para salvar', { detalhe: 'Sem conexão. Tente de novo.' })}>Erro</button>
+                <button type="button" className={botao} onClick={() => avisar.info('Sincronizando contatos')}>Info</button>
+              </div>
+            </Exemplo>
+            <Exemplo titulo="formulário" codigo={`<button disabled={salvando}>\n  {salvando ? <TailorLoader variant="compact" label="Salvando" /> : 'Salvar'}\n</button>\n\n// deu certo: o formulário vira o sucesso, e o aviso confirma\n{salvo && <TailorLoader sucesso label="Contato salvo" detail="Maria Souza" />}`}>
+              <FormularioDemo />
+            </Exemplo>
+            <Exemplo titulo="TailorEsqueleto" codigo={`<TailorEsqueleto />                          {/* texto */}\n<TailorEsqueleto forma="cartoes" linhas={3} />\n<TailorEsqueleto forma="tabela" colunas={4} />\n<TailorEsqueleto forma="bloco" altura="144px" />\n<TailorTabela carregando ... />            {/* já usa o esqueleto */}`}>
+              <div className="grid gap-8">
+                <TailorEsqueleto />
+                <TailorEsqueleto forma="cartoes" linhas={3} />
+                <TailorEsqueleto forma="tabela" colunas={4} linhas={4} />
+                <TailorEsqueleto forma="bloco" />
+              </div>
             </Exemplo>
           </Secao>
 
@@ -495,6 +552,7 @@ const colunas: TailorTabelaColuna<Corretor>[] = [
         )}
       </div>
 
+      <TailorAvisos />
       <EquipeDock
         estilo="vetor"
         agentes={[

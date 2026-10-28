@@ -155,7 +155,7 @@
   100%    { transform: translate(0, 0) scale(1); opacity: 0; }
 }
 /* compact: o ponto dá a volta num quadrado de 13px. */
-.tailor-loader__volta { animation: tailor-volta 1.236s steps(1, end) infinite; }
+.tailor-loader__volta { background: var(--tailor-loader-ponto, var(--tailor-marca-primaria)); animation: tailor-volta 1.236s steps(1, end) infinite; }
 @keyframes tailor-volta {
   0%   { transform: translate(0, 0); }
   25%  { transform: translate(8px, 0); }
@@ -169,6 +169,61 @@
 @keyframes tailor-ok-ponto { 0% { transform: scale(1); } 50% { transform: scale(3); opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
 .tailor-loader__check { stroke-dasharray: 1; stroke-dashoffset: 1; animation: tailor-check 0.382s 0.3s var(--tailor-ease-in-out) both; }
 @keyframes tailor-check { to { stroke-dashoffset: 0; } }
+
+/* TailorEsqueleto — barras retas e a linha da marca varrendo de cima a baixo. */
+.tailor-esq { position: relative; overflow: hidden; display: grid; gap: 13px; padding: 2px 0; }
+.tailor-esq__rotulo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.tailor-esq__barra { display: block; height: 13px; background: var(--tailor-esq-barra, #F2F2F2); }
+.tailor-esq__barra--fina { height: 8px; }
+.tailor-esq__barra--grossa { height: 34px; }
+.tailor-esq__linha { display: grid; gap: 21px; padding: 8px 0; border-bottom: 1px solid var(--tailor-marca-borda); }
+.tailor-esq__linha--cabecalho .tailor-esq__barra { height: 8px; }
+.tailor-esq__cartoes { display: grid; gap: 13px; grid-template-columns: repeat(auto-fit, minmax(144px, 1fr)); }
+.tailor-esq__cartao { display: grid; gap: 13px; padding: 21px; border: 1px solid var(--tailor-marca-borda); }
+.tailor-esq::after {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px;
+  background: var(--tailor-marca-primaria);
+  animation: tailor-esq-varre 1.618s var(--tailor-ease-in-out) infinite alternate;
+}
+@keyframes tailor-esq-varre { from { top: 0; } to { top: calc(100% - 2px); } }
+:where(.dark, [data-theme="dark"]) .tailor-esq { --tailor-esq-barra: #1F1F1F; }
+
+/* TailorAvisos — caixa preta; a cor do tipo entra varrendo e recolhe na borda; barra do tempo. */
+.tailor-avisos {
+  position: fixed; z-index: 1100; right: 21px; top: 21px; display: flex; flex-direction: column; gap: 8px;
+  width: min(377px, calc(100vw - 32px)); pointer-events: none;
+}
+@media (max-width: 640px) { .tailor-avisos { right: 16px; left: 16px; top: 16px; width: auto; } }
+.tailor-aviso {
+  --tailor-aviso-cor: var(--tailor-marca-primaria);
+  position: relative; overflow: hidden; pointer-events: auto; display: flex; align-items: flex-start; gap: 13px;
+  padding: 16px 13px 18px 21px; background: #000; color: #fff; font-family: var(--tailor-font);
+  animation: tailor-aviso-entra 0.382s var(--tailor-ease-out) both;
+}
+.tailor-aviso--erro { --tailor-aviso-cor: #FF0040; }
+.tailor-aviso::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; background: var(--tailor-aviso-cor);
+  animation: tailor-aviso-varre 0.618s var(--tailor-ease-in-out) both;
+}
+.tailor-aviso > * { position: relative; }
+@keyframes tailor-aviso-entra { from { transform: translateY(-21px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes tailor-aviso-varre { 0% { width: 0; } 45% { width: 100%; } 100% { width: 5px; } }
+.tailor-aviso__icone { width: 21px; height: 21px; flex-shrink: 0; overflow: visible; stroke: var(--tailor-aviso-cor); fill: var(--tailor-aviso-cor); }
+.tailor-aviso .tailor-loader__check { animation-delay: 0.45s; }
+.tailor-aviso__texto { flex: 1; min-width: 0; }
+.tailor-aviso__titulo { margin: 0; font-size: 15px; font-weight: 500; line-height: 1.382; }
+.tailor-aviso__detalhe { margin: 3px 0 0; font-size: 13px; line-height: 1.5; color: rgb(255 255 255 / 0.7); }
+.tailor-aviso__fechar {
+  margin: -5px -3px 0 0; width: 34px; height: 34px; flex-shrink: 0; border: 0; background: none; color: rgb(255 255 255 / 0.7);
+  font-size: 21px; line-height: 1; cursor: pointer;
+}
+.tailor-aviso__fechar:hover { color: #fff; }
+.tailor-aviso__fechar:focus-visible { outline: 2px solid var(--tailor-aviso-cor); outline-offset: -2px; }
+.tailor-aviso__tempo {
+  position: absolute !important; left: 0; right: 0; bottom: 0; height: 3px; background: var(--tailor-aviso-cor);
+  transform-origin: left; animation: tailor-aviso-tempo var(--tailor-aviso-duracao, 4s) linear both;
+}
+@keyframes tailor-aviso-tempo { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 
 /* PontoMalha e a malha da entrada: se desenham a partir do ponto e somem, em 2φ (3,236s). */
 .tailor-malha__linha {
@@ -299,6 +354,9 @@
   .tailor-loader__rastro, .tailor-loader__check, .tailor-loader__ok-malha .tailor-malha__linha { animation: none; stroke-dashoffset: 0; opacity: 1; }
   .tailor-loader__corredor, .tailor-loader__volta { animation: none; }
   .tailor-loader__ok-ponto { animation: none; opacity: 0; }
+  .tailor-esq::after { animation: none; display: none; }
+  .tailor-aviso, .tailor-aviso::before { animation: none; }
+  .tailor-aviso::before { width: 5px; }
   .tailor-loader__reticencias::after { animation: none; content: '...'; }
   .tailor-ponto-pisca { animation: none; }
   .tailor-mascote__corpo, .tailor-mascote__olho, .tailor-mascote__verde { animation: none; }

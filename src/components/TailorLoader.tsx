@@ -103,7 +103,7 @@ export const TailorLoader: React.FC<TailorLoaderProps> = ({
           </svg>
         ) : (
           <span className="relative block h-[13px] w-[13px] shrink-0" aria-hidden="true">
-            <span className="tailor-loader__volta absolute left-0 top-0 block h-[5px] w-[5px] bg-tailor-green" />
+            <span className="tailor-loader__volta absolute left-0 top-0 block h-[5px] w-[5px]" />
           </span>
         )}
         <span>

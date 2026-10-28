@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { cn } from '../cn';
-import { TailorLoader } from './TailorLoader';
+import { TailorEsqueleto } from './TailorEsqueleto';
 
 /** Como o valor aparece e se alinha. `percentual` recebe fração (0,123 = 12,3%). */
 export type TipoDaColuna = 'texto' | 'numero' | 'moeda' | 'percentual' | 'data' | 'id';
@@ -142,7 +142,7 @@ export function TailorTabela<T>({
           </thead>
           <tbody>
             {carregando ? (
-              <tr><td colSpan={colunas.length} className="tailor-tabela__estado"><TailorLoader variant="compact" /></td></tr>
+              <tr><td colSpan={colunas.length}><TailorEsqueleto forma="tabela" colunas={colunas.length} linhas={Math.min(porPagina ?? 5, 8)} /></td></tr>
             ) : visiveis.length === 0 ? (
               <tr><td colSpan={colunas.length} className="tailor-tabela__estado">{vazio}</td></tr>
             ) : visiveis.map((l, i) => (
