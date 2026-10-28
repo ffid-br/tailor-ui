@@ -10,6 +10,9 @@ import React, { useEffect, useRef } from 'react';
 const CORPO = 'var(--tailor-mv-corpo, var(--tailor-black))';
 const OLHO = 'var(--tailor-mv-olho, var(--tailor-white))';
 const VERDE = 'var(--tailor-green)';
+/** Só o gorro do Natal: vermelho da paleta de apoio, com aba e pompom brancos. */
+const VERMELHO = 'var(--tailor-mv-vermelho, #FF0040)';
+const BRANCO = 'var(--tailor-white)';
 
 type Agente = {
   /** Topo da cabeça, onde o acessório assenta. */
@@ -141,13 +144,13 @@ const OLHAR_DA_POSE: Record<PoseDoMascote, ExpressaoDoMascote> = {
   esperando: 'surpreso', comemorando: 'feliz', erro: 'triste', dormindo: 'sonolento',
 };
 
-/** Desenhados com o topo da cabeça em (0, 0). Só em tinta: o verde é do agente. */
+/** Desenhados com o topo da cabeça em (0, 0). Só em tinta (exceto o gorro): o verde é do agente. */
 const ACESSORIOS = {
   gorro: <>
-    <path d="M-36 2 L36 2 L36 -10 Q0 -60 -36 -10 Z" fill={CORPO} />
-    <path d="M-36 2 Q-30 -36 6 -46 Q30 -50 40 -24" fill={CORPO} stroke={CORPO} strokeWidth="2" />
-    <rect x="-42" y="-6" width="84" height="14" rx="7" fill={OLHO} stroke={CORPO} strokeWidth="3" />
-    <circle cx="40" cy="-24" r="9" fill={OLHO} stroke={CORPO} strokeWidth="3" />
+    <path d="M-36 2 L36 2 L36 -10 Q0 -60 -36 -10 Z" fill={VERMELHO} />
+    <path d="M-36 2 Q-30 -36 6 -46 Q30 -50 40 -24" fill={VERMELHO} stroke={VERMELHO} strokeWidth="2" />
+    <rect x="-42" y="-6" width="84" height="14" rx="7" fill={BRANCO} stroke={CORPO} strokeWidth="3" />
+    <circle cx="40" cy="-24" r="9" fill={BRANCO} stroke={CORPO} strokeWidth="3" />
   </>,
   orelhas: <>
     {[-1, 1].map((l) => (
