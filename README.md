@@ -308,8 +308,11 @@ Página pública: https://ffid-br.github.io/tailor-ui/ (publicada pelo workflow 
 
 ## Mudanças
 
+### 0.6.0
+- `TailorPageHeader`, `TailorMarca`, `temaDoWhitelabel`: cabeçalho de página que veste a marca do cliente por variáveis CSS. Segue `--color-tailor-green`/`-ink` do app quando definidos.
+- Simulador de mascotes na página de exemplos (`#simulador`).
+
 ### 0.5.0
-- `TailorPageHeader`, `TailorMarca`, `temaDoWhitelabel`: cabeçalho de página que veste a marca do cliente por variáveis CSS.
 - `AgenteMascote` `estilo="vetor"`: 11 agentes, olhar que segue o cursor, 9 expressões nos olhos, temas de datas, acessórios, objetos e balão de fala. Estados novos: `parado`, `cumprimentando`, `falando`, `erro`.
 - `EquipeDock`: prop `estilo` e equipe trabalhando no botão.
 - Página de exemplos publicada em https://ffid-br.github.io/tailor-ui/.
