@@ -206,6 +206,38 @@ Notas para quem migra:
 - Sem `onRecolher`, o botão de recolher não aparece.
 - As classes novas estão no `dist`, então o `@source` da configuração já as cobre.
 
+### `TailorPageHeader` e a marca do cliente
+
+```tsx
+import { TailorMarca, TailorPageHeader, temaDoWhitelabel } from '@ffid-br/tailor-ui';
+
+const { tema, escuro } = temaDoWhitelabel(cliente.account_info?.whitelabel);
+
+<TailorMarca tema={tema} escuro={escuro}>
+  <TailorPageHeader
+    sobretitulo="Comercial"
+    titulo="Leads"
+    descricao="Quem chegou esta semana e o que falta para cada um avançar."
+    trilha={[{ rotulo: 'Início', href: '/' }, { rotulo: 'Leads' }]}
+    voltar={{ rotulo: 'Voltar', onClick: () => navigate(-1) }}
+    etiqueta={<Badge>Beta</Badge>}
+    indicadores={[{ rotulo: 'novos', valor: 128 }]}
+    acoes={<Botao>Novo lead</Botao>}
+    renderLink={({ href, ...p }) => <NavLink to={href} {...p} />}
+  >
+    <Abas />                                {/* abaixo, na largura toda */}
+  </TailorPageHeader>
+</TailorMarca>
+```
+
+O visual vem só de variáveis CSS. Sem tema, vale o padrão Tailor; com tema, o cabeçalho veste a marca do cliente.
+
+- `--tailor-marca-*` (todas as peças que aceitam marca): `primaria`, `primaria-texto`, `texto`, `texto-suave`, `borda`, `fundo`, `fonte-titulo`, `fonte-texto`, `peso-titulo`, `caixa-titulo`, `raio`. Os padrões ficam em `:where()`, então qualquer CSS do app sobrescreve.
+- `--tailor-cabecalho-*` (só o cabeçalho): `fundo`, `padding`, `regua`, `tamanho-titulo`.
+- `TailorMarca` aplica um `TailorTema` (e o `escuro`, sob `.dark` ou `[data-theme="dark"]`) sem mexer no layout.
+- `temaDoWhitelabel` traduz `account_info.whitelabel` do Mongo. Ignora o azul padrão do cadastro (`#007bff`, que 107 clientes têm sem ter escolhido) e o que não for hex. A primária só vira cor de texto com contraste AA sobre o fundo. Lê também os campos propostos `colors.text_muted`, `colors.border`, `colors.dark.*`, `fonts.heading/body/heading_weight/heading_case` e `shape.radius`.
+- A fonte do cliente é carregada pelo app (ex.: link do Google Fonts).
+
 ## Receita: transição login → app
 
 1. **No login**: marque a entrada ao enviar, desmarque se der erro e mostre o preto crescendo do botão.
@@ -277,6 +309,7 @@ Página pública: https://ffid-br.github.io/tailor-ui/ (publicada pelo workflow 
 ## Mudanças
 
 ### 0.5.0
+- `TailorPageHeader`, `TailorMarca`, `temaDoWhitelabel`: cabeçalho de página que veste a marca do cliente por variáveis CSS.
 - `AgenteMascote` `estilo="vetor"`: 11 agentes, olhar que segue o cursor, 9 expressões nos olhos, temas de datas, acessórios, objetos e balão de fala. Estados novos: `parado`, `cumprimentando`, `falando`, `erro`.
 - `EquipeDock`: prop `estilo` e equipe trabalhando no botão.
 - Página de exemplos publicada em https://ffid-br.github.io/tailor-ui/.

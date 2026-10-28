@@ -9,7 +9,11 @@ import {
   PontoMalha,
   TailorBrandMark,
   TailorLoader,
+  TailorMarca,
   TailorMobileBar,
+  TailorPageHeader,
+  temaDoWhitelabel,
+  type WhitelabelDoCliente,
   TailorSidebar,
   TailorUserMenu,
   type TailorSidebarGrupo,
@@ -28,6 +32,55 @@ const Quadrado = icone('M4 4h16v16H4z');
 const Pessoa = icone('M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0');
 const Menu = icone('M4 6h16M4 12h16M4 18h16');
 const Sair = icone('M9 21H5V3h4M16 17l5-5-5-5M21 12H9');
+
+// Cliente fictício, no formato de account_info.whitelabel do Mongo.
+const MARCAS: Record<string, { rotulo: string; wl: WhitelabelDoCliente | null }> = {
+  tailor: { rotulo: 'Tailor (padrão)', wl: null },
+  vermelha: {
+    rotulo: 'Construtora Exemplo',
+    wl: {
+      colors: { primary: '#C8102E', text: '#1A1A1A', text_muted: '#5C5C5C', border: '#E3D9D9', dark: { primary: '#FF5A6E', text: '#FFFFFF' } },
+      fonts: { heading: 'Montserrat', body: 'Montserrat', heading_weight: 700, heading_case: 'uppercase' },
+      shape: { radius: '6px' },
+    },
+  },
+  amarela: {
+    rotulo: 'Imobiliária Exemplo',
+    wl: { colors: { primary: '#FFD71D', text: '#111111' }, fonts: { heading: 'Raleway', heading_weight: 300 } },
+  },
+  cadastro: {
+    rotulo: 'Cadastro sem marca (#007bff)',
+    wl: { colors: { primary: '#007bff', secondary: '#6c757d', background: '#ffffff', text: '#000000' } },
+  },
+};
+
+function CabecalhoComMarca() {
+  const [marca, setMarca] = useState('vermelha');
+  const { tema, escuro } = temaDoWhitelabel(MARCAS[marca].wl);
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-1">
+        {Object.entries(MARCAS).map(([k, m]) => (
+          <button key={k} type="button" aria-pressed={k === marca} onClick={() => setMarca(k)}
+            className={'min-h-8 border px-2.5 text-xs font-medium ' + (k === marca ? 'border-black bg-black text-white dark:border-white dark:bg-white dark:text-black' : 'border-neutral-300 dark:border-neutral-700')}>
+            {m.rotulo}
+          </button>
+        ))}
+      </div>
+      <TailorMarca tema={tema} escuro={escuro}>
+        <TailorPageHeader
+          sobretitulo="Comercial"
+          titulo="Leads"
+          descricao="Quem chegou esta semana e o que falta para cada um avançar."
+          trilha={[{ rotulo: 'Início', href: '#cabecalho' }, { rotulo: 'Comercial', href: '#cabecalho' }, { rotulo: 'Leads' }]}
+          etiqueta={<span className="border border-current px-2 py-0.5 text-xs">Beta</span>}
+          indicadores={[{ rotulo: 'novos', valor: 128 }, { rotulo: 'sem resposta', valor: 17 }]}
+          acoes={<button type="button" className="h-10 bg-black px-4 text-sm font-medium text-white dark:bg-white dark:text-black">Novo lead</button>}
+        />
+      </TailorMarca>
+    </div>
+  );
+}
 
 function Exemplo({ titulo, codigo, children, escuro }: { titulo: string; codigo: string; children: React.ReactNode; escuro?: boolean }) {
   return (
@@ -54,6 +107,7 @@ function Secao({ id, titulo, descricao, children }: { id: string; titulo: string
 }
 
 const SECOES = [
+  { id: 'cabecalho', rotulo: 'TailorPageHeader', icone: Quadrado },
   { id: 'loader', rotulo: 'TailorLoader', icone: Circulo },
   { id: 'intro', rotulo: 'CinematicIntro', icone: Quadrado },
   { id: 'ponto', rotulo: 'PontoMalha', icone: Circulo },
@@ -152,6 +206,28 @@ function App() {
               Tema {escuro ? 'claro' : 'escuro'}
             </button>
           </header>
+
+          <Secao id="cabecalho" titulo="TailorPageHeader" descricao="Cabeçalho de página que veste a marca do cliente: cores, fontes, caixa do título e cantos vêm do whitelabel do Mongo.">
+            <Exemplo
+              titulo="marca do cliente"
+              codigo={`
+const { tema, escuro } = temaDoWhitelabel(cliente.account_info.whitelabel);
+
+<TailorMarca tema={tema} escuro={escuro}>
+  <TailorPageHeader
+    sobretitulo="Comercial"
+    titulo="Leads"
+    descricao="Quem chegou esta semana e o que falta para cada um avançar."
+    trilha={[{ rotulo: 'Início', href: '/' }, { rotulo: 'Comercial', href: '/comercial' }, { rotulo: 'Leads' }]}
+    indicadores={[{ rotulo: 'novos', valor: 128 }, { rotulo: 'sem resposta', valor: 17 }]}
+    acoes={<Botao>Novo lead</Botao>}
+    renderLink={({ href, ...p }) => <NavLink to={href} {...p} />}
+  />
+</TailorMarca>`}
+            >
+              <CabecalhoComMarca />
+            </Exemplo>
+          </Secao>
 
           <Secao id="loader" titulo="TailorLoader" descricao="Carregamento com o ponto verde e a malha Fibonacci. Sempre expõe role=&quot;status&quot;.">
             <Exemplo titulo="inline (padrão)" codigo={`<TailorLoader detail="3 de 5 contas" />`}>
