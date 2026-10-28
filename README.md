@@ -264,6 +264,29 @@ Tabela de relatório. `tipo` formata e alinha: `numero`, `moeda` (BRL) e `percen
 - `carregando` mostra o `TailorLoader`; `vazio` troca o "Nenhum registro no período."; `aoClicarLinha` deixa a linha clicável (Enter também); `cabecalhoFixo` prende o cabeçalho.
 - Visual por `--tailor-marca-*` (veste a marca do cliente, como o cabeçalho) e `--tailor-tabela-*` (`fonte`, `padding`, `padding-cabecalho`, `cabecalho`, `cabecalho-fixo`, `topo`, `fundo`).
 
+## Retorno padrão: esqueleto, loader, sucesso e avisos
+
+Um jeito só em todo app:
+
+| Momento | Use |
+|---|---|
+| Tela ou bloco chegando | `<TailorEsqueleto />` com `forma` `texto`, `tabela`, `cartoes` ou `bloco` |
+| Carregamento sem forma conhecida | `<TailorLoader />` |
+| Botão salvando | `<TailorLoader variant="compact" label="Salvando" />` dentro do botão |
+| Formulário salvo | `<TailorLoader sucesso label="Contato salvo" />` no lugar do formulário + `avisar.sucesso(...)` |
+| Retorno de ação em qualquer tela | `avisar.sucesso`, `avisar.erro`, `avisar.info` |
+
+```tsx
+// uma vez, perto da raiz
+<TailorAvisos />
+
+// em qualquer lugar, até fora de componente
+avisar.sucesso('Contato salvo', { detalhe: 'Maria Souza entrou no funil Vendas' });
+avisar.erro('Não deu para salvar', { detalhe: 'Sem conexão. Tente de novo.' }); // fica 8s, role="alert"
+```
+
+Num botão da cor da marca, troque a cor do ponto do loader: `className="[--tailor-loader-ponto:#000]"`.
+
 ## Receita: transição login → app
 
 1. **No login**: marque a entrada ao enviar, desmarque se der erro e mostre o preto crescendo do botão.
