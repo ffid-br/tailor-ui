@@ -24,8 +24,10 @@
  * (ou o componente TailorMarca). Tema escuro: `.dark` ou `[data-theme="dark"]`.
  */
 :where(:root) {
-  --tailor-marca-primaria: var(--tailor-green);
-  --tailor-marca-primaria-texto: var(--tailor-ink);
+  /* Seguem os tokens do Tailwind do app: quem já troca --color-tailor-green pela
+     cor do cliente (accounts, brandTheme) leva o cabeçalho junto. */
+  --tailor-marca-primaria: var(--color-tailor-green, var(--tailor-green));
+  --tailor-marca-primaria-texto: var(--color-tailor-ink, var(--tailor-ink));
   --tailor-marca-texto: var(--tailor-black);
   --tailor-marca-texto-suave: #666666;
   --tailor-marca-borda: #E5E5E5;
@@ -37,7 +39,7 @@
   --tailor-marca-raio: 0;
 }
 :where(.dark, [data-theme="dark"]) {
-  --tailor-marca-primaria-texto: var(--tailor-green);
+  --tailor-marca-primaria-texto: var(--color-tailor-green, var(--tailor-green));
   --tailor-marca-texto: var(--tailor-white);
   --tailor-marca-texto-suave: #A3A3A3;
   --tailor-marca-borda: rgba(255, 255, 255, 0.1);
