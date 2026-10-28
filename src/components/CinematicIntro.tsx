@@ -12,7 +12,9 @@ const QUADRANTES = [1, -1].flatMap((sx) => [1, -1].map((sy) => ({ sx, sy })));
 export type CinematicIntroProps = {
   /** Chamado ao fim da abertura, no "Pular" ou de imediato com menos movimento. */
   onComplete: () => void;
+  /** Linha curta acima do slogan, com o ponto verde. Sem ela, não aparece. */
   overline?: string;
+  /** Frase abaixo da marca (ex.: "Sua operação em outro nível"). Sem ela, não aparece. */
   slogan?: string;
   skipLabel?: string;
   /** Nome do produto abaixo da marca (ex.: "Pilot"). Omitido: só a marca. */
@@ -31,8 +33,8 @@ export type CinematicIntroProps = {
  */
 export const CinematicIntro: React.FC<CinematicIntroProps> = ({
   onComplete,
-  overline = 'Alfaiataria digital',
-  slogan = 'Tecnologia sob medida para a sua operação',
+  overline,
+  slogan,
   skipLabel = 'Pular',
   produto,
   logo = logoBranco,
@@ -108,22 +110,22 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({
             {produto}
           </motion.p>
         )}
-        <motion.p
+        {overline && <motion.p
           className="mt-[55px] flex items-center gap-[8px] text-[11px] font-medium uppercase tracking-[0.14em] text-tailor-green"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: PHI.f - PHI.b, duration: PHI.c, ease: EASE }}
         >
           <span className="inline-block h-2 w-2 bg-tailor-green" aria-hidden="true" /> {overline}
-        </motion.p>
-        <motion.p
-          className="mt-[13px] max-w-[377px] text-base leading-[1.618] text-white/75 sm:max-w-[610px] sm:text-[26px] sm:leading-[1.382]"
+        </motion.p>}
+        {slogan && <motion.p
+          className={`${overline ? 'mt-[13px]' : 'mt-[55px]'} max-w-[377px] text-base leading-[1.618] text-white/75 sm:max-w-[610px] sm:text-[26px] sm:leading-[1.382]`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: PHI.f, duration: PHI.c, ease: EASE }}
         >
           {slogan}
-        </motion.p>
+        </motion.p>}
       </div>
 
       <button

@@ -48,8 +48,7 @@ Sempre expõe `role="status"` com o rótulo.
     <CinematicIntro
       onComplete={() => setMostrarIntro(false)}
       produto="Pilot"             // opcional, aparece abaixo da marca
-      overline="Alfaiataria digital"
-      slogan="Tecnologia sob medida para a sua operação"
+      slogan="Sua operação em outro nível"
       skipLabel="Pular"
     />
   )}
@@ -335,6 +334,7 @@ Página pública: https://ffid-br.github.io/tailor-ui/ (publicada pelo workflow 
 ## Mudanças
 
 ### 0.6.0
+- `CinematicIntro`: `overline` e `slogan` sem texto padrão (saíram "Alfaiataria digital" e "Tecnologia sob medida…", que o site não usa mais). Sem eles, a abertura mostra só a marca.
 - `TailorTabela`: tabela de relatório com formatação por tipo, ordenação, paginação, linha de total e marca do cliente.
 - `TailorPageHeader`, `TailorMarca`, `temaDoWhitelabel`: cabeçalho de página que veste a marca do cliente por variáveis CSS. Segue `--color-tailor-green`/`-ink` do app quando definidos.
 - Simulador de mascotes na página de exemplos (`#simulador`).

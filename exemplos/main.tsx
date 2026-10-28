@@ -314,8 +314,7 @@ const colunas: TailorTabelaColuna<Corretor>[] = [
     <CinematicIntro
       onComplete={() => setMostrarIntro(false)}
       produto="Pilot"
-      overline="Alfaiataria digital"
-      slogan="Tecnologia sob medida para a sua operação"
+      slogan="Sua operação em outro nível"
       skipLabel="Pular"
     />
   )}
@@ -327,8 +326,7 @@ const colunas: TailorTabelaColuna<Corretor>[] = [
                   <CinematicIntro
                     onComplete={() => setIntro(false)}
                     produto="Pilot"
-                    overline="Alfaiataria digital"
-                    slogan="Tecnologia sob medida para a sua operação"
+                    slogan="Sua operação em outro nível"
                     skipLabel="Pular"
                   />
                 )}
