@@ -14,6 +14,7 @@ import {
   TailorUserMenu,
   type TailorSidebarGrupo,
 } from '../src';
+import { Simulador } from './Simulador';
 import './exemplos.css';
 
 // Ícones de linha mínimos, só para a página não depender do lucide-react.
@@ -59,6 +60,7 @@ const SECOES = [
   { id: 'marca', rotulo: 'TailorBrandMark', icone: Quadrado },
   { id: 'mascote', rotulo: 'AgenteMascote', icone: Pessoa, badge: 3 },
   { id: 'vetor', rotulo: 'Mascote vetor', icone: Pessoa },
+  { id: 'simulador', rotulo: 'Simulador de mascotes', icone: Quadrado },
   { id: 'equipe', rotulo: 'EquipeDock', icone: Pessoa },
   { id: 'sidebar', rotulo: 'TailorSidebar', icone: Menu },
   { id: 'entrada', rotulo: 'Login → app', icone: Sair },
@@ -79,6 +81,11 @@ function App() {
     addEventListener('hashchange', aoMudar);
     return () => removeEventListener('hashchange', aoMudar);
   }, []);
+  // Ao voltar do simulador as seções nascem depois do salto do navegador: rola de novo.
+  useEffect(() => {
+    if (hash === 'simulador') scrollTo(0, 0);
+    else document.getElementById(hash)?.scrollIntoView();
+  }, [hash]);
   useEffect(() => {
     document.documentElement.classList.toggle('dark', escuro);
   }, [escuro]);
@@ -124,6 +131,17 @@ function App() {
 
       <div className="min-w-0 flex-1">
         <TailorMobileBar produto="UI" onAbrirMenu={() => setAberto(true)} menuAberto={aberto} />
+        {hash === 'simulador' ? (
+        <main className="mx-auto max-w-6xl space-y-6 px-4 py-10 sm:px-8">
+          <header className="space-y-2">
+            <h1 className="text-3xl font-bold text-black dark:text-white">Simulador de mascotes</h1>
+            <p className="text-neutral-600 dark:text-neutral-400">
+              Monte qualquer mascote com o componente de verdade e copie o código. Link direto: <code>#simulador</code>.
+            </p>
+          </header>
+          <Simulador />
+        </main>
+        ) : (
         <main className="mx-auto max-w-4xl space-y-16 px-4 py-10 sm:px-8">
           <header className="space-y-2">
             <h1 className="text-3xl font-bold text-black dark:text-white">@ffid-br/tailor-ui</h1>
@@ -319,6 +337,7 @@ function App() {
             </Exemplo>
           </Secao>
         </main>
+        )}
       </div>
 
       <EquipeDock
