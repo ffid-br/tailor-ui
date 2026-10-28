@@ -35,6 +35,7 @@ A fonte Raleway (e a Roboto, para números) é carregada pelo app.
 <TailorLoader />                                        {/* inline: "Carregando..." */}
 <TailorLoader variant="overlay" label="Entrando" />     {/* tela inteira, bloqueia a interação */}
 <TailorLoader variant="compact" label="Salvando" />     {/* uma linha, para botão ou célula */}
+<TailorLoader sucesso label="Relatório pronto" />     {/* depois de carregar: malha verde e check */}
 <TailorLoader detail="3 de 5 contas" />
 ```
 
