@@ -238,6 +238,32 @@ O visual vem só de variáveis CSS. Sem tema, vale o padrão Tailor; com tema, o
 - `temaDoWhitelabel` traduz `account_info.whitelabel` do Mongo. Ignora o azul padrão do cadastro (`#007bff`, que 107 clientes têm sem ter escolhido) e o que não for hex. A primária só vira cor de texto com contraste AA sobre o fundo. Lê também os campos propostos `colors.text_muted`, `colors.border`, `colors.dark.*`, `fonts.heading/body/heading_weight/heading_case` e `shape.radius`.
 - A fonte do cliente é carregada pelo app (ex.: link do Google Fonts).
 
+### `TailorTabela`
+
+```tsx
+import { TailorTabela, somar, type TailorTabelaColuna } from '@ffid-br/tailor-ui';
+
+const colunas: TailorTabelaColuna<Corretor>[] = [
+  { chave: 'id', titulo: 'ID', tipo: 'id' },
+  { chave: 'nome', titulo: 'Corretor', ordenavel: true },
+  { chave: 'leads', titulo: 'Leads', tipo: 'numero', ordenavel: true, total: somar((c) => c.leads) },
+  { chave: 'receita', titulo: 'Receita', tipo: 'moeda', ordenavel: true, total: somar((c) => c.receita) },
+  { chave: 'conversao', titulo: 'Conversão', tipo: 'percentual' },
+  { chave: 'status', titulo: 'Status', celula: (c) => <Badge>{c.status}</Badge> },
+];
+
+<TailorTabela legenda="Desempenho por corretor" colunas={colunas} linhas={corretores}
+  chaveDaLinha={(c) => c.id} ordemInicial={{ chave: 'receita', direcao: 'desc' }} porPagina={20} />
+```
+
+Tabela de relatório. `tipo` formata e alinha: `numero`, `moeda` (BRL) e `percentual` (recebe fração: 0,125 = 12,5%) vão à direita com números tabulares; `data` em dd/mm/aaaa; `id` em mono; vazio vira traço.
+
+- Ordenação: sozinha no navegador (`ordemInicial`), ou controlada pelo servidor com `ordem` + `aoOrdenar`. `aria-sort` no cabeçalho.
+- Paginação: `porPagina` (navegador) ou `paginacao={{ pagina, totalPaginas, aoMudar, totalRegistros }}` (servidor).
+- `total` por coluna monta a linha de total, calculada sobre todas as linhas, não só a página. `somar` ajuda.
+- `carregando` mostra o `TailorLoader`; `vazio` troca o "Nenhum registro no período."; `aoClicarLinha` deixa a linha clicável (Enter também); `cabecalhoFixo` prende o cabeçalho.
+- Visual por `--tailor-marca-*` (veste a marca do cliente, como o cabeçalho) e `--tailor-tabela-*` (`fonte`, `padding`, `padding-cabecalho`, `cabecalho`, `cabecalho-fixo`, `topo`, `fundo`).
+
 ## Receita: transição login → app
 
 1. **No login**: marque a entrada ao enviar, desmarque se der erro e mostre o preto crescendo do botão.
@@ -309,6 +335,7 @@ Página pública: https://ffid-br.github.io/tailor-ui/ (publicada pelo workflow 
 ## Mudanças
 
 ### 0.6.0
+- `TailorTabela`: tabela de relatório com formatação por tipo, ordenação, paginação, linha de total e marca do cliente.
 - `TailorPageHeader`, `TailorMarca`, `temaDoWhitelabel`: cabeçalho de página que veste a marca do cliente por variáveis CSS. Segue `--color-tailor-green`/`-ink` do app quando definidos.
 - Simulador de mascotes na página de exemplos (`#simulador`).
 

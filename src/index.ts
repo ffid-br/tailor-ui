@@ -44,3 +44,5 @@ export { TailorPageHeader } from './components/TailorPageHeader';
 export type { TailorPageHeaderProps, TailorPageHeaderLink } from './components/TailorPageHeader';
 export { TailorMarca, temaParaVariaveis, temaDoWhitelabel, contraste } from './components/TailorMarca';
 export type { TailorMarcaProps, TailorTema, WhitelabelDoCliente } from './components/TailorMarca';
+export { TailorTabela, formatarValor, somar } from './components/TailorTabela';
+export type { TailorTabelaProps, TailorTabelaColuna, TailorTabelaOrdem, TipoDaColuna } from './components/TailorTabela';

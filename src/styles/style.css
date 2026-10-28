@@ -90,6 +90,49 @@
 .tailor-ph__indicador-rotulo { display: block; margin-top: 8px; font-size: 13px; color: var(--tailor-marca-texto-suave); }
 .tailor-ph__extra { min-width: 0; }
 
+/* TailorTabela — relatório. Medidas em --tailor-tabela-*, cores da marca. */
+.tailor-tabela {
+  border: 1px solid var(--tailor-marca-borda); background: var(--tailor-tabela-fundo, transparent);
+  color: var(--tailor-marca-texto); font-family: var(--tailor-marca-fonte-texto); border-radius: var(--tailor-marca-raio);
+}
+.tailor-tabela__rolagem { overflow-x: auto; }
+.tailor-tabela table { width: 100%; border-collapse: collapse; font-size: var(--tailor-tabela-fonte, 14px); }
+.tailor-tabela__legenda { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.tailor-tabela th {
+  padding: var(--tailor-tabela-padding-cabecalho, 10px 13px); white-space: nowrap;
+  font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--tailor-marca-texto-suave); background: var(--tailor-tabela-cabecalho, color-mix(in srgb, var(--tailor-marca-texto) 3%, transparent));
+  border-bottom: 1px solid var(--tailor-marca-borda);
+}
+.tailor-tabela__fixo th { position: sticky; top: var(--tailor-tabela-topo, 0); z-index: 1; background: var(--tailor-tabela-cabecalho-fixo, var(--tailor-white)); }
+:where(.dark, [data-theme="dark"]) .tailor-tabela__fixo th { background: var(--tailor-tabela-cabecalho-fixo, var(--tailor-black)); }
+.tailor-tabela td { padding: var(--tailor-tabela-padding, 10px 13px); border-top: 1px solid var(--tailor-marca-borda); }
+.tailor-tabela tbody tr:first-child td { border-top: 0; }
+.tailor-tabela tbody tr:hover td { background: color-mix(in srgb, var(--tailor-marca-primaria) 6%, transparent); }
+.tailor-tabela--direita { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tailor-tabela--centro { text-align: center; }
+.tailor-tabela--esquerda { text-align: left; }
+.tailor-tabela__id { white-space: nowrap; font-family: ui-monospace, "Roboto Mono", Menlo, monospace; font-size: 12px; }
+.tailor-tabela__ordenar { display: inline-flex; align-items: center; gap: 4px; padding: 0; border: 0; background: none; font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; cursor: pointer; }
+.tailor-tabela__ordenar:hover { color: var(--tailor-marca-texto); }
+.tailor-tabela__seta { opacity: 0.35; }
+.tailor-tabela__seta--ativa { opacity: 1; color: var(--tailor-marca-primaria-texto); }
+.tailor-tabela__clicavel { cursor: pointer; }
+.tailor-tabela__clicavel:focus-visible, .tailor-tabela button:focus-visible { outline: 3px solid var(--tailor-marca-primaria); outline-offset: -3px; }
+.tailor-tabela__estado { padding: 34px 13px; text-align: center; color: var(--tailor-marca-texto-suave); }
+.tailor-tabela tfoot td { border-top: 1px solid var(--tailor-marca-texto); font-weight: 600; }
+.tailor-tabela__paginacao {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 8px 13px; border-top: 1px solid var(--tailor-marca-borda); font-size: 13px; color: var(--tailor-marca-texto-suave);
+}
+.tailor-tabela__paginas { display: flex; gap: 8px; }
+.tailor-tabela__paginacao button {
+  min-height: 34px; padding: 0 13px; border: 1px solid var(--tailor-marca-borda); border-radius: var(--tailor-marca-raio);
+  background: transparent; color: var(--tailor-marca-texto); font: inherit; cursor: pointer;
+}
+.tailor-tabela__paginacao button:hover:not(:disabled) { border-color: var(--tailor-marca-texto); }
+.tailor-tabela__paginacao button:disabled { opacity: 0.45; cursor: not-allowed; }
+
 /* TailorLoader — a malha pequena se desenha a partir do ponto e some, em 2φ (3,236s). */
 .tailor-malha__linha {
   stroke-dasharray: 1;

@@ -12,6 +12,9 @@ import {
   TailorMarca,
   TailorMobileBar,
   TailorPageHeader,
+  TailorTabela,
+  somar,
+  type TailorTabelaColuna,
   temaDoWhitelabel,
   type WhitelabelDoCliente,
   TailorSidebar,
@@ -54,6 +57,28 @@ const MARCAS: Record<string, { rotulo: string; wl: WhitelabelDoCliente | null }>
   },
 };
 
+type Corretor = { id: string; nome: string; equipe: string; leads: number; visitas: number; vendas: number; receita: number; conversao: number; ultima: string };
+const CORRETORES: Corretor[] = [
+  ['Ana Souza', 'Centro', 128, 41, 9, 4120000, '2026-10-27'], ['Bruno Lima', 'Zona Sul', 96, 22, 4, 1980000, '2026-10-25'],
+  ['Carla Dias', 'Centro', 143, 52, 11, 5230000, '2026-10-28'], ['Diego Alves', 'Litoral', 61, 9, 1, 420000, '2026-10-12'],
+  ['Elisa Rocha', 'Zona Sul', 88, 30, 6, 2770000, '2026-10-26'], ['Fábio Nunes', 'Litoral', 72, 18, 3, 1310000, '2026-10-21'],
+  ['Gabi Torres', 'Centro', 110, 37, 7, 3390000, '2026-10-28'], ['Hugo Melo', 'Zona Sul', 54, 11, 0, 0, '2026-09-30'],
+].map(([nome, equipe, leads, visitas, vendas, receita, ultima], i) => ({
+  id: `C-${1040 + i}`, nome, equipe, leads, visitas, vendas, receita, conversao: (vendas as number) / (leads as number), ultima,
+} as Corretor));
+
+const COLUNAS: Array<TailorTabelaColuna<Corretor>> = [
+  { chave: 'id', titulo: 'ID', tipo: 'id', largura: '90px' },
+  { chave: 'nome', titulo: 'Corretor', ordenavel: true },
+  { chave: 'equipe', titulo: 'Equipe', ordenavel: true },
+  { chave: 'leads', titulo: 'Leads', tipo: 'numero', ordenavel: true, total: somar((c: Corretor) => c.leads) },
+  { chave: 'vendas', titulo: 'Vendas', tipo: 'numero', ordenavel: true, total: somar((c: Corretor) => c.vendas) },
+  { chave: 'receita', titulo: 'Receita', tipo: 'moeda', ordenavel: true, total: somar((c: Corretor) => c.receita) },
+  { chave: 'conversao', titulo: 'Conversão', tipo: 'percentual', ordenavel: true,
+    total: (ls: Corretor[]) => ls.reduce((s, c) => s + c.vendas, 0) / ls.reduce((s, c) => s + c.leads, 0) },
+  { chave: 'ultima', titulo: 'Última venda', tipo: 'data', ordenavel: true },
+];
+
 function CabecalhoComMarca() {
   const [marca, setMarca] = useState('vermelha');
   const { tema, escuro } = temaDoWhitelabel(MARCAS[marca].wl);
@@ -77,6 +102,10 @@ function CabecalhoComMarca() {
           indicadores={[{ rotulo: 'novos', valor: 128 }, { rotulo: 'sem resposta', valor: 17 }]}
           acoes={<button type="button" className="h-10 bg-black px-4 text-sm font-medium text-white dark:bg-white dark:text-black">Novo lead</button>}
         />
+        <div className="mt-6">
+          <TailorTabela legenda="Desempenho por corretor" colunas={COLUNAS} linhas={CORRETORES} chaveDaLinha={(c) => c.id}
+            ordemInicial={{ chave: 'receita', direcao: 'desc' }} porPagina={5} />
+        </div>
       </TailorMarca>
     </div>
   );
@@ -108,6 +137,7 @@ function Secao({ id, titulo, descricao, children }: { id: string; titulo: string
 
 const SECOES = [
   { id: 'cabecalho', rotulo: 'TailorPageHeader', icone: Quadrado },
+  { id: 'tabela', rotulo: 'TailorTabela', icone: Quadrado },
   { id: 'loader', rotulo: 'TailorLoader', icone: Circulo },
   { id: 'intro', rotulo: 'CinematicIntro', icone: Quadrado },
   { id: 'ponto', rotulo: 'PontoMalha', icone: Circulo },
@@ -226,6 +256,36 @@ const { tema, escuro } = temaDoWhitelabel(cliente.account_info.whitelabel);
 </TailorMarca>`}
             >
               <CabecalhoComMarca />
+            </Exemplo>
+          </Secao>
+
+          <Secao id="tabela" titulo="TailorTabela" descricao="Tabela de relatório: formata por tipo, ordena, pagina, soma o total e veste a marca do cliente (veja acima, junto do cabeçalho).">
+            <Exemplo
+              titulo="relatório"
+              codigo={`
+const colunas: TailorTabelaColuna<Corretor>[] = [
+  { chave: 'id', titulo: 'ID', tipo: 'id' },
+  { chave: 'nome', titulo: 'Corretor', ordenavel: true },
+  { chave: 'leads', titulo: 'Leads', tipo: 'numero', ordenavel: true, total: somar((c) => c.leads) },
+  { chave: 'receita', titulo: 'Receita', tipo: 'moeda', ordenavel: true, total: somar((c) => c.receita) },
+  { chave: 'conversao', titulo: 'Conversão', tipo: 'percentual' },   // fração: 0,125 = 12,5%
+  { chave: 'ultima', titulo: 'Última venda', tipo: 'data' },
+  { chave: 'status', titulo: 'Status', celula: (c) => <Badge>{c.status}</Badge> },
+];
+
+<TailorTabela
+  legenda="Desempenho por corretor"
+  colunas={colunas}
+  linhas={corretores}
+  chaveDaLinha={(c) => c.id}
+  ordemInicial={{ chave: 'receita', direcao: 'desc' }}
+  porPagina={20}                 // ou paginacao={{ pagina, totalPaginas, aoMudar, totalRegistros }} (servidor)
+  carregando={isLoading}
+  aoClicarLinha={(c) => navigate(\`/corretores/\${c.id}\`)}
+/>`}
+            >
+              <TailorTabela legenda="Desempenho por corretor (sem marca)" colunas={COLUNAS} linhas={CORRETORES} chaveDaLinha={(c) => c.id}
+                ordemInicial={{ chave: 'leads', direcao: 'desc' }} porPagina={4} cabecalhoFixo />
             </Exemplo>
           </Secao>
 
