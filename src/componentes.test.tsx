@@ -83,3 +83,12 @@ describe('0.1.1', () => {
     expect(screen.getByLabelText('Tailor.ia Genius')).toBeTruthy();
   });
 });
+
+describe('TailorLoader sucesso', () => {
+  it('troca o rótulo padrão para Pronto e tira as reticências', () => {
+    const { container } = render(<TailorLoader sucesso />);
+    expect(screen.getByRole('status')).toHaveTextContent('Pronto');
+    expect(container.querySelector('.tailor-loader__reticencias')).toBeNull();
+    expect(container.querySelector('.tailor-loader__check')).not.toBeNull();
+  });
+});

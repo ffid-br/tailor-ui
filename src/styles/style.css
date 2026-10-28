@@ -133,7 +133,44 @@
 .tailor-tabela__paginacao button:hover:not(:disabled) { border-color: var(--tailor-marca-texto); }
 .tailor-tabela__paginacao button:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* TailorLoader — a malha pequena se desenha a partir do ponto e some, em 2φ (3,236s). */
+/* TailorLoader — o ponto corre a espiral Fibonacci (trechos 3, 5, 8, 13, 21, 34 = 84) com rastro, pulsa e volta. */
+.tailor-loader__rastro { stroke-dasharray: 1; stroke-dashoffset: 1; animation: tailor-rastro 2.618s linear infinite; }
+@keyframes tailor-rastro {
+  0%   { stroke-dashoffset: 1; opacity: 1; }
+  80%  { stroke-dashoffset: 0; opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+/* Cantos da espiral em fração do trecho de corrida (80%): 3, 8, 16, 29, 50, 84 de 84. */
+.tailor-loader__corredor { animation: tailor-corredor 2.618s linear infinite; }
+@keyframes tailor-corredor {
+  0%      { transform: translate(0, 0); opacity: 1; }
+  2.857%  { transform: translate(3px, 0); }
+  7.619%  { transform: translate(3px, -5px); }
+  15.238% { transform: translate(-5px, -5px); }
+  27.619% { transform: translate(-5px, 8px); }
+  47.619% { transform: translate(16px, 8px); }
+  80%     { transform: translate(16px, -26px) scale(1); opacity: 1; }
+  86%     { transform: translate(16px, -26px) scale(2.2); opacity: 1; }
+  92%     { transform: translate(16px, -26px) scale(0); opacity: 0; }
+  100%    { transform: translate(0, 0) scale(1); opacity: 0; }
+}
+/* compact: o ponto dá a volta num quadrado de 13px. */
+.tailor-loader__volta { animation: tailor-volta 1.236s steps(1, end) infinite; }
+@keyframes tailor-volta {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(8px, 0); }
+  50%  { transform: translate(8px, 8px); }
+  75%  { transform: translate(0, 8px); }
+}
+/* Sucesso: a malha nasce verde do ponto, o ponto estoura e o check se desenha. Uma vez só. */
+.tailor-loader__ok-malha .tailor-malha__linha { animation: tailor-ok-malha 0.618s var(--tailor-ease-in-out) both; }
+@keyframes tailor-ok-malha { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; opacity: 0.5; } }
+.tailor-loader__ok-ponto { transform-box: fill-box; transform-origin: center; animation: tailor-ok-ponto 0.382s var(--tailor-ease-in-out) both; }
+@keyframes tailor-ok-ponto { 0% { transform: scale(1); } 50% { transform: scale(3); opacity: 1; } 100% { transform: scale(0); opacity: 0; } }
+.tailor-loader__check { stroke-dasharray: 1; stroke-dashoffset: 1; animation: tailor-check 0.382s 0.3s var(--tailor-ease-in-out) both; }
+@keyframes tailor-check { to { stroke-dashoffset: 0; } }
+
+/* PontoMalha e a malha da entrada: se desenham a partir do ponto e somem, em 2φ (3,236s). */
 .tailor-malha__linha {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
@@ -259,6 +296,9 @@
 /* Menos movimento: a informação continua, o movimento sai. */
 @media (prefers-reduced-motion: reduce) {
   .tailor-malha__linha { animation: none; stroke-dashoffset: 0; }
+  .tailor-loader__rastro, .tailor-loader__check, .tailor-loader__ok-malha .tailor-malha__linha { animation: none; stroke-dashoffset: 0; opacity: 1; }
+  .tailor-loader__corredor, .tailor-loader__volta { animation: none; }
+  .tailor-loader__ok-ponto { animation: none; opacity: 0; }
   .tailor-loader__reticencias::after { animation: none; content: '...'; }
   .tailor-ponto-pisca { animation: none; }
   .tailor-mascote__corpo, .tailor-mascote__olho, .tailor-mascote__verde { animation: none; }

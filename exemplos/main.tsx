@@ -111,6 +111,24 @@ function CabecalhoComMarca() {
   );
 }
 
+/** Carrega 2,6s e mostra o sucesso; o botão repete. */
+function SucessoDemo() {
+  const [rodada, setRodada] = useState(0);
+  const [pronto, setPronto] = useState(false);
+  useEffect(() => {
+    setPronto(false);
+    const t = setTimeout(() => setPronto(true), 2618);
+    return () => clearTimeout(t);
+  }, [rodada]);
+  return (
+    <div className="grid gap-4">
+      <TailorLoader key={`a${rodada}${pronto}`} sucesso={pronto} label={pronto ? 'Relatório pronto' : 'Gerando relatório'} semRespiro />
+      <TailorLoader key={`b${rodada}${pronto}`} variant="compact" sucesso={pronto} label={pronto ? 'Salvo' : 'Salvando'} />
+      <button type="button" className="self-start border border-black px-3 py-2 text-xs font-medium dark:border-white" onClick={() => setRodada((r) => r + 1)}>Repetir</button>
+    </div>
+  );
+}
+
 function Exemplo({ titulo, codigo, children, escuro }: { titulo: string; codigo: string; children: React.ReactNode; escuro?: boolean }) {
   return (
     <div className="overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-800">
@@ -298,6 +316,9 @@ const colunas: TailorTabelaColuna<Corretor>[] = [
             </Exemplo>
             <Exemplo titulo="caixa" codigo={`<TailorLoader variant="caixa" label="Buscando conversas" />`}>
               <TailorLoader variant="caixa" label="Buscando conversas" />
+            </Exemplo>
+            <Exemplo titulo="sucesso" codigo={`<TailorLoader sucesso label="Relatório pronto" />\n<TailorLoader variant="compact" sucesso label="Salvo" />`}>
+              <SucessoDemo />
             </Exemplo>
             <Exemplo titulo="overlay" codigo={`<TailorLoader variant="overlay" label="Entrando" />`}>
               <button type="button" className={botao} onClick={() => setOverlay(true)}>Mostrar por 2s</button>

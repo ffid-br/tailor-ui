@@ -334,6 +334,7 @@ Página pública: https://ffid-br.github.io/tailor-ui/ (publicada pelo workflow 
 ## Mudanças
 
 ### 0.7.0
+- `TailorLoader`: o ponto corre uma espiral Fibonacci com rastro verde (no `compact`, dá a volta num quadrado). Prop nova `sucesso`: a malha nasce verde e o ponto vira check, rótulo padrão "Pronto".
 - `CinematicIntro`: `overline` e `slogan` sem texto padrão (saíram "Alfaiataria digital" e "Tecnologia sob medida…", que o site não usa mais). Sem eles, a abertura mostra só a marca.
 - `TailorTabela`: tabela de relatório com formatação por tipo, ordenação, paginação, linha de total e marca do cliente.
 
