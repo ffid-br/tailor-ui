@@ -247,8 +247,11 @@ Cores só por tokens nomeados (`tailor-green`, `tailor-ink`, `black`, `white`, `
 ```bash
 npm install
 npm test         # vitest + testing-library
+npm run exemplos # página com todos os componentes ao vivo + código (exemplos/)
 npm run build    # dist/: index.es.js, index.umd.js, types/, style.css, theme.css, logos
 ```
+
+Página pública: https://ffid-br.github.io/tailor-ui/ (publicada pelo workflow `exemplos.yml` a cada push na `main`).
 
 
 ## Mudanças
