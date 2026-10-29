@@ -1,48 +1,48 @@
 import React, { useId } from 'react';
 
 /**
- * A marca do cliente em variáveis CSS. Os componentes que leem `--tailor-marca-*`
- * (por enquanto o `TailorPageHeader`) trocam de cor, fonte e cantos sem mudar uma
+ * A marca do cliente em variáveis CSS. Os componentes que leem `--tailor-brand-*`
+ * (`TailorPageHeader`, `TailorTable`, avisos) trocam de cor, fonte e cantos sem mudar uma
  * linha de componente. Sem tema, valem os padrões Tailor do `style.css`.
  */
-export type TailorTema = {
+export type TailorTheme = {
   /** Cor de destaque: o ponto do sobretítulo, a barra de foco. */
-  primaria?: string;
+  primary?: string;
   /** Destaque como texto sobre o fundo (precisa de contraste; no Tailor é o verde-ink). */
-  primariaTexto?: string;
-  texto?: string;
-  textoSuave?: string;
-  borda?: string;
+  primaryText?: string;
+  text?: string;
+  textMuted?: string;
+  border?: string;
   /** Fundo do cabeçalho. Padrão: transparente (o cabeçalho é o começo da página). */
-  fundo?: string;
-  fonteTitulo?: string;
-  fonteTexto?: string;
-  pesoTitulo?: string | number;
+  background?: string;
+  headingFont?: string;
+  bodyFont?: string;
+  headingWeight?: string | number;
   /** `uppercase` para marcas que pedem título em caixa alta. */
-  caixaTitulo?: 'none' | 'uppercase';
+  headingCase?: 'none' | 'uppercase';
   /** Cantos dos elementos com caixa (etiqueta, botão voltar). Tailor: 0. */
-  raio?: string;
+  radius?: string;
 };
 
-const VARIAVEL: Record<keyof TailorTema, string> = {
-  primaria: '--tailor-marca-primaria',
-  primariaTexto: '--tailor-marca-primaria-texto',
-  texto: '--tailor-marca-texto',
-  textoSuave: '--tailor-marca-texto-suave',
-  borda: '--tailor-marca-borda',
-  fundo: '--tailor-marca-fundo',
-  fonteTitulo: '--tailor-marca-fonte-titulo',
-  fonteTexto: '--tailor-marca-fonte-texto',
-  pesoTitulo: '--tailor-marca-peso-titulo',
-  caixaTitulo: '--tailor-marca-caixa-titulo',
-  raio: '--tailor-marca-raio',
+const VARIAVEL: Record<keyof TailorTheme, string> = {
+  primary: '--tailor-brand-primary',
+  primaryText: '--tailor-brand-primary-text',
+  text: '--tailor-brand-text',
+  textMuted: '--tailor-brand-text-muted',
+  border: '--tailor-brand-border',
+  background: '--tailor-brand-background',
+  headingFont: '--tailor-brand-heading-font',
+  bodyFont: '--tailor-brand-body-font',
+  headingWeight: '--tailor-brand-heading-weight',
+  headingCase: '--tailor-brand-heading-case',
+  radius: '--tailor-brand-radius',
 };
 
 /** O tema como objeto de variáveis, para `style` ou para montar um CSS do cliente. */
-export function temaParaVariaveis(tema: TailorTema): Record<string, string> {
+export function themeToVars(theme: TailorTheme): Record<string, string> {
   const vars: Record<string, string> = {};
-  (Object.keys(tema) as Array<keyof TailorTema>).forEach((k) => {
-    const v = tema[k];
+  (Object.keys(theme) as Array<keyof TailorTheme>).forEach((k) => {
+    const v = theme[k];
     if (v !== undefined && v !== '') vars[VARIAVEL[k]] = String(v);
   });
   return vars;
@@ -51,10 +51,10 @@ export function temaParaVariaveis(tema: TailorTema): Record<string, string> {
 const bloco = (vars: Record<string, string>) =>
   Object.entries(vars).map(([k, v]) => `${k}:${v.replace(/[;{}<]/g, '')}`).join(';');
 
-export type TailorMarcaProps = {
-  tema: TailorTema;
+export type TailorBrandProps = {
+  theme: TailorTheme;
   /** Ajustes do tema escuro (`.dark` ou `[data-theme="dark"]` num ancestral). */
-  escuro?: TailorTema;
+  dark?: TailorTheme;
   children: React.ReactNode;
 };
 
@@ -63,13 +63,13 @@ export type TailorMarcaProps = {
  * As variáveis vão num `<style>` com seletor próprio, e não em `style`, para o
  * tema escuro conseguir sobrescrever as do claro.
  */
-export function TailorMarca({ tema, escuro, children }: TailorMarcaProps) {
+export function TailorBrand({ theme, dark, children }: TailorBrandProps) {
   const id = useId();
-  const sel = `[data-tailor-marca="${id}"]`;
-  const css = `${sel}{${bloco(temaParaVariaveis(tema))}}`
-    + (escuro ? `:where(.dark,[data-theme="dark"]) ${sel}${sel}{${bloco(temaParaVariaveis(escuro))}}` : '');
+  const sel = `[data-tailor-brand="${id}"]`;
+  const css = `${sel}{${bloco(themeToVars(theme))}}`
+    + (dark ? `:where(.dark,[data-theme="dark"]) ${sel}${sel}{${bloco(themeToVars(dark))}}` : '');
   return (
-    <div className="tailor-marca" data-tailor-marca={id}>
+    <div className="tailor-brand" data-tailor-brand={id}>
       <style>{css}</style>
       {children}
     </div>
@@ -81,7 +81,7 @@ export function TailorMarca({ tema, escuro, children }: TailorMarcaProps) {
  * `colors.primary/secondary/background/text` e `logos.*` são a proposta para
  * completar a marca; enquanto não existirem, ficam os padrões Tailor.
  */
-export type WhitelabelDoCliente = {
+export type TailorWhitelabel = {
   colors?: {
     primary?: string; secondary?: string; background?: string; text?: string;
     text_muted?: string; border?: string;
@@ -109,7 +109,7 @@ function luminancia(h: string) {
   return 0.2126 * r + 0.7152 * g + 0.0722 * b;
 }
 /** Razão de contraste WCAG entre duas cores hex. */
-export function contraste(a: string, b: string) {
+export function contrast(a: string, b: string) {
   const [x, y] = [luminancia(a), luminancia(b)].sort((m, n) => n - m);
   return (x + 0.05) / (y + 0.05);
 }
@@ -119,35 +119,35 @@ export function contraste(a: string, b: string) {
  * valores que não são hex. A primária só vira cor de texto se tiver contraste
  * AA sobre o fundo; senão o texto de destaque usa a cor de texto da marca.
  */
-export function temaDoWhitelabel(wl?: WhitelabelDoCliente | null): { tema: TailorTema; escuro?: TailorTema } {
+export function themeFromWhitelabel(wl?: TailorWhitelabel | null): { theme: TailorTheme; dark?: TailorTheme } {
   const c = wl?.colors ?? {};
   const fundo = hex(c.background) ?? '#FFFFFF';
   const primaria = cor(c.primary);
   const texto = hex(c.text);
-  const tema: TailorTema = {
-    primaria,
-    primariaTexto: primaria && contraste(primaria, fundo) >= 4.5 ? primaria : texto,
-    texto,
-    textoSuave: hex(c.text_muted),
-    borda: hex(c.border),
-    fonteTitulo: wl?.fonts?.heading ? `"${wl.fonts.heading}", var(--tailor-font)` : undefined,
-    fonteTexto: wl?.fonts?.body ? `"${wl.fonts.body}", var(--tailor-font)` : undefined,
-    pesoTitulo: wl?.fonts?.heading_weight,
-    caixaTitulo: wl?.fonts?.heading_case,
-    raio: wl?.shape?.radius,
+  const theme: TailorTheme = {
+    primary: primaria,
+    primaryText: primaria && contrast(primaria, fundo) >= 4.5 ? primaria : texto,
+    text: texto,
+    textMuted: hex(c.text_muted),
+    border: hex(c.border),
+    headingFont: wl?.fonts?.heading ? `"${wl.fonts.heading}", var(--tailor-font)` : undefined,
+    bodyFont: wl?.fonts?.body ? `"${wl.fonts.body}", var(--tailor-font)` : undefined,
+    headingWeight: wl?.fonts?.heading_weight,
+    headingCase: wl?.fonts?.heading_case,
+    radius: wl?.shape?.radius,
   };
   const d = c.dark;
-  if (!d) return { tema };
+  if (!d) return { theme };
   const fundoEscuro = hex(d.background) ?? '#000000';
   const primariaEscura = cor(d.primary) ?? primaria;
   return {
-    tema,
-    escuro: {
-      primaria: primariaEscura,
-      primariaTexto: primariaEscura && contraste(primariaEscura, fundoEscuro) >= 4.5 ? primariaEscura : hex(d.text),
-      texto: hex(d.text),
-      textoSuave: hex(d.text_muted),
-      borda: hex(d.border),
+    theme,
+    dark: {
+      primary: primariaEscura,
+      primaryText: primariaEscura && contrast(primariaEscura, fundoEscuro) >= 4.5 ? primariaEscura : hex(d.text),
+      text: hex(d.text),
+      textMuted: hex(d.text_muted),
+      border: hex(d.border),
     },
   };
 }

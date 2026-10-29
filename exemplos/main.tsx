@@ -9,19 +9,19 @@ import {
   PontoMalha,
   TailorBrandMark,
   TailorLoader,
-  TailorEsqueleto,
-  TailorAvisos,
-  avisar,
-  TailorDigitando,
-  TailorConclusao,
-  TailorMarca,
+  TailorSkeleton,
+  TailorToaster,
+  toast,
+  TailorTypewriter,
+  TailorResult,
+  TailorBrand,
   TailorMobileBar,
   TailorPageHeader,
-  TailorTabela,
-  somar,
-  type TailorTabelaColuna,
-  temaDoWhitelabel,
-  type WhitelabelDoCliente,
+  TailorTable,
+  sumBy,
+  type TailorTableColumn,
+  themeFromWhitelabel,
+  type TailorWhitelabel,
   TailorSidebar,
   TailorUserMenu,
   type TailorSidebarGrupo,
@@ -42,7 +42,7 @@ const Menu = icone('M4 6h16M4 12h16M4 18h16');
 const Sair = icone('M9 21H5V3h4M16 17l5-5-5-5M21 12H9');
 
 // Cliente fictício, no formato de account_info.whitelabel do Mongo.
-const MARCAS: Record<string, { rotulo: string; wl: WhitelabelDoCliente | null }> = {
+const MARCAS: Record<string, { rotulo: string; wl: TailorWhitelabel | null }> = {
   tailor: { rotulo: 'Tailor (padrão)', wl: null },
   vermelha: {
     rotulo: 'Construtora Exemplo',
@@ -72,21 +72,21 @@ const CORRETORES: Corretor[] = [
   id: `C-${1040 + i}`, nome, equipe, leads, visitas, vendas, receita, conversao: (vendas as number) / (leads as number), ultima,
 } as Corretor));
 
-const COLUNAS: Array<TailorTabelaColuna<Corretor>> = [
-  { chave: 'id', titulo: 'ID', tipo: 'id', largura: '90px' },
-  { chave: 'nome', titulo: 'Corretor', ordenavel: true },
-  { chave: 'equipe', titulo: 'Equipe', ordenavel: true },
-  { chave: 'leads', titulo: 'Leads', tipo: 'numero', ordenavel: true, total: somar((c: Corretor) => c.leads) },
-  { chave: 'vendas', titulo: 'Vendas', tipo: 'numero', ordenavel: true, total: somar((c: Corretor) => c.vendas) },
-  { chave: 'receita', titulo: 'Receita', tipo: 'moeda', ordenavel: true, total: somar((c: Corretor) => c.receita) },
-  { chave: 'conversao', titulo: 'Conversão', tipo: 'percentual', ordenavel: true,
+const COLUNAS: Array<TailorTableColumn<Corretor>> = [
+  { key: 'id', header: 'ID', type: 'id', width: '90px' },
+  { key: 'nome', header: 'Corretor', sortable: true },
+  { key: 'equipe', header: 'Equipe', sortable: true },
+  { key: 'leads', header: 'Leads', type: 'number', sortable: true, total: sumBy((c: Corretor) => c.leads) },
+  { key: 'vendas', header: 'Vendas', type: 'number', sortable: true, total: sumBy((c: Corretor) => c.vendas) },
+  { key: 'receita', header: 'Receita', type: 'currency', sortable: true, total: sumBy((c: Corretor) => c.receita) },
+  { key: 'conversao', header: 'Conversão', type: 'percent', sortable: true,
     total: (ls: Corretor[]) => ls.reduce((s, c) => s + c.vendas, 0) / ls.reduce((s, c) => s + c.leads, 0) },
-  { chave: 'ultima', titulo: 'Última venda', tipo: 'data', ordenavel: true },
+  { key: 'ultima', header: 'Última venda', type: 'date', sortable: true },
 ];
 
 function CabecalhoComMarca() {
   const [marca, setMarca] = useState('vermelha');
-  const { tema, escuro } = temaDoWhitelabel(MARCAS[marca].wl);
+  const { theme, dark } = themeFromWhitelabel(MARCAS[marca].wl);
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap gap-1">
@@ -97,21 +97,21 @@ function CabecalhoComMarca() {
           </button>
         ))}
       </div>
-      <TailorMarca tema={tema} escuro={escuro}>
+      <TailorBrand theme={theme} dark={dark}>
         <TailorPageHeader
-          sobretitulo="Comercial"
-          titulo="Leads"
-          descricao="Quem chegou esta semana e o que falta para cada um avançar."
-          trilha={[{ rotulo: 'Início', href: '#cabecalho' }, { rotulo: 'Comercial', href: '#cabecalho' }, { rotulo: 'Leads' }]}
-          etiqueta={<span className="border border-current px-2 py-0.5 text-xs">Beta</span>}
-          indicadores={[{ rotulo: 'novos', valor: 128 }, { rotulo: 'sem resposta', valor: 17 }]}
-          acoes={<button type="button" className="h-10 bg-black px-4 text-sm font-medium text-white dark:bg-white dark:text-black">Novo lead</button>}
+          eyebrow="Comercial"
+          title="Leads"
+          description="Quem chegou esta semana e o que falta para cada um avançar."
+          breadcrumbs={[{ label: 'Início', href: '#cabecalho' }, { label: 'Comercial', href: '#cabecalho' }, { label: 'Leads' }]}
+          badge={<span className="border border-current px-2 py-0.5 text-xs">Beta</span>}
+          stats={[{ label: 'novos', value: 128 }, { label: 'sem resposta', value: 17 }]}
+          actions={<button type="button" className="h-10 bg-black px-4 text-sm font-medium text-white dark:bg-white dark:text-black">Novo lead</button>}
         />
         <div className="mt-6">
-          <TailorTabela legenda="Desempenho por corretor" colunas={COLUNAS} linhas={CORRETORES} chaveDaLinha={(c) => c.id}
-            ordemInicial={{ chave: 'receita', direcao: 'desc' }} porPagina={5} />
+          <TailorTable caption="Desempenho por corretor" columns={COLUNAS} rows={CORRETORES} rowKey={(c) => c.id}
+            defaultSort={{ key: 'receita', direction: 'desc' }} pageSize={5} />
         </div>
-      </TailorMarca>
+      </TailorBrand>
     </div>
   );
 }
@@ -127,8 +127,8 @@ function SucessoDemo() {
   }, [rodada]);
   return (
     <div className="grid gap-4">
-      <TailorLoader key={`a${rodada}${pronto}`} sucesso={pronto} label={pronto ? 'Relatório pronto' : 'Gerando relatório'} semRespiro />
-      <TailorLoader key={`b${rodada}${pronto}`} variant="compact" sucesso={pronto} label={pronto ? 'Salvo' : 'Salvando'} />
+      <TailorLoader key={`a${rodada}${pronto}`} success={pronto} label={pronto ? 'Relatório pronto' : 'Gerando relatório'} noPadding />
+      <TailorLoader key={`b${rodada}${pronto}`} variant="compact" success={pronto} label={pronto ? 'Salvo' : 'Salvando'} />
       <button type="button" className="self-start border border-black px-3 py-2 text-xs font-medium dark:border-white" onClick={() => setRodada((r) => r + 1)}>Repetir</button>
     </div>
   );
@@ -141,12 +141,12 @@ function FormularioDemo() {
   const salvar = (e: React.FormEvent) => {
     e.preventDefault();
     setFase('salvando');
-    setTimeout(() => { setFase('salvo'); avisar.sucesso('Contato salvo', { detalhe: nome }); }, 1618);
+    setTimeout(() => { setFase('salvo'); toast.success('Contato salvo', { description: nome }); }, 1618);
   };
   if (fase === 'salvo') {
     return (
       <div className="grid justify-items-center gap-4">
-        <TailorLoader sucesso label="Contato salvo" detail={nome} semRespiro />
+        <TailorLoader success label="Contato salvo" detail={nome} noPadding />
         <button type="button" className="border border-black px-3 py-2 text-xs font-medium dark:border-white" onClick={() => setFase('editando')}>Editar de novo</button>
       </div>
     );
@@ -160,7 +160,7 @@ function FormularioDemo() {
       </label>
       <button type="submit" disabled={fase === 'salvando'}
         className="flex h-10 items-center justify-center bg-tailor-green px-4 text-sm font-medium text-black disabled:cursor-wait">
-        {fase === 'salvando' ? <TailorLoader variant="compact" label="Salvando" className="text-black dark:text-black [--tailor-loader-ponto:#000]" /> : 'Salvar'}
+        {fase === 'salvando' ? <TailorLoader variant="compact" label="Salvando" className="text-black dark:text-black [--tailor-loader-dot:#000]" /> : 'Salvar'}
       </button>
     </form>
   );
@@ -177,9 +177,9 @@ function ProgressoDemo() {
     return () => clearInterval(t);
   }, []);
   return (
-    <TailorLoader logo={LOGO_PARCEIRO} label="Carregando funil" progresso={p} semRespiro
-      etapas={['Conectando ao servidor', 'Buscando leads', 'Organizando métricas', 'Montando gráficos']}
-      mensagens={['Cruzando origens e etapas', 'Separando quem respondeu', 'Quase lá']} />
+    <TailorLoader logo={LOGO_PARCEIRO} label="Carregando funil" progress={p} noPadding
+      steps={['Conectando ao servidor', 'Buscando leads', 'Organizando métricas', 'Montando gráficos']}
+      messages={['Cruzando origens e etapas', 'Separando quem respondeu', 'Quase lá']} />
   );
 }
 
@@ -207,13 +207,13 @@ function ModalDemo() {
               <button type="button" className="h-10 border border-black px-4 text-sm dark:border-white" onClick={fechar}>Cancelar</button>
               <button type="button" className="h-10 border border-black px-4 text-sm dark:border-white" disabled={fase === 'salvando'} onClick={() => salvar(true)}>Salvar com erro</button>
               <button type="button" className="flex h-10 items-center bg-tailor-green px-4 text-sm font-medium text-black" disabled={fase === 'salvando'} onClick={() => salvar(false)}>
-                {fase === 'salvando' ? <TailorLoader variant="compact" label="Salvando" className="text-black dark:text-black [--tailor-loader-ponto:#000]" /> : 'Salvar'}
+                {fase === 'salvando' ? <TailorLoader variant="compact" label="Salvando" className="text-black dark:text-black [--tailor-loader-dot:#000]" /> : 'Salvar'}
               </button>
             </div>
-            {fase === 'sucesso' && <TailorConclusao tipo="sucesso" titulo="Contato salvo" detalhe="Maria Souza entrou no funil Vendas" aoFechar={fechar} />}
+            {fase === 'sucesso' && <TailorResult status="success" title="Contato salvo" description="Maria Souza entrou no funil Vendas" onClose={fechar} />}
             {fase === 'erro' && (
-              <TailorConclusao tipo="erro" titulo="Não deu para salvar" detalhe="Sem conexão. Nada foi perdido."
-                acoes={<>
+              <TailorResult status="error" title="Não deu para salvar" description="Sem conexão. Nada foi perdido."
+                actions={<>
                   <button type="button" className="h-10 border border-white px-4 text-sm" onClick={() => setFase('editando')}>Voltar ao formulário</button>
                   <button type="button" className="h-10 bg-white px-4 text-sm font-medium text-black" onClick={() => salvar(false)}>Tentar de novo</button>
                 </>} />
@@ -251,7 +251,7 @@ function Secao({ id, titulo, descricao, children }: { id: string; titulo: string
 
 const SECOES = [
   { id: 'cabecalho', rotulo: 'TailorPageHeader', icone: Quadrado },
-  { id: 'tabela', rotulo: 'TailorTabela', icone: Quadrado },
+  { id: 'tabela', rotulo: 'TailorTable', icone: Quadrado },
   { id: 'loader', rotulo: 'TailorLoader', icone: Circulo },
   { id: 'feedback', rotulo: 'Avisos e esqueleto', icone: Circulo },
   { id: 'intro', rotulo: 'CinematicIntro', icone: Quadrado },
@@ -356,51 +356,51 @@ function App() {
             <Exemplo
               titulo="marca do cliente"
               codigo={`
-const { tema, escuro } = temaDoWhitelabel(cliente.account_info.whitelabel);
+const { theme, dark } = themeFromWhitelabel(cliente.account_info.whitelabel);
 
-<TailorMarca tema={tema} escuro={escuro}>
+<TailorBrand theme={theme} dark={dark}>
   <TailorPageHeader
-    sobretitulo="Comercial"
-    titulo="Leads"
-    descricao="Quem chegou esta semana e o que falta para cada um avançar."
-    trilha={[{ rotulo: 'Início', href: '/' }, { rotulo: 'Comercial', href: '/comercial' }, { rotulo: 'Leads' }]}
-    indicadores={[{ rotulo: 'novos', valor: 128 }, { rotulo: 'sem resposta', valor: 17 }]}
-    acoes={<Botao>Novo lead</Botao>}
+    eyebrow="Comercial"
+    title="Leads"
+    description="Quem chegou esta semana e o que falta para cada um avançar."
+    breadcrumbs={[{ label: 'Início', href: '/' }, { label: 'Comercial', href: '/comercial' }, { label: 'Leads' }]}
+    stats={[{ label: 'novos', value: 128 }, { label: 'sem resposta', value: 17 }]}
+    actions={<Botao>Novo lead</Botao>}
     renderLink={({ href, ...p }) => <NavLink to={href} {...p} />}
   />
-</TailorMarca>`}
+</TailorBrand>`}
             >
               <CabecalhoComMarca />
             </Exemplo>
           </Secao>
 
-          <Secao id="tabela" titulo="TailorTabela" descricao="Tabela de relatório: formata por tipo, ordena, pagina, soma o total e veste a marca do cliente (veja acima, junto do cabeçalho).">
+          <Secao id="tabela" titulo="TailorTable" descricao="Tabela de relatório: formata por tipo, ordena, pagina, soma o total e veste a marca do cliente (veja acima, junto do cabeçalho).">
             <Exemplo
               titulo="relatório"
               codigo={`
-const colunas: TailorTabelaColuna<Corretor>[] = [
-  { chave: 'id', titulo: 'ID', tipo: 'id' },
-  { chave: 'nome', titulo: 'Corretor', ordenavel: true },
-  { chave: 'leads', titulo: 'Leads', tipo: 'numero', ordenavel: true, total: somar((c) => c.leads) },
-  { chave: 'receita', titulo: 'Receita', tipo: 'moeda', ordenavel: true, total: somar((c) => c.receita) },
-  { chave: 'conversao', titulo: 'Conversão', tipo: 'percentual' },   // fração: 0,125 = 12,5%
-  { chave: 'ultima', titulo: 'Última venda', tipo: 'data' },
-  { chave: 'status', titulo: 'Status', celula: (c) => <Badge>{c.status}</Badge> },
+const columns: TailorTableColumn<Corretor>[] = [
+  { key: 'id', header: 'ID', type: 'id' },
+  { key: 'nome', header: 'Corretor', sortable: true },
+  { key: 'leads', header: 'Leads', type: 'number', sortable: true, total: sumBy((c) => c.leads) },
+  { key: 'receita', header: 'Receita', type: 'currency', sortable: true, total: sumBy((c) => c.receita) },
+  { key: 'conversao', header: 'Conversão', type: 'percent' },   // fração: 0,125 = 12,5%
+  { key: 'ultima', header: 'Última venda', type: 'date' },
+  { key: 'status', header: 'Status', cell: (c) => <Badge>{c.status}</Badge> },
 ];
 
-<TailorTabela
-  legenda="Desempenho por corretor"
-  colunas={colunas}
-  linhas={corretores}
-  chaveDaLinha={(c) => c.id}
-  ordemInicial={{ chave: 'receita', direcao: 'desc' }}
-  porPagina={20}                 // ou paginacao={{ pagina, totalPaginas, aoMudar, totalRegistros }} (servidor)
-  carregando={isLoading}
-  aoClicarLinha={(c) => navigate(\`/corretores/\${c.id}\`)}
+<TailorTable
+  caption="Desempenho por corretor"
+  columns={columns}
+  rows={agents}
+  rowKey={(c) => c.id}
+  defaultSort={{ key: 'receita', direction: 'desc' }}
+  pageSize={20}                 // ou pagination={{ page, totalPages, onPageChange, totalRows }} (servidor)
+  loading={isLoading}
+  onRowClick={(c) => navigate(\`/corretores/\${c.id}\`)}
 />`}
             >
-              <TailorTabela legenda="Desempenho por corretor (sem marca)" colunas={COLUNAS} linhas={CORRETORES} chaveDaLinha={(c) => c.id}
-                ordemInicial={{ chave: 'leads', direcao: 'desc' }} porPagina={4} cabecalhoFixo />
+              <TailorTable caption="Desempenho por corretor (sem marca)" columns={COLUNAS} rows={CORRETORES} rowKey={(c) => c.id}
+                defaultSort={{ key: 'leads', direction: 'desc' }} pageSize={4} stickyHeader />
             </Exemplo>
           </Secao>
 
@@ -414,10 +414,10 @@ const colunas: TailorTabelaColuna<Corretor>[] = [
             <Exemplo titulo="caixa" codigo={`<TailorLoader variant="caixa" label="Buscando conversas" />`}>
               <TailorLoader variant="caixa" label="Buscando conversas" />
             </Exemplo>
-            <Exemplo titulo="parceiro, progresso e mensagens" codigo={`<TailorLoader\n  logo={whitelabel.logos.rectangular_light}\n  logoEscuro={whitelabel.logos.rectangular_dark}\n  label="Carregando funil"\n  progresso={progresso}\n  etapas={['Conectando ao servidor', 'Buscando leads', 'Organizando métricas', 'Montando gráficos']}\n  mensagens={['Cruzando origens e etapas', 'Separando quem respondeu', 'Quase lá']}\n/>`}>
+            <Exemplo titulo="parceiro, progresso e mensagens" codigo={`<TailorLoader\n  logo={whitelabel.logos.rectangular_light}\n  logoDark={whitelabel.logos.rectangular_dark}\n  label="Carregando funil"\n  progress={progress}\n  steps={['Conectando ao servidor', 'Buscando leads', 'Organizando métricas', 'Montando gráficos']}\n  messages={['Cruzando origens e etapas', 'Separando quem respondeu', 'Quase lá']}\n/>`}>
               <ProgressoDemo />
             </Exemplo>
-            <Exemplo titulo="sucesso" codigo={`<TailorLoader sucesso label="Relatório pronto" />\n<TailorLoader variant="compact" sucesso label="Salvo" />`}>
+            <Exemplo titulo="sucesso" codigo={`<TailorLoader success label="Relatório pronto" />\n<TailorLoader variant="compact" success label="Salvo" />`}>
               <SucessoDemo />
             </Exemplo>
             <Exemplo titulo="overlay" codigo={`<TailorLoader variant="overlay" label="Entrando" />`}>
@@ -427,28 +427,28 @@ const colunas: TailorTabelaColuna<Corretor>[] = [
           </Secao>
 
           <Secao id="feedback" titulo="Avisos, esqueleto e formulário" descricao="O mesmo retorno em todo app: esqueleto enquanto chega, loader no botão, sucesso que se vê de longe.">
-            <Exemplo titulo="TailorAvisos + avisar" codigo={`// uma vez, perto da raiz\n<TailorAvisos />\n\n// em qualquer lugar, até fora de componente\navisar.sucesso('Contato salvo', { detalhe: 'Maria Souza entrou no funil Vendas' });\navisar.erro('Não deu para salvar', { detalhe: 'Sem conexão. Tente de novo.' });\navisar.info('Sincronizando contatos');`}>
+            <Exemplo titulo="TailorToaster + toast" codigo={`// uma vez, perto da raiz\n<TailorToaster />\n\n// em qualquer lugar, até fora de componente\ntoast.success('Contato salvo', { description: 'Maria Souza entrou no funil Vendas' });\ntoast.error('Não deu para salvar', { description: 'Sem conexão. Tente de novo.' });\ntoast.info('Sincronizando contatos');`}>
               <div className="flex flex-wrap gap-2">
-                <button type="button" className={botao} onClick={() => avisar.sucesso('Contato salvo', { detalhe: 'Maria Souza entrou no funil Vendas' })}>Sucesso</button>
-                <button type="button" className={botao} onClick={() => avisar.erro('Não deu para salvar', { detalhe: 'Sem conexão. Tente de novo.' })}>Erro</button>
-                <button type="button" className={botao} onClick={() => avisar.info('Sincronizando contatos')}>Info</button>
+                <button type="button" className={botao} onClick={() => toast.success('Contato salvo', { description: 'Maria Souza entrou no funil Vendas' })}>Sucesso</button>
+                <button type="button" className={botao} onClick={() => toast.error('Não deu para salvar', { description: 'Sem conexão. Tente de novo.' })}>Erro</button>
+                <button type="button" className={botao} onClick={() => toast.info('Sincronizando contatos')}>Info</button>
               </div>
             </Exemplo>
-            <Exemplo titulo="modal concluído (TailorConclusao)" codigo={`<div className="relative ...">   {/* o painel do modal */}\n  ...formulário...\n  {ok && <TailorConclusao tipo="sucesso" titulo="Contato salvo" detalhe="Maria Souza" aoFechar={fechar} />}\n  {erro && <TailorConclusao tipo="erro" titulo="Não deu para salvar" acoes={<button>Tentar de novo</button>} />}\n</div>`}>
+            <Exemplo titulo="modal concluído (TailorResult)" codigo={`<div className="relative ...">   {/* o painel do modal */}\n  ...formulário...\n  {ok && <TailorResult status="success" title="Contato salvo" description="Maria Souza" onClose={fechar} />}\n  {erro && <TailorResult status="error" title="Não deu para salvar" actions={<button>Tentar de novo</button>} />}\n</div>`}>
               <ModalDemo />
             </Exemplo>
-            <Exemplo titulo="TailorDigitando" codigo={`<TailorDigitando textos={['Cruzando origens e etapas', 'Separando quem respondeu', 'Quase lá']} />`}>
-              <p className="text-2xl font-medium"><TailorDigitando textos={['Cruzando origens e etapas', 'Separando quem respondeu', 'Quase lá']} /></p>
+            <Exemplo titulo="TailorTypewriter" codigo={`<TailorTypewriter texts={['Cruzando origens e etapas', 'Separando quem respondeu', 'Quase lá']} />`}>
+              <p className="text-2xl font-medium"><TailorTypewriter texts={['Cruzando origens e etapas', 'Separando quem respondeu', 'Quase lá']} /></p>
             </Exemplo>
-            <Exemplo titulo="formulário" codigo={`<button disabled={salvando}>\n  {salvando ? <TailorLoader variant="compact" label="Salvando" /> : 'Salvar'}\n</button>\n\n// deu certo: o formulário vira o sucesso, e o aviso confirma\n{salvo && <TailorLoader sucesso label="Contato salvo" detail="Maria Souza" />}`}>
+            <Exemplo titulo="formulário" codigo={`<button disabled={salvando}>\n  {salvando ? <TailorLoader variant="compact" label="Salvando" /> : 'Salvar'}\n</button>\n\n// deu certo: o formulário vira o sucesso, e o aviso confirma\n{salvo && <TailorLoader success label="Contato salvo" detail="Maria Souza" />}`}>
               <FormularioDemo />
             </Exemplo>
-            <Exemplo titulo="TailorEsqueleto" codigo={`<TailorEsqueleto />                          {/* texto */}\n<TailorEsqueleto forma="cartoes" linhas={3} />\n<TailorEsqueleto forma="tabela" colunas={4} />\n<TailorEsqueleto forma="bloco" altura="144px" />\n<TailorTabela carregando ... />            {/* já usa o esqueleto */}`}>
+            <Exemplo titulo="TailorSkeleton" codigo={`<TailorSkeleton />                          {/* texto */}\n<TailorSkeleton shape="cards" lines={3} />\n<TailorSkeleton shape="table" columns={4} />\n<TailorSkeleton shape="block" height="144px" />\n<TailorTable loading ... />            {/* já usa o esqueleto */}`}>
               <div className="grid gap-8">
-                <TailorEsqueleto />
-                <TailorEsqueleto forma="cartoes" linhas={3} />
-                <TailorEsqueleto forma="tabela" colunas={4} linhas={4} />
-                <TailorEsqueleto forma="bloco" />
+                <TailorSkeleton />
+                <TailorSkeleton shape="cards" lines={3} />
+                <TailorSkeleton shape="table" columns={4} lines={4} />
+                <TailorSkeleton shape="block" />
               </div>
             </Exemplo>
           </Secao>
@@ -622,7 +622,7 @@ const colunas: TailorTabelaColuna<Corretor>[] = [
         )}
       </div>
 
-      <TailorAvisos />
+      <TailorToaster />
       <EquipeDock
         estilo="vetor"
         agentes={[

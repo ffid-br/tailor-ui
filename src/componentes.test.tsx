@@ -86,7 +86,7 @@ describe('0.1.1', () => {
 
 describe('TailorLoader sucesso', () => {
   it('troca o rótulo padrão para Pronto e tira as reticências', () => {
-    const { container } = render(<TailorLoader sucesso />);
+    const { container } = render(<TailorLoader success />);
     expect(screen.getByRole('status')).toHaveTextContent('Pronto');
     expect(container.querySelector('.tailor-loader__reticencias')).toBeNull();
     expect(container.querySelector('.tailor-loader__check')).not.toBeNull();
@@ -96,7 +96,7 @@ describe('TailorLoader sucesso', () => {
 describe('TailorLoader do parceiro', () => {
   it('mostra a arte, o progresso e marca a etapa atual', () => {
     const { container } = render(
-      <TailorLoader logo="/parceiro.svg" progresso={60} etapas={['Conectando', 'Buscando', 'Organizando', 'Montando']} />
+      <TailorLoader logo="/parceiro.svg" progress={60} steps={['Conectando', 'Buscando', 'Organizando', 'Montando']} />
     );
     expect(container.querySelector('img')).toHaveAttribute('src', '/parceiro.svg');
     expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '60');

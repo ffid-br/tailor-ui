@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import { cn } from '../cn';
 import { PontoMalha } from './PontoMalha';
-import { TailorDigitando } from './TailorDigitando';
+import { TailorTypewriter } from './TailorTypewriter';
+import { useTailorLocale } from '../i18n';
 
 /**
  * Carregamento na identidade Tailor: o ponto verde e a malha Fibonacci.
  *
  * É a mesma linguagem da entrada depois do login: o ponto pisca no centro e a
  * malha se desenha a partir dele. No `overlay` é literalmente a entrada (o
- * `PontoMalha` sobre o preto); no `inline`/`caixa` o ponto corre uma espiral
- * Fibonacci deixando rastro verde. Com `sucesso`, o ponto vira check. Quem pediu
+ * `PontoMalha` sobre o preto); no `inline`/`box` o ponto corre uma espiral
+ * Fibonacci deixando rastro verde. Com `success`, o ponto vira check. Quem pediu
  * menos movimento vê tudo parado — a informação é a mesma.
  *
  * - `inline`: ocupa o lugar do conteúdo (tabela, lista, card).
  * - `overlay`: tela inteira, bloqueia a interação.
  * - `compact`: uma linha só (botão, célula, rodapé de lista): ponto + rótulo.
- * - `caixa`: numa caixa própria de 377px, com fundo e borda.
+ * - `box`: numa caixa própria de 377px, com fundo e borda.
  */
 
 // Arestas Fibonacci da malha pequena (a da entrada vai até 440).
@@ -24,7 +25,7 @@ const RAIO = 34;
 const QUADRANTES = [1, -1].flatMap((sx) => [1, -1].map((sy) => ({ sx, sy })));
 
 export type TailorLoaderProps = {
-  /** Rótulo principal. Padrão: "Carregando". */
+  /** Rótulo principal. Padrão: o texto `loading` do idioma. */
   label?: string;
   /** Linha de apoio abaixo do rótulo (o que está sendo carregado, ou quanto falta). */
   detail?: React.ReactNode;
@@ -34,23 +35,26 @@ export type TailorLoaderProps = {
    */
   logo?: string;
   /** Arte para fundo escuro (tema escuro e `overlay`). Sem ela, vale `logo`. */
-  logoEscuro?: string;
+  logoDark?: string;
   /** Frases que o ponto escreve e apaga em ciclo, abaixo do rótulo ("Cruzando dados", "Quase lá"). */
-  mensagens?: string[];
+  messages?: string[];
   /** Progresso real, 0 a 100. Mostra a barra e o número. Sem ele, só a animação. */
-  progresso?: number;
-  /** Etapas da carga; só aparecem com `progresso` (sem ele não há etapa atual). */
-  etapas?: string[];
+  progress?: number;
+  /** Etapas da carga; só aparecem com `progress` (sem ele não há etapa atual). */
+  steps?: string[];
   /**
    * `inline`: no lugar do conteúdo. `overlay`: tela inteira, bloqueia.
    * `compact`: uma linha (ponto + rótulo), para botões e listas.
-   * `caixa`: numa caixa própria de 377px, com fundo e borda — para painéis
+   * `box`: numa caixa própria de 377px, com fundo e borda — para painéis
    * estreitos e fundos com estampa (chat), onde o inline ficaria transparente.
    */
-  variant?: 'inline' | 'overlay' | 'compact' | 'caixa';
-  /** Troca a corrida pelo sucesso animado (a malha nasce verde e o ponto vira check). Rótulo padrão: "Pronto". */
-  sucesso?: boolean;
-  /** Tira o respiro externo do `inline`/`caixa` (quem chama já tem espaçamento). */
+  /** `caixa` é o nome antigo de `box` (obsoleto). */
+  variant?: 'inline' | 'overlay' | 'compact' | 'box' | 'caixa';
+  /** Troca a corrida pelo sucesso animado (a malha nasce verde e o ponto vira check). Rótulo padrão: o texto `done` do idioma. */
+  success?: boolean;
+  /** Tira o respiro externo do `inline`/`box` (quem chama já tem espaçamento). */
+  noPadding?: boolean;
+  /** @deprecated use `noPadding`. */
   semRespiro?: boolean;
   className?: string;
 };
@@ -93,12 +97,12 @@ const Malha: React.FC<{ sucesso?: boolean }> = ({ sucesso }) => (
 );
 
 /** Arte do parceiro: troca no tema escuro; se a imagem falhar, some. */
-const Logo: React.FC<{ logo: string; logoEscuro?: string; escuro?: boolean }> = ({ logo, logoEscuro, escuro }) => {
+const Logo: React.FC<{ logo: string; logoDark?: string; escuro?: boolean }> = ({ logo, logoDark, escuro }) => {
   const [falhou, setFalhou] = useState(false);
   if (falhou) return null;
   const img = (src: string, cls: string) => <img src={src} alt="" className={cn('h-auto max-h-[89px] w-[233px] object-contain', cls)} onError={() => setFalhou(true)} />;
-  if (escuro) return img(logoEscuro ?? logo, '');
-  return logoEscuro ? <>{img(logo, 'dark:hidden')}{img(logoEscuro, 'hidden dark:block')}</> : img(logo, '');
+  if (escuro) return img(logoDark ?? logo, '');
+  return logoDark ? <>{img(logo, 'dark:hidden')}{img(logoDark, 'hidden dark:block')}</> : img(logo, '');
 };
 
 /** Barra de progresso reta e as etapas (feita, atual com o ponto piscando, a fazer). */
@@ -136,18 +140,22 @@ const Rotulo: React.FC<{ label: string; className?: string; sucesso?: boolean }>
 
 /** Loader da marca (ponto verde e malha Fibonacci). Sempre expõe `role="status"` com o rótulo. */
 export const TailorLoader: React.FC<TailorLoaderProps> = ({
-  sucesso = false,
-  label = sucesso ? 'Pronto' : 'Carregando',
+  success: sucesso = false,
+  label: rotulo,
   detail,
   logo,
-  logoEscuro,
-  progresso,
-  etapas,
-  mensagens,
+  logoDark,
+  progress: progresso,
+  steps: etapas,
+  messages: mensagens,
   variant = 'inline',
-  semRespiro = false,
+  noPadding,
+  semRespiro: semRespiroAntigo,
   className,
 }) => {
+  const { messages: m } = useTailorLocale();
+  const label = rotulo ?? (sucesso ? m.done : m.loading);
+  const semRespiro = noPadding ?? semRespiroAntigo ?? false;
   if (variant === 'compact') {
     return (
       <span role="status" aria-live="polite" className={cn('inline-flex items-center gap-[8px] text-sm text-black dark:text-white', className)}>
@@ -175,20 +183,20 @@ export const TailorLoader: React.FC<TailorLoaderProps> = ({
         <PontoMalha />
         {logo && (
           <div className="absolute inset-x-0 bottom-1/2 mb-[55px] flex justify-center px-[21px]">
-            <Logo logo={logo} logoEscuro={logoEscuro} escuro />
+            <Logo logo={logo} logoDark={logoDark} escuro />
           </div>
         )}
         <div role="status" aria-live="polite" className={cn('absolute inset-x-0 top-1/2 mt-[55px] flex flex-col items-center px-[21px] text-center', className)}>
           <Rotulo label={label} className="text-[26px] leading-[1.1]" />
           {detail && <div className="mt-[8px] text-base leading-[1.618] text-white/70">{detail}</div>}
-          {mensagens?.length ? <TailorDigitando textos={mensagens} className="mt-[8px] text-base text-white/70" /> : null}
+          {mensagens?.length ? <TailorTypewriter texts={mensagens} className="mt-[8px] text-base text-white/70" /> : null}
           {progresso !== undefined && <div className="mt-[21px] flex w-full justify-center"><Progresso progresso={progresso} etapas={etapas} escuro /></div>}
         </div>
       </div>
     );
   }
 
-  if (variant === 'caixa') {
+  if (variant === 'box' || variant === 'caixa') {
     return (
       <div className={cn('flex w-full items-center justify-center', !semRespiro && 'px-[13px] py-[34px]')}>
         <div
@@ -209,12 +217,12 @@ export const TailorLoader: React.FC<TailorLoaderProps> = ({
   return (
     <div className={cn('flex w-full items-center justify-center', !semRespiro && 'px-[21px] py-[89px]')}>
       <div role="status" aria-live="polite" className={cn('flex flex-col items-center gap-[21px] text-center text-black dark:text-white', className)}>
-        {logo && <Logo logo={logo} logoEscuro={logoEscuro} />}
+        {logo && <Logo logo={logo} logoDark={logoDark} />}
         <Malha sucesso={sucesso} />
         <div>
           <Rotulo sucesso={sucesso} label={label} className="text-[26px] leading-[1.1]" />
           {detail && <div className="mt-[8px] text-base leading-[1.618] text-neutral-600 dark:text-neutral-400">{detail}</div>}
-          {mensagens?.length && !sucesso ? <TailorDigitando textos={mensagens} className="mt-[8px] block min-h-[1.618em] text-base text-neutral-600 dark:text-neutral-400" /> : null}
+          {mensagens?.length && !sucesso ? <TailorTypewriter texts={mensagens} className="mt-[8px] block min-h-[1.618em] text-base text-neutral-600 dark:text-neutral-400" /> : null}
         </div>
         {progresso !== undefined && !sucesso && <Progresso progresso={progresso} etapas={etapas} />}
       </div>

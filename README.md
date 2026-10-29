@@ -209,60 +209,75 @@ Notas para quem migra:
 ### `TailorPageHeader` e a marca do cliente
 
 ```tsx
-import { TailorMarca, TailorPageHeader, temaDoWhitelabel } from '@ffid-br/tailor-ui';
+import { TailorBrand, TailorPageHeader, themeFromWhitelabel } from '@ffid-br/tailor-ui';
 
-const { tema, escuro } = temaDoWhitelabel(cliente.account_info?.whitelabel);
+const { theme, dark } = themeFromWhitelabel(client.account_info?.whitelabel);
 
-<TailorMarca tema={tema} escuro={escuro}>
+<TailorBrand theme={theme} dark={dark}>
   <TailorPageHeader
-    sobretitulo="Comercial"
-    titulo="Leads"
-    descricao="Quem chegou esta semana e o que falta para cada um avançar."
-    trilha={[{ rotulo: 'Início', href: '/' }, { rotulo: 'Leads' }]}
-    voltar={{ rotulo: 'Voltar', onClick: () => navigate(-1) }}
-    etiqueta={<Badge>Beta</Badge>}
-    indicadores={[{ rotulo: 'novos', valor: 128 }]}
-    acoes={<Botao>Novo lead</Botao>}
+    eyebrow="Comercial"
+    title="Leads"
+    description="Quem chegou esta semana e o que falta para cada um avançar."
+    breadcrumbs={[{ label: 'Início', href: '/' }, { label: 'Leads' }]}
+    back={{ label: 'Voltar', onClick: () => navigate(-1) }}
+    badge={<Badge>Beta</Badge>}
+    stats={[{ label: 'novos', value: 128 }]}
+    actions={<Button>Novo lead</Button>}
     renderLink={({ href, ...p }) => <NavLink to={href} {...p} />}
   >
-    <Abas />                                {/* abaixo, na largura toda */}
+    <Tabs />                                {/* abaixo, na largura toda */}
   </TailorPageHeader>
-</TailorMarca>
+</TailorBrand>
 ```
 
 O visual vem só de variáveis CSS. Sem tema, vale o padrão Tailor; com tema, o cabeçalho veste a marca do cliente.
 
-- `--tailor-marca-*` (todas as peças que aceitam marca): `primaria`, `primaria-texto`, `texto`, `texto-suave`, `borda`, `fundo`, `fonte-titulo`, `fonte-texto`, `peso-titulo`, `caixa-titulo`, `raio`. Os padrões ficam em `:where()`, então qualquer CSS do app sobrescreve.
-- `--tailor-cabecalho-*` (só o cabeçalho): `fundo`, `padding`, `regua`, `tamanho-titulo`.
-- `TailorMarca` aplica um `TailorTema` (e o `escuro`, sob `.dark` ou `[data-theme="dark"]`) sem mexer no layout.
-- `temaDoWhitelabel` traduz `account_info.whitelabel` do Mongo. Ignora o azul padrão do cadastro (`#007bff`, que 107 clientes têm sem ter escolhido) e o que não for hex. A primária só vira cor de texto com contraste AA sobre o fundo. Lê também os campos propostos `colors.text_muted`, `colors.border`, `colors.dark.*`, `fonts.heading/body/heading_weight/heading_case` e `shape.radius`.
+- `--tailor-brand-*` (todas as peças que aceitam marca): `primary`, `primary-text`, `text`, `text-muted`, `border`, `background`, `heading-font`, `body-font`, `heading-weight`, `heading-case`, `radius`. Os padrões ficam em `:where()`, então qualquer CSS do app sobrescreve.
+- `--tailor-header-*` (só o cabeçalho): `background`, `padding`, `rule`, `title-size`.
+- `TailorBrand` aplica um `TailorTheme` (e o `dark`, sob `.dark` ou `[data-theme="dark"]`) sem mexer no layout.
+- `themeFromWhitelabel` traduz `account_info.whitelabel` do Mongo. Ignora o azul padrão do cadastro (`#007bff`, que 107 clientes têm sem ter escolhido) e o que não for hex. A primária só vira cor de texto com contraste AA sobre o fundo. Lê também os campos propostos `colors.text_muted`, `colors.border`, `colors.dark.*`, `fonts.heading/body/heading_weight/heading_case` e `shape.radius`.
 - A fonte do cliente é carregada pelo app (ex.: link do Google Fonts).
 
-### `TailorTabela`
+### `TailorTable`
 
 ```tsx
-import { TailorTabela, somar, type TailorTabelaColuna } from '@ffid-br/tailor-ui';
+import { TailorTable, sumBy, type TailorTableColumn } from '@ffid-br/tailor-ui';
 
-const colunas: TailorTabelaColuna<Corretor>[] = [
-  { chave: 'id', titulo: 'ID', tipo: 'id' },
-  { chave: 'nome', titulo: 'Corretor', ordenavel: true },
-  { chave: 'leads', titulo: 'Leads', tipo: 'numero', ordenavel: true, total: somar((c) => c.leads) },
-  { chave: 'receita', titulo: 'Receita', tipo: 'moeda', ordenavel: true, total: somar((c) => c.receita) },
-  { chave: 'conversao', titulo: 'Conversão', tipo: 'percentual' },
-  { chave: 'status', titulo: 'Status', celula: (c) => <Badge>{c.status}</Badge> },
+const columns: TailorTableColumn<Agent>[] = [
+  { key: 'id', header: 'ID', type: 'id' },
+  { key: 'name', header: 'Corretor', sortable: true },
+  { key: 'leads', header: 'Leads', type: 'number', sortable: true, total: sumBy((a) => a.leads) },
+  { key: 'revenue', header: 'Receita', type: 'currency', sortable: true, total: sumBy((a) => a.revenue) },
+  { key: 'conversion', header: 'Conversão', type: 'percent' },
+  { key: 'status', header: 'Status', cell: (a) => <Badge>{a.status}</Badge> },
 ];
 
-<TailorTabela legenda="Desempenho por corretor" colunas={colunas} linhas={corretores}
-  chaveDaLinha={(c) => c.id} ordemInicial={{ chave: 'receita', direcao: 'desc' }} porPagina={20} />
+<TailorTable caption="Desempenho por corretor" columns={columns} rows={agents}
+  rowKey={(a) => a.id} defaultSort={{ key: 'revenue', direction: 'desc' }} pageSize={20} />
 ```
 
-Tabela de relatório. `tipo` formata e alinha: `numero`, `moeda` (BRL) e `percentual` (recebe fração: 0,125 = 12,5%) vão à direita com números tabulares; `data` em dd/mm/aaaa; `id` em mono; vazio vira traço.
+Tabela de relatório. `type` formata e alinha: `number`, `currency` e `percent` (recebe fração: 0,125 = 12,5%) vão à direita com números tabulares; `date` no formato do idioma; `id` em mono; vazio vira traço.
 
-- Ordenação: sozinha no navegador (`ordemInicial`), ou controlada pelo servidor com `ordem` + `aoOrdenar`. `aria-sort` no cabeçalho.
-- Paginação: `porPagina` (navegador) ou `paginacao={{ pagina, totalPaginas, aoMudar, totalRegistros }}` (servidor).
-- `total` por coluna monta a linha de total, calculada sobre todas as linhas, não só a página. `somar` ajuda.
-- `carregando` mostra o `TailorLoader`; `vazio` troca o "Nenhum registro no período."; `aoClicarLinha` deixa a linha clicável (Enter também); `cabecalhoFixo` prende o cabeçalho.
-- Visual por `--tailor-marca-*` (veste a marca do cliente, como o cabeçalho) e `--tailor-tabela-*` (`fonte`, `padding`, `padding-cabecalho`, `cabecalho`, `cabecalho-fixo`, `topo`, `fundo`).
+- Ordenação: sozinha no navegador (`defaultSort`), ou controlada pelo servidor com `sort` + `onSortChange`. `aria-sort` no cabeçalho.
+- Paginação: `pageSize` (navegador) ou `pagination={{ page, totalPages, onPageChange, totalRows }}` (servidor).
+- `total` por coluna monta a linha de total, calculada sobre todas as linhas, não só a página. `sumBy` ajuda.
+- `loading` mostra o esqueleto da tabela; `empty` troca o texto de vazio; `onRowClick` deixa a linha clicável (Enter também); `stickyHeader` prende o cabeçalho.
+- Visual por `--tailor-brand-*` e `--tailor-table-*` (`font`, `padding`, `header-padding`, `header`, `sticky-top`, `top`, `background`).
+
+## Idioma e moeda
+
+Os textos dos componentes ("Carregando", "Página 1 de 2", "Próxima") e a formatação de número, moeda e data seguem o `TailorLocaleProvider`. Sem ele: pt-BR e BRL.
+
+```tsx
+<TailorLocaleProvider locale="en" currency="USD">
+  <App />
+</TailorLocaleProvider>
+
+// trocar um texto só
+<TailorLocaleProvider locale="pt-BR" messages={{ empty: 'Nada por aqui.' }}>
+```
+
+Vêm `pt-BR` e `en`; outro idioma usa os textos em inglês e formata números e datas no próprio idioma.
 
 ## Retorno padrão: esqueleto, loader, sucesso e avisos
 
@@ -270,24 +285,26 @@ Um jeito só em todo app:
 
 | Momento | Use |
 |---|---|
-| Tela ou bloco chegando | `<TailorEsqueleto />` com `forma` `texto`, `tabela`, `cartoes` ou `bloco` |
+| Tela ou bloco chegando | `<TailorSkeleton />` com `shape` `text`, `table`, `cards` ou `block` |
 | Carregamento sem forma conhecida | `<TailorLoader />` |
 | Botão salvando | `<TailorLoader variant="compact" label="Salvando" />` dentro do botão |
-| Formulário salvo | `<TailorLoader sucesso label="Contato salvo" />` no lugar do formulário + `avisar.sucesso(...)` |
-| Modal concluído (ou falhou) | `<TailorConclusao tipo="sucesso" titulo="Contato salvo" aoFechar={fechar} />` dentro do painel (`position: relative`) |
-| Relatório de parceiro carregando | `<TailorLoader logo={...} logoEscuro={...} progresso={p} etapas={[...]} mensagens={[...]} />` |
-| Retorno de ação em qualquer tela | `avisar.sucesso`, `avisar.erro`, `avisar.info` |
+| Formulário salvo | `<TailorLoader success label="Contato salvo" />` no lugar do formulário + `toast.success(...)` |
+| Modal concluído (ou falhou) | `<TailorResult status="success" title="Contato salvo" onClose={close} />` dentro do painel (`position: relative`) |
+| Relatório de parceiro carregando | `<TailorLoader logo={...} logoDark={...} progress={p} steps={[...]} messages={[...]} />` |
+| Retorno de ação em qualquer tela | `toast.success`, `toast.error`, `toast.info` |
 
 ```tsx
 // uma vez, perto da raiz
-<TailorAvisos />
+<TailorToaster />
 
 // em qualquer lugar, até fora de componente
-avisar.sucesso('Contato salvo', { detalhe: 'Maria Souza entrou no funil Vendas' });
-avisar.erro('Não deu para salvar', { detalhe: 'Sem conexão. Tente de novo.' }); // fica 8s, role="alert"
+toast.success('Contato salvo', { description: 'Maria Souza entrou no funil Vendas' });
+toast.error('Não deu para salvar', { description: 'Sem conexão. Tente de novo.' }); // fica 8s, role="alert"
 ```
 
-Num botão da cor da marca, troque a cor do ponto do loader: `className="[--tailor-loader-ponto:#000]"`.
+`<TailorTypewriter texts={[...]} />` é o efeito do ponto escrevendo, solto, para usar onde quiser.
+
+Num botão da cor da marca, troque a cor do ponto do loader: `className="[--tailor-loader-dot:#000]"`.
 
 ## Receita: transição login → app
 
@@ -360,14 +377,16 @@ Página pública: https://ffid-br.github.io/tailor-ui/ (publicada pelo workflow 
 ## Mudanças
 
 ### 0.7.0
-- `TailorDigitando`: o ponto da marca como cursor; escreve, apaga e escreve a próxima frase.
-- `TailorConclusao`: fim de modal ou formulário. A cor do resultado varre o painel, o título é escrito, e tudo recolhe no ponto antes de `aoFechar`.
-- `TailorLoader`: `logo`/`logoEscuro` (arte do parceiro ou cliente), `progresso`, `etapas` e `mensagens` (escritas pelo ponto). Cobre o `ReportLoadingScreen` do bi.
-- `TailorAvisos` + `avisar.sucesso/erro/info`: avisos (toasts) da marca: o ponto escreve o título e vira check ou X. No lugar de react-toastify e react-hot-toast.
-- `TailorEsqueleto`: esqueleto de texto, bloco, tabela e cartões com a linha verde varrendo. `TailorTabela carregando` passou a usar.
-- `TailorLoader`: o ponto corre uma espiral Fibonacci com rastro verde (no `compact`, dá a volta num quadrado). Prop nova `sucesso`: a malha nasce verde e o ponto vira check, rótulo padrão "Pronto".
-- `CinematicIntro`: `overline` e `slogan` sem texto padrão (saíram "Alfaiataria digital" e "Tecnologia sob medida…", que o site não usa mais). Sem eles, a abertura mostra só a marca.
-- `TailorTabela`: tabela de relatório com formatação por tipo, ordenação, paginação, linha de total e marca do cliente.
+API em inglês, pensando na internacionalização. O que saiu na 0.6.0 mudou de nome sem alias (nenhum app usava ainda); o que os apps já usam ganhou nome em inglês e o antigo segue funcionando até a 1.0.
+- `TailorLocaleProvider`: idioma, moeda e textos dos componentes (`pt-BR` e `en`).
+- `TailorTable`: tabela de relatório com formatação por tipo, ordenação, paginação, linha de total e marca do cliente.
+- `TailorSkeleton`: esqueleto de texto, bloco, tabela e cartões com a linha verde varrendo.
+- `TailorToaster` + `toast.success/error/info`: avisos da marca; o ponto escreve o título e vira check ou X.
+- `TailorResult`: fim de modal ou formulário. A cor do resultado varre o painel, o título é escrito, e tudo recolhe no ponto antes de `onClose`.
+- `TailorTypewriter`: o ponto da marca como cursor; escreve, apaga e escreve a próxima frase.
+- `TailorLoader`: o ponto corre uma espiral Fibonacci com rastro verde; `success`, `logo`/`logoDark`, `progress`, `steps`, `messages`; `variant="box"` e `noPadding` (os antigos `caixa` e `semRespiro` seguem valendo).
+- 0.6.0 renomeada: `TailorMarca` → `TailorBrand`, `temaDoWhitelabel` → `themeFromWhitelabel`, `temaParaVariaveis` → `themeToVars`, `contraste` → `contrast`; props do `TailorPageHeader` em inglês; variáveis `--tailor-marca-*` → `--tailor-brand-*`, `--tailor-cabecalho-*` → `--tailor-header-*`.
+- `CinematicIntro`: `overline` e `slogan` sem texto padrão.
 
 ### 0.6.0
 - `TailorPageHeader`, `TailorMarca`, `temaDoWhitelabel`: cabeçalho de página que veste a marca do cliente por variáveis CSS. Segue `--color-tailor-green`/`-ink` do app quando definidos.

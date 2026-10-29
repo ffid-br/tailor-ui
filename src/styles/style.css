@@ -26,112 +26,112 @@
 :where(:root) {
   /* Seguem os tokens do Tailwind do app: quem já troca --color-tailor-green pela
      cor do cliente (accounts, brandTheme) leva o cabeçalho junto. */
-  --tailor-marca-primaria: var(--color-tailor-green, var(--tailor-green));
-  --tailor-marca-primaria-texto: var(--color-tailor-ink, var(--tailor-ink));
-  --tailor-marca-texto: var(--tailor-black);
-  --tailor-marca-texto-suave: #666666;
-  --tailor-marca-borda: #E5E5E5;
-  --tailor-marca-fundo: transparent;
-  --tailor-marca-fonte-titulo: var(--tailor-font);
-  --tailor-marca-fonte-texto: var(--tailor-font);
-  --tailor-marca-peso-titulo: 500;
-  --tailor-marca-caixa-titulo: none;
-  --tailor-marca-raio: 0;
+  --tailor-brand-primary: var(--color-tailor-green, var(--tailor-green));
+  --tailor-brand-primary-text: var(--color-tailor-ink, var(--tailor-ink));
+  --tailor-brand-text: var(--tailor-black);
+  --tailor-brand-text-muted: #666666;
+  --tailor-brand-border: #E5E5E5;
+  --tailor-brand-background: transparent;
+  --tailor-brand-heading-font: var(--tailor-font);
+  --tailor-brand-body-font: var(--tailor-font);
+  --tailor-brand-heading-weight: 500;
+  --tailor-brand-heading-case: none;
+  --tailor-brand-radius: 0;
 }
 :where(.dark, [data-theme="dark"]) {
-  --tailor-marca-primaria-texto: var(--color-tailor-green, var(--tailor-green));
-  --tailor-marca-texto: var(--tailor-white);
-  --tailor-marca-texto-suave: #A3A3A3;
-  --tailor-marca-borda: rgba(255, 255, 255, 0.1);
+  --tailor-brand-primary-text: var(--color-tailor-green, var(--tailor-green));
+  --tailor-brand-text: var(--tailor-white);
+  --tailor-brand-text-muted: #A3A3A3;
+  --tailor-brand-border: rgba(255, 255, 255, 0.1);
 }
-.tailor-marca { display: contents; }
+.tailor-brand { display: contents; }
 
-/* TailorPageHeader — cada medida tem a sua variável --tailor-cabecalho-*. */
+/* TailorPageHeader — cada medida tem a sua variável --tailor-header-*. */
 .tailor-ph {
   display: flex; flex-direction: column; gap: 21px;
-  padding: var(--tailor-cabecalho-padding, 0 0 21px);
-  background: var(--tailor-cabecalho-fundo, var(--tailor-marca-fundo));
-  border-bottom: var(--tailor-cabecalho-regua, 1px solid var(--tailor-marca-borda));
-  color: var(--tailor-marca-texto);
-  font-family: var(--tailor-marca-fonte-texto);
+  padding: var(--tailor-header-padding, 0 0 21px);
+  background: var(--tailor-header-background, var(--tailor-brand-background));
+  border-bottom: var(--tailor-header-rule, 1px solid var(--tailor-brand-border));
+  color: var(--tailor-brand-text);
+  font-family: var(--tailor-brand-body-font);
 }
-.tailor-ph__linha { display: flex; flex-direction: column; gap: 21px; }
+.tailor-ph__row { display: flex; flex-direction: column; gap: 21px; }
 @media (min-width: 640px) {
-  .tailor-ph__linha { flex-direction: row; align-items: flex-end; justify-content: space-between; }
+  .tailor-ph__row { flex-direction: row; align-items: flex-end; justify-content: space-between; }
 }
-.tailor-ph__principal { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
-.tailor-ph__voltar {
+.tailor-ph__main { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.tailor-ph__back {
   display: inline-flex; align-items: center; gap: 6px; padding: 0; border: 0; background: none; cursor: pointer;
-  font: inherit; font-size: 13px; color: var(--tailor-marca-texto-suave); text-decoration: none; border-radius: var(--tailor-marca-raio);
+  font: inherit; font-size: 13px; color: var(--tailor-brand-text-muted); text-decoration: none; border-radius: var(--tailor-brand-radius);
 }
-.tailor-ph__voltar:hover, .tailor-ph__trilha-link:hover { color: var(--tailor-marca-texto); }
-.tailor-ph__trilha ol { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; padding: 0; list-style: none; font-size: 13px; color: var(--tailor-marca-texto-suave); }
-.tailor-ph__trilha li { display: flex; align-items: center; gap: 6px; }
-.tailor-ph__trilha-link { color: inherit; text-decoration: none; }
-.tailor-ph__trilha [aria-current="page"] { color: var(--tailor-marca-texto); }
-.tailor-ph__voltar:focus-visible, .tailor-ph__trilha-link:focus-visible { outline: 3px solid var(--tailor-marca-primaria); outline-offset: 2px; }
-.tailor-ph__sobretitulo {
+.tailor-ph__back:hover, .tailor-ph__breadcrumb-link:hover { color: var(--tailor-brand-text); }
+.tailor-ph__breadcrumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0; padding: 0; list-style: none; font-size: 13px; color: var(--tailor-brand-text-muted); }
+.tailor-ph__breadcrumbs li { display: flex; align-items: center; gap: 6px; }
+.tailor-ph__breadcrumb-link { color: inherit; text-decoration: none; }
+.tailor-ph__breadcrumbs [aria-current="page"] { color: var(--tailor-brand-text); }
+.tailor-ph__back:focus-visible, .tailor-ph__breadcrumb-link:focus-visible { outline: 3px solid var(--tailor-brand-primary); outline-offset: 2px; }
+.tailor-ph__eyebrow {
   display: flex; align-items: center; gap: 8px; margin: 5px 0 0;
   font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
-  color: var(--tailor-marca-primaria-texto);
+  color: var(--tailor-brand-primary-text);
 }
-.tailor-ph__ponto { width: 8px; height: 8px; background: var(--tailor-marca-primaria); border-radius: var(--tailor-marca-raio); }
-.tailor-ph__titulo-linha { display: flex; flex-wrap: wrap; align-items: center; gap: 13px; }
-.tailor-ph__titulo {
+.tailor-ph__dot { width: 8px; height: 8px; background: var(--tailor-brand-primary); border-radius: var(--tailor-brand-radius); }
+.tailor-ph__title-row { display: flex; flex-wrap: wrap; align-items: center; gap: 13px; }
+.tailor-ph__title {
   margin: 0; line-height: 1.1;
-  font-family: var(--tailor-marca-fonte-titulo); font-weight: var(--tailor-marca-peso-titulo);
-  text-transform: var(--tailor-marca-caixa-titulo);
-  font-size: var(--tailor-cabecalho-tamanho-titulo, clamp(26px, 4vw, 42px));
+  font-family: var(--tailor-brand-heading-font); font-weight: var(--tailor-brand-heading-weight);
+  text-transform: var(--tailor-brand-heading-case);
+  font-size: var(--tailor-header-title-size, clamp(26px, 4vw, 42px));
 }
-.tailor-ph__descricao { margin: 0; max-width: 610px; font-size: 16px; line-height: 1.618; color: var(--tailor-marca-texto-suave); }
-.tailor-ph__lateral { display: flex; flex-shrink: 0; flex-wrap: wrap; align-items: center; gap: 13px; }
-.tailor-ph__indicador { text-align: right; }
-.tailor-ph__indicador-valor { display: block; font-size: 26px; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums; font-family: var(--tailor-marca-fonte-titulo); }
-.tailor-ph__indicador-rotulo { display: block; margin-top: 8px; font-size: 13px; color: var(--tailor-marca-texto-suave); }
-.tailor-ph__extra { min-width: 0; }
+.tailor-ph__description { margin: 0; max-width: 610px; font-size: 16px; line-height: 1.618; color: var(--tailor-brand-text-muted); }
+.tailor-ph__aside { display: flex; flex-shrink: 0; flex-wrap: wrap; align-items: center; gap: 13px; }
+.tailor-ph__stat { text-align: right; }
+.tailor-ph__stat-value { display: block; font-size: 26px; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums; font-family: var(--tailor-brand-heading-font); }
+.tailor-ph__stat-label { display: block; margin-top: 8px; font-size: 13px; color: var(--tailor-brand-text-muted); }
+.tailor-ph__below { min-width: 0; }
 
-/* TailorTabela — relatório. Medidas em --tailor-tabela-*, cores da marca. */
-.tailor-tabela {
-  border: 1px solid var(--tailor-marca-borda); background: var(--tailor-tabela-fundo, transparent);
-  color: var(--tailor-marca-texto); font-family: var(--tailor-marca-fonte-texto); border-radius: var(--tailor-marca-raio);
+/* TailorTabela — relatório. Medidas em --tailor-table-*, cores da marca. */
+.tailor-table {
+  border: 1px solid var(--tailor-brand-border); background: var(--tailor-table-background, transparent);
+  color: var(--tailor-brand-text); font-family: var(--tailor-brand-body-font); border-radius: var(--tailor-brand-radius);
 }
-.tailor-tabela__rolagem { overflow-x: auto; }
-.tailor-tabela table { width: 100%; border-collapse: collapse; font-size: var(--tailor-tabela-fonte, 14px); }
-.tailor-tabela__legenda { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.tailor-tabela th {
-  padding: var(--tailor-tabela-padding-cabecalho, 10px 13px); white-space: nowrap;
+.tailor-table__scroll { overflow-x: auto; }
+.tailor-table table { width: 100%; border-collapse: collapse; font-size: var(--tailor-table-font, 14px); }
+.tailor-table__caption { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.tailor-table th {
+  padding: var(--tailor-table-header-padding, 10px 13px); white-space: nowrap;
   font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
-  color: var(--tailor-marca-texto-suave); background: var(--tailor-tabela-cabecalho, color-mix(in srgb, var(--tailor-marca-texto) 3%, transparent));
-  border-bottom: 1px solid var(--tailor-marca-borda);
+  color: var(--tailor-brand-text-muted); background: var(--tailor-table-header, color-mix(in srgb, var(--tailor-brand-text) 3%, transparent));
+  border-bottom: 1px solid var(--tailor-brand-border);
 }
-.tailor-tabela__fixo th { position: sticky; top: var(--tailor-tabela-topo, 0); z-index: 1; background: var(--tailor-tabela-cabecalho-fixo, var(--tailor-white)); }
-:where(.dark, [data-theme="dark"]) .tailor-tabela__fixo th { background: var(--tailor-tabela-cabecalho-fixo, var(--tailor-black)); }
-.tailor-tabela td { padding: var(--tailor-tabela-padding, 10px 13px); border-top: 1px solid var(--tailor-marca-borda); }
-.tailor-tabela tbody tr:first-child td { border-top: 0; }
-.tailor-tabela tbody tr:hover td { background: color-mix(in srgb, var(--tailor-marca-primaria) 6%, transparent); }
-.tailor-tabela--direita { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.tailor-tabela--centro { text-align: center; }
-.tailor-tabela--esquerda { text-align: left; }
-.tailor-tabela__id { white-space: nowrap; font-family: ui-monospace, "Roboto Mono", Menlo, monospace; font-size: 12px; }
-.tailor-tabela__ordenar { display: inline-flex; align-items: center; gap: 4px; padding: 0; border: 0; background: none; font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; cursor: pointer; }
-.tailor-tabela__ordenar:hover { color: var(--tailor-marca-texto); }
-.tailor-tabela__seta { opacity: 0.35; }
-.tailor-tabela__seta--ativa { opacity: 1; color: var(--tailor-marca-primaria-texto); }
-.tailor-tabela__clicavel { cursor: pointer; }
-.tailor-tabela__clicavel:focus-visible, .tailor-tabela button:focus-visible { outline: 3px solid var(--tailor-marca-primaria); outline-offset: -3px; }
-.tailor-tabela__estado { padding: 34px 13px; text-align: center; color: var(--tailor-marca-texto-suave); }
-.tailor-tabela tfoot td { border-top: 1px solid var(--tailor-marca-texto); font-weight: 600; }
-.tailor-tabela__paginacao {
+.tailor-table__sticky th { position: sticky; top: var(--tailor-table-top, 0); z-index: 1; background: var(--tailor-table-sticky-top, var(--tailor-white)); }
+:where(.dark, [data-theme="dark"]) .tailor-table__sticky th { background: var(--tailor-table-sticky-top, var(--tailor-black)); }
+.tailor-table td { padding: var(--tailor-table-padding, 10px 13px); border-top: 1px solid var(--tailor-brand-border); }
+.tailor-table tbody tr:first-child td { border-top: 0; }
+.tailor-table tbody tr:hover td { background: color-mix(in srgb, var(--tailor-brand-primary) 6%, transparent); }
+.tailor-table--right { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tailor-table--center { text-align: center; }
+.tailor-table--left { text-align: left; }
+.tailor-table__id { white-space: nowrap; font-family: ui-monospace, "Roboto Mono", Menlo, monospace; font-size: 12px; }
+.tailor-table__sort { display: inline-flex; align-items: center; gap: 4px; padding: 0; border: 0; background: none; font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; cursor: pointer; }
+.tailor-table__sort:hover { color: var(--tailor-brand-text); }
+.tailor-table__arrow { opacity: 0.35; }
+.tailor-table__arrow--active { opacity: 1; color: var(--tailor-brand-primary-text); }
+.tailor-table__clickable { cursor: pointer; }
+.tailor-table__clickable:focus-visible, .tailor-table button:focus-visible { outline: 3px solid var(--tailor-brand-primary); outline-offset: -3px; }
+.tailor-table__state { padding: 34px 13px; text-align: center; color: var(--tailor-brand-text-muted); }
+.tailor-table tfoot td { border-top: 1px solid var(--tailor-brand-text); font-weight: 600; }
+.tailor-table__pagination {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px;
-  padding: 8px 13px; border-top: 1px solid var(--tailor-marca-borda); font-size: 13px; color: var(--tailor-marca-texto-suave);
+  padding: 8px 13px; border-top: 1px solid var(--tailor-brand-border); font-size: 13px; color: var(--tailor-brand-text-muted);
 }
-.tailor-tabela__paginas { display: flex; gap: 8px; }
-.tailor-tabela__paginacao button {
-  min-height: 34px; padding: 0 13px; border: 1px solid var(--tailor-marca-borda); border-radius: var(--tailor-marca-raio);
-  background: transparent; color: var(--tailor-marca-texto); font: inherit; cursor: pointer;
+.tailor-table__pages { display: flex; gap: 8px; }
+.tailor-table__pagination button {
+  min-height: 34px; padding: 0 13px; border: 1px solid var(--tailor-brand-border); border-radius: var(--tailor-brand-radius);
+  background: transparent; color: var(--tailor-brand-text); font: inherit; cursor: pointer;
 }
-.tailor-tabela__paginacao button:hover:not(:disabled) { border-color: var(--tailor-marca-texto); }
-.tailor-tabela__paginacao button:disabled { opacity: 0.45; cursor: not-allowed; }
+.tailor-table__pagination button:hover:not(:disabled) { border-color: var(--tailor-brand-text); }
+.tailor-table__pagination button:disabled { opacity: 0.45; cursor: not-allowed; }
 
 /* TailorLoader — o ponto corre a espiral Fibonacci (trechos 3, 5, 8, 13, 21, 34 = 84) com rastro, pulsa e volta. */
 .tailor-loader__rastro { stroke-dasharray: 1; stroke-dashoffset: 1; animation: tailor-rastro 2.618s linear infinite; }
@@ -155,7 +155,7 @@
   100%    { transform: translate(0, 0) scale(1); opacity: 0; }
 }
 /* compact: o ponto dá a volta num quadrado de 13px. */
-.tailor-loader__volta { background: var(--tailor-loader-ponto, var(--tailor-marca-primaria)); animation: tailor-volta 1.236s steps(1, end) infinite; }
+.tailor-loader__volta { background: var(--tailor-loader-dot, var(--tailor-brand-primary)); animation: tailor-volta 1.236s steps(1, end) infinite; }
 @keyframes tailor-volta {
   0%   { transform: translate(0, 0); }
   25%  { transform: translate(8px, 0); }
@@ -171,89 +171,89 @@
 @keyframes tailor-check { to { stroke-dashoffset: 0; } }
 
 /* TailorEsqueleto — barras retas e a linha da marca varrendo de cima a baixo. */
-.tailor-esq { position: relative; overflow: hidden; display: grid; gap: 13px; padding: 2px 0; }
-.tailor-esq__rotulo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.tailor-esq__barra { display: block; height: 13px; background: var(--tailor-esq-barra, #F2F2F2); }
-.tailor-esq__barra--fina { height: 8px; }
-.tailor-esq__barra--grossa { height: 34px; }
-.tailor-esq__linha { display: grid; gap: 21px; padding: 8px 0; border-bottom: 1px solid var(--tailor-marca-borda); }
-.tailor-esq__linha--cabecalho .tailor-esq__barra { height: 8px; }
-.tailor-esq__cartoes { display: grid; gap: 13px; grid-template-columns: repeat(auto-fit, minmax(144px, 1fr)); }
-.tailor-esq__cartao { display: grid; gap: 13px; padding: 21px; border: 1px solid var(--tailor-marca-borda); }
-.tailor-esq::after {
+.tailor-skeleton { position: relative; overflow: hidden; display: grid; gap: 13px; padding: 2px 0; }
+.tailor-skeleton__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.tailor-skeleton__bar { display: block; height: 13px; background: var(--tailor-skeleton-bar, #F2F2F2); }
+.tailor-skeleton__bar--thin { height: 8px; }
+.tailor-skeleton__bar--thick { height: 34px; }
+.tailor-skeleton__row { display: grid; gap: 21px; padding: 8px 0; border-bottom: 1px solid var(--tailor-brand-border); }
+.tailor-skeleton__row--header .tailor-skeleton__bar { height: 8px; }
+.tailor-skeleton__cards { display: grid; gap: 13px; grid-template-columns: repeat(auto-fit, minmax(144px, 1fr)); }
+.tailor-skeleton__card { display: grid; gap: 13px; padding: 21px; border: 1px solid var(--tailor-brand-border); }
+.tailor-skeleton::after {
   content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px;
-  background: var(--tailor-marca-primaria);
-  animation: tailor-esq-varre 1.618s var(--tailor-ease-in-out) infinite alternate;
+  background: var(--tailor-brand-primary);
+  animation: tailor-skeleton-scan 1.618s var(--tailor-ease-in-out) infinite alternate;
 }
-@keyframes tailor-esq-varre { from { top: 0; } to { top: calc(100% - 2px); } }
-:where(.dark, [data-theme="dark"]) .tailor-esq { --tailor-esq-barra: #1F1F1F; }
+@keyframes tailor-skeleton-scan { from { top: 0; } to { top: calc(100% - 2px); } }
+:where(.dark, [data-theme="dark"]) .tailor-skeleton { --tailor-skeleton-bar: #1F1F1F; }
 
 /* TailorAvisos — caixa preta; a cor do tipo entra varrendo e recolhe na borda; barra do tempo. */
-.tailor-avisos {
+.tailor-toaster {
   position: fixed; z-index: 1100; right: 21px; top: 21px; display: flex; flex-direction: column; gap: 8px;
   width: min(377px, calc(100vw - 32px)); pointer-events: none;
 }
-@media (max-width: 640px) { .tailor-avisos { right: 16px; left: 16px; top: 16px; width: auto; } }
-.tailor-aviso {
-  --tailor-aviso-cor: var(--tailor-marca-primaria);
+@media (max-width: 640px) { .tailor-toaster { right: 16px; left: 16px; top: 16px; width: auto; } }
+.tailor-toast {
+  --tailor-toast-color: var(--tailor-brand-primary);
   position: relative; overflow: hidden; pointer-events: auto; display: flex; align-items: flex-start; gap: 13px;
   padding: 16px 13px 18px 21px; background: #000; color: #fff; font-family: var(--tailor-font);
-  animation: tailor-aviso-entra 0.382s var(--tailor-ease-out) both;
+  animation: tailor-toast-in 0.382s var(--tailor-ease-out) both;
 }
-.tailor-aviso--erro { --tailor-aviso-cor: #FF0040; }
-.tailor-aviso::before {
-  content: ''; position: absolute; left: 0; top: 0; bottom: 0; background: var(--tailor-aviso-cor);
+.tailor-toast--error { --tailor-toast-color: #FF0040; }
+.tailor-toast::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; background: var(--tailor-toast-color);
   width: 3px;
 }
-.tailor-aviso > * { position: relative; }
-@keyframes tailor-aviso-entra { from { transform: translateY(-21px); opacity: 0; } to { transform: none; opacity: 1; } }
-.tailor-aviso__icone { width: 21px; height: 21px; flex-shrink: 0; overflow: visible; stroke: var(--tailor-aviso-cor); fill: var(--tailor-aviso-cor); }
-.tailor-aviso .tailor-loader__check { animation-delay: 0s; }
-.tailor-aviso__texto { flex: 1; min-width: 0; }
-.tailor-aviso__titulo { margin: 0; font-size: 15px; font-weight: 500; line-height: 1.382; }
-.tailor-aviso__detalhe { margin: 3px 0 0; font-size: 13px; line-height: 1.5; color: rgb(255 255 255 / 0.7); }
-.tailor-aviso__fechar {
+.tailor-toast > * { position: relative; }
+@keyframes tailor-toast-in { from { transform: translateY(-21px); opacity: 0; } to { transform: none; opacity: 1; } }
+.tailor-toast__icon { width: 21px; height: 21px; flex-shrink: 0; overflow: visible; stroke: var(--tailor-toast-color); fill: var(--tailor-toast-color); }
+.tailor-toast .tailor-loader__check { animation-delay: 0s; }
+.tailor-toast__text { flex: 1; min-width: 0; }
+.tailor-toast__title { margin: 0; font-size: 15px; font-weight: 500; line-height: 1.382; }
+.tailor-toast__description { margin: 3px 0 0; font-size: 13px; line-height: 1.5; color: rgb(255 255 255 / 0.7); }
+.tailor-toast__close {
   margin: -5px -3px 0 0; width: 34px; height: 34px; flex-shrink: 0; border: 0; background: none; color: rgb(255 255 255 / 0.7);
   font-size: 21px; line-height: 1; cursor: pointer;
 }
-.tailor-aviso__fechar:hover { color: #fff; }
-.tailor-aviso__fechar:focus-visible { outline: 2px solid var(--tailor-aviso-cor); outline-offset: -2px; }
-.tailor-aviso__tempo {
-  position: absolute !important; left: 0; right: 0; bottom: 0; height: 3px; background: var(--tailor-aviso-cor);
-  transform-origin: left; animation: tailor-aviso-tempo var(--tailor-aviso-duracao, 4s) linear both;
+.tailor-toast__close:hover { color: #fff; }
+.tailor-toast__close:focus-visible { outline: 2px solid var(--tailor-toast-color); outline-offset: -2px; }
+.tailor-toast__timer {
+  position: absolute !important; left: 0; right: 0; bottom: 0; height: 3px; background: var(--tailor-toast-color);
+  transform-origin: left; animation: tailor-toast-timer var(--tailor-toast-duration, 4s) linear both;
 }
-@keyframes tailor-aviso-tempo { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+@keyframes tailor-toast-timer { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 
 /* TailorDigitando — o ponto da marca como cursor. */
-.tailor-digitando__leitor { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.tailor-digitando__cursor {
+.tailor-typewriter__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.tailor-typewriter__cursor {
   display: inline-block; width: 0.5em; height: 0.5em; margin-left: 0.12em; vertical-align: baseline;
-  background: var(--tailor-digitando-cursor, var(--tailor-marca-primaria));
+  background: var(--tailor-typewriter-cursor, var(--tailor-brand-primary));
 }
 
 /* TailorConclusao — a cor varre o painel, o ícone e o título se escrevem, e tudo recolhe no ponto. */
-.tailor-conclusao {
-  --tailor-conclusao-cor: var(--tailor-marca-primaria);
-  --tailor-conclusao-texto: #000;
+.tailor-result {
+  --tailor-result-color: var(--tailor-brand-primary);
+  --tailor-result-text: #000;
   position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 13px; padding: 34px 21px; text-align: center; font-family: var(--tailor-font);
-  background: var(--tailor-conclusao-cor); color: var(--tailor-conclusao-texto);
-  --tailor-digitando-cursor: var(--tailor-conclusao-texto);
-  animation: tailor-conclusao-entra 0.382s var(--tailor-ease-in-out) both;
+  background: var(--tailor-result-color); color: var(--tailor-result-text);
+  --tailor-typewriter-cursor: var(--tailor-result-text);
+  animation: tailor-result-in 0.382s var(--tailor-ease-in-out) both;
 }
-.tailor-conclusao--erro { --tailor-conclusao-cor: #FF0040; --tailor-conclusao-texto: #fff; }
-.tailor-conclusao--saindo { animation: tailor-conclusao-sai 0.618s var(--tailor-ease-in-out) both; }
-@keyframes tailor-conclusao-entra { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
-@keyframes tailor-conclusao-sai {
+.tailor-result--error { --tailor-result-color: #FF0040; --tailor-result-text: #fff; }
+.tailor-result--leaving { animation: tailor-result-out 0.618s var(--tailor-ease-in-out) both; }
+@keyframes tailor-result-in { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes tailor-result-out {
   0%   { clip-path: inset(0 0 0 0); }
   70%  { clip-path: inset(calc(50% - 4px) calc(50% - 4px)); opacity: 1; }
   100% { clip-path: inset(calc(50% - 4px) calc(50% - 4px)); opacity: 0; }
 }
-.tailor-conclusao__icone { width: 55px; height: 55px; overflow: visible; stroke: var(--tailor-conclusao-texto); }
-.tailor-conclusao .tailor-loader__check { animation-delay: 0.3s; }
-.tailor-conclusao__titulo { margin: 0; min-height: 1.1em; font-size: 26px; font-weight: 500; line-height: 1.1; }
-.tailor-conclusao__detalhe { font-size: 15px; line-height: 1.5; opacity: 0.8; }
-.tailor-conclusao__acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 8px; }
+.tailor-result__icon { width: 55px; height: 55px; overflow: visible; stroke: var(--tailor-result-text); }
+.tailor-result .tailor-loader__check { animation-delay: 0.3s; }
+.tailor-result__title { margin: 0; min-height: 1.1em; font-size: 26px; font-weight: 500; line-height: 1.1; }
+.tailor-result__description { font-size: 15px; line-height: 1.5; opacity: 0.8; }
+.tailor-result__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 8px; }
 
 /* PontoMalha e a malha da entrada: se desenham a partir do ponto e somem, em 2φ (3,236s). */
 .tailor-malha__linha {
@@ -384,9 +384,9 @@
   .tailor-loader__rastro, .tailor-loader__check, .tailor-loader__ok-malha .tailor-malha__linha { animation: none; stroke-dashoffset: 0; opacity: 1; }
   .tailor-loader__corredor, .tailor-loader__volta { animation: none; }
   .tailor-loader__ok-ponto { animation: none; opacity: 0; }
-  .tailor-esq::after { animation: none; display: none; }
-  .tailor-aviso { animation: none; }
-  .tailor-conclusao, .tailor-conclusao > * { animation: none !important; }
+  .tailor-skeleton::after { animation: none; display: none; }
+  .tailor-toast { animation: none; }
+  .tailor-result, .tailor-result > * { animation: none !important; }
   .tailor-loader__reticencias::after { animation: none; content: '...'; }
   .tailor-ponto-pisca { animation: none; }
   .tailor-mascote__corpo, .tailor-mascote__olho, .tailor-mascote__verde { animation: none; }
