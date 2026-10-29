@@ -99,7 +99,7 @@ Personagem 8x8 de cada agente (`desk`, `pergunte`, `pm`, `diretor`), com um úni
 
 O companheiro animado: olha o cursor, pisca e muda de movimento por estado. Expressão só nos olhos, sem boca nem braços.
 
-- Agentes: `desk`, `pergunte`, `pm`, `diretor` (também em pixel) e `sdr`, `cred`, `score`, `pilot`, `flow`, `bi`, `rh` (só vetor: saem em vetor mesmo sem `estilo`).
+- Agentes: `desk`, `pergunte`, `pm`, `diretor` (também em pixel) e `sdr`, `cred`, `score`, `pilot`, `flow`, `bi`, `rh`, `cs` (só vetor: saem em vetor mesmo sem `estilo`).
 - Estados: os cinco do pixel e mais `parado`, `cumprimentando`, `falando`, `erro`. No vetor, `analisando` pensa, `feito` fala, `subiu` comemora, `desligado` dorme.
 - `expressao`: `neutro`, `feliz`, `piscando`, `surpreso`, `bravo`, `triste`, `desconfiado`, `sonolento`, `tonto`. Sem ela, vale o olhar do estado.
 - `tema` veste acessório + objeto: `natal`, `pascoa`, `aniversario`, `halloween`, `copa`, `galaxia`, `premiacao`. Ou solto: `acessorio` (`gorro`, `orelhas`, `festa`, `bruxa`, `bone`, `capacete`, `coroa`) e `objeto` (`presente`, `ovo`, `bolo`, `abobora`, `bola`, `sabre`, `trofeu`).
