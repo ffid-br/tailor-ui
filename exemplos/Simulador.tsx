@@ -14,7 +14,7 @@ import {
 // Listas da página; os tipos garantem que só entram valores que o componente aceita.
 const AGENTES: Record<ChaveDoAgente, string> = {
   desk: 'Alfred', pergunte: 'Pergunte', pm: 'PM', diretor: 'Diretor', sdr: 'SDR', cred: 'Cred',
-  score: 'Score', pilot: 'Pilot', flow: 'Flow', bi: 'BI', rh: 'RH',
+  score: 'Score', pilot: 'Pilot', flow: 'Flow', bi: 'BI', rh: 'RH', cs: 'CS',
 };
 const ESTADOS = Object.keys(ROTULO_DO_ESTADO) as EstadoDoMascote[];
 const EXPRESSOES: ExpressaoDoMascote[] = ['neutro', 'feliz', 'piscando', 'surpreso', 'bravo', 'triste', 'desconfiado', 'sonolento', 'tonto'];

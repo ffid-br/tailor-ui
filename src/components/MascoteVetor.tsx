@@ -116,6 +116,15 @@ const AGENTES = {
     corpo: <rect x="56" y="68" width="108" height="112" rx="54" fill={CORPO} />,
     verde: <path d="M110 178 C94 168 95 157 103 157 C107 157 110 161 110 161 C110 161 113 157 117 157 C125 157 126 168 110 178 Z" fill={VERDE} />,
   },
+  cs: {
+    topo: 64, apoio: [166, 130], olhos: { l: 90, r: 130, y: 108 },
+    corpo: <rect x="54" y="64" width="112" height="116" rx="42" fill={CORPO} />,
+    // sucesso do cliente: balão de conversa com o check, a conversa que resolve
+    verde: <>
+      <path d="M94 146 H126 Q131 146 131 151 V163 Q131 168 126 168 H106 L98 175 V168 H94 Q89 168 89 163 V151 Q89 146 94 146 Z" fill={VERDE} />
+      <path d="M102 157 L108 162 L119 151" fill="none" stroke={CORPO} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
+    </>,
+  },
 } satisfies Record<string, Agente>;
 
 export type ChaveDoAgenteVetor = keyof typeof AGENTES;
