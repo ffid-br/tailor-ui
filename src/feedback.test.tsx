@@ -1,5 +1,5 @@
 import { act, render, screen, fireEvent } from '@testing-library/react';
-import { TailorToaster, TailorResult, TailorTypewriter, TailorSkeleton, toast } from './index';
+import { TailorField, TailorToaster, TailorResult, TailorTypewriter, TailorSkeleton, toast } from './index';
 
 describe('TailorToaster', () => {
   it('mostra sucesso como status e erro como alert; fecha no botão', () => {
@@ -61,5 +61,17 @@ describe('TailorResult', () => {
     expect(screen.getByRole('alert')).toHaveTextContent('Falhou');
     expect(screen.getByRole('button', { name: 'Tentar de novo' })).toBeInTheDocument();
     vi.useRealTimers();
+  });
+});
+
+describe('TailorField', () => {
+  it('liga rótulo e erro ao controle e marca aria-invalid', () => {
+    const { rerender } = render(<TailorField label="Nome" required><input /></TailorField>);
+    const input = screen.getByRole('textbox', { name: /Nome/ });
+    expect(input).toBeRequired();
+    expect(input).not.toHaveAttribute('aria-invalid');
+    rerender(<TailorField label="Nome" required error="Preencha o nome."><input /></TailorField>);
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(input).toHaveAccessibleDescription('Preencha o nome.');
   });
 });

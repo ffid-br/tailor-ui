@@ -14,6 +14,7 @@ export type TailorMessages = {
   breadcrumb: string;
   dismiss: string;
   skip: string;
+  required: string;
 };
 
 const PT_BR: TailorMessages = {
@@ -29,6 +30,7 @@ const PT_BR: TailorMessages = {
   breadcrumb: 'Trilha',
   dismiss: 'Fechar aviso',
   skip: 'Pular',
+  required: 'obrigatório',
 };
 
 const EN: TailorMessages = {
@@ -44,6 +46,7 @@ const EN: TailorMessages = {
   breadcrumb: 'Breadcrumb',
   dismiss: 'Dismiss',
   skip: 'Skip',
+  required: 'required',
 };
 
 export const TAILOR_MESSAGES: Record<string, TailorMessages> = { 'pt-BR': PT_BR, en: EN };

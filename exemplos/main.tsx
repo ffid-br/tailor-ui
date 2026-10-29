@@ -14,6 +14,7 @@ import {
   toast,
   TailorTypewriter,
   TailorResult,
+  TailorField,
   TailorBrand,
   TailorMobileBar,
   TailorPageHeader,
@@ -134,12 +135,24 @@ function SucessoDemo() {
   );
 }
 
-/** Salvar: loader no botão, depois o sucesso no lugar do formulário e o aviso. */
+/** Salvar: campo vazio fica vermelho com a mensagem; deu certo, loader no botão, sucesso e aviso. */
 function FormularioDemo() {
   const [fase, setFase] = useState<'editando' | 'salvando' | 'salvo'>('editando');
-  const [nome, setNome] = useState('Maria Souza');
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+  const [erros, setErros] = useState<{ nome?: string; email?: string }>({});
+  const formRef = useRef<HTMLFormElement>(null);
   const salvar = (e: React.FormEvent) => {
     e.preventDefault();
+    const novos = {
+      nome: nome.trim() ? undefined : 'Preencha o nome.',
+      email: !email.trim() ? 'Preencha o e-mail.' : /^\S+@\S+\.\S+$/.test(email) ? undefined : 'Use um e-mail no formato nome@empresa.com.',
+    };
+    setErros(novos);
+    if (novos.nome || novos.email) {
+      formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+      return;
+    }
     setFase('salvando');
     setTimeout(() => { setFase('salvo'); toast.success('Contato salvo', { description: nome }); }, 1618);
   };
@@ -147,20 +160,21 @@ function FormularioDemo() {
     return (
       <div className="grid justify-items-center gap-4">
         <TailorLoader success label="Contato salvo" detail={nome} noPadding />
-        <button type="button" className="border border-black px-3 py-2 text-xs font-medium dark:border-white" onClick={() => setFase('editando')}>Editar de novo</button>
+        <button type="button" className="border border-black px-3 py-2 text-xs font-medium dark:border-white" onClick={() => { setFase('editando'); setNome(''); setEmail(''); }}>Novo contato</button>
       </div>
     );
   }
   return (
-    <form onSubmit={salvar} className="grid max-w-sm gap-3">
-      <label className="grid gap-2 text-[13px] font-medium">
-        Nome
-        <input value={nome} onChange={(e) => setNome(e.target.value)} disabled={fase === 'salvando'}
-          className="h-10 border border-neutral-400 bg-transparent px-3 text-sm font-normal focus:border-black focus:outline-none dark:focus:border-white" />
-      </label>
+    <form ref={formRef} onSubmit={salvar} noValidate className="grid max-w-sm gap-5">
+      <TailorField label="Nome" required error={erros.nome}>
+        <input value={nome} disabled={fase === 'salvando'} onChange={(e) => { setNome(e.target.value); if (erros.nome) setErros((v) => ({ ...v, nome: undefined })); }} />
+      </TailorField>
+      <TailorField label="E-mail" required error={erros.email} hint="Para onde vão as propostas.">
+        <input type="email" value={email} disabled={fase === 'salvando'} onChange={(e) => { setEmail(e.target.value); if (erros.email) setErros((v) => ({ ...v, email: undefined })); }} />
+      </TailorField>
       <button type="submit" disabled={fase === 'salvando'}
         className="flex h-10 items-center justify-center bg-tailor-green px-4 text-sm font-medium text-black disabled:cursor-wait">
-        {fase === 'salvando' ? <TailorLoader variant="compact" label="Salvando" className="text-black dark:text-black [--tailor-loader-dot:#000]" /> : 'Salvar'}
+        {fase === 'salvando' ? <TailorLoader variant="compact" label="Salvando" className="text-black dark:text-black [--tailor-loader-dot:#000]" /> : 'Salvar contato'}
       </button>
     </form>
   );
@@ -444,7 +458,7 @@ const columns: TailorTableColumn<Corretor>[] = [
             <Exemplo titulo="TailorTypewriter" codigo={`<TailorTypewriter texts={['Cruzando origens e etapas', 'Separando quem respondeu', 'Quase lá']} />`}>
               <p className="text-2xl font-medium"><TailorTypewriter texts={['Cruzando origens e etapas', 'Separando quem respondeu', 'Quase lá']} /></p>
             </Exemplo>
-            <Exemplo titulo="formulário" codigo={`<button disabled={salvando}>\n  {salvando ? <TailorLoader variant="compact" label="Salvando" /> : 'Salvar'}\n</button>\n\n// deu certo: o formulário vira o sucesso, e o aviso confirma\n{salvo && <TailorLoader success label="Contato salvo" detail="Maria Souza" />}`}>
+            <Exemplo titulo="formulário (TailorField)" codigo={`<TailorField label="Nome" required error={errors.name}>\n  <input value={name} onChange={...} />\n</TailorField>\n<TailorField label="E-mail" required error={errors.email} hint="Para onde vão as propostas.">\n  <input type="email" ... />\n</TailorField>\n\n<button disabled={salvando}>\n  {salvando ? <TailorLoader variant="compact" label="Salvando" /> : 'Salvar'}\n</button>\n\n// deu certo: o formulário vira o sucesso, e o aviso confirma\n{salvo && <TailorLoader success label="Contato salvo" detail="Maria Souza" />}`}>
               <FormularioDemo />
             </Exemplo>
             <Exemplo titulo="TailorSkeleton" codigo={`<TailorSkeleton />                          {/* texto */}\n<TailorSkeleton shape="cards" lines={3} />\n<TailorSkeleton shape="table" columns={4} />\n<TailorSkeleton shape="block" height="144px" />\n<TailorTable loading ... />            {/* já usa o esqueleto */}`}>

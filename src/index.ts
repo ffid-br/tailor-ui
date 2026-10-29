@@ -56,3 +56,5 @@ export { TailorResult } from './components/TailorResult';
 export type { TailorResultProps } from './components/TailorResult';
 export { TailorLocaleProvider, useTailorLocale, TAILOR_MESSAGES } from './i18n';
 export type { TailorLocaleProviderProps, TailorLocale, TailorMessages } from './i18n';
+export { TailorField } from './components/TailorField';
+export type { TailorFieldProps } from './components/TailorField';

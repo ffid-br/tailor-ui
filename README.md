@@ -287,6 +287,7 @@ Um jeito só em todo app:
 |---|---|
 | Tela ou bloco chegando | `<TailorSkeleton />` com `shape` `text`, `table`, `cards` ou `block` |
 | Carregamento sem forma conhecida | `<TailorLoader />` |
+| Campo obrigatório vazio ou inválido | `<TailorField label="Nome" required error="Preencha o nome."><input /></TailorField>`: borda e ponto vermelhos, mensagem ligada ao campo |
 | Botão salvando | `<TailorLoader variant="compact" label="Salvando" />` dentro do botão |
 | Formulário salvo | `<TailorLoader success label="Contato salvo" />` no lugar do formulário + `toast.success(...)` |
 | Modal concluído (ou falhou) | `<TailorResult status="success" title="Contato salvo" onClose={close} />` dentro do painel (`position: relative`) |
@@ -382,7 +383,8 @@ API em inglês, pensando na internacionalização. O que saiu na 0.6.0 mudou de 
 - `TailorTable`: tabela de relatório com formatação por tipo, ordenação, paginação, linha de total e marca do cliente.
 - `TailorSkeleton`: esqueleto de texto, bloco, tabela e cartões com a linha verde varrendo.
 - `TailorToaster` + `toast.success/error/info`: avisos da marca; o ponto escreve o título e vira check ou X.
-- `TailorResult`: fim de modal ou formulário. A cor do resultado varre o painel, o título é escrito, e tudo recolhe no ponto antes de `onClose`.
+- `TailorResult`: fim de modal ou formulário. O ponto do botão (`origin`) cresce até cobrir o painel com a cor do resultado, o título é escrito, e tudo recolhe no ponto antes de `onClose`.
+- `TailorField`: rótulo, campo e mensagem; com `error`, borda e ponto vermelhos, um empurrão curto e `aria-invalid`/`aria-describedby`.
 - `TailorTypewriter`: o ponto da marca como cursor; escreve, apaga e escreve a próxima frase.
 - `TailorLoader`: o ponto corre uma espiral Fibonacci com rastro verde; `success`, `logo`/`logoDark`, `progress`, `steps`, `messages`; `variant="box"` e `noPadding` (os antigos `caixa` e `semRespiro` seguem valendo).
 - 0.6.0 renomeada: `TailorMarca` → `TailorBrand`, `temaDoWhitelabel` → `themeFromWhitelabel`, `temaParaVariaveis` → `themeToVars`, `contraste` → `contrast`; props do `TailorPageHeader` em inglês; variáveis `--tailor-marca-*` → `--tailor-brand-*`, `--tailor-cabecalho-*` → `--tailor-header-*`.
