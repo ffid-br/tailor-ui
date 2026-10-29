@@ -546,9 +546,27 @@ export type TailorUserMenuProps = {
  * (padrão disclosure: aceita conteúdo livre, como o seletor de tema). Esc e
  * clique fora fecham; setas percorrem os itens.
  */
+const semMovimento = () =>
+  typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
 export const TailorUserMenu: React.FC<TailorUserMenuProps> = ({ nome, detalhe, papel, avatarUrl, acoes = [], children }) => {
   const { tom, recolhido } = useContext(SidebarContexto);
   const [aberto, setAberto] = useState(false);
+  // Fechando: o painel recolhe no ponto antes de sair do DOM.
+  const [fechando, setFechando] = useState(false);
+  const saida = useRef<ReturnType<typeof setTimeout>>();
+  useEffect(() => () => clearTimeout(saida.current), []);
+  const fechar = () => {
+    if (!aberto || fechando) return;
+    setFechando(true);
+    saida.current = setTimeout(() => { setAberto(false); setFechando(false); }, semMovimento() ? 0 : 236);
+  };
+  const abrir = () => {
+    clearTimeout(saida.current);
+    setFechando(false);
+    setAberto(true);
+  };
+  const expandido = aberto && !fechando;
   const raiz = useRef<HTMLDivElement>(null);
   const botao = useRef<HTMLButtonElement>(null);
   const painel = useRef<HTMLDivElement>(null);
@@ -556,21 +574,22 @@ export const TailorUserMenu: React.FC<TailorUserMenuProps> = ({ nome, detalhe, p
   useEffect(() => {
     if (!aberto) return;
     const fora = (e: MouseEvent) => {
-      if (!raiz.current?.contains(e.target as Node)) setAberto(false);
+      if (!raiz.current?.contains(e.target as Node)) fechar();
     };
     document.addEventListener('mousedown', fora);
     return () => document.removeEventListener('mousedown', fora);
-  }, [aberto]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [aberto, fechando]);
 
   const teclas = (e: React.KeyboardEvent) => {
-    if (e.key === 'Escape' && aberto) {
+    if (e.key === 'Escape' && expandido) {
       // Para aqui: na gaveta, o Esc de fora fecharia a gaveta inteira.
       e.stopPropagation();
-      setAberto(false);
+      fechar();
       botao.current?.focus();
       return;
     }
-    if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && aberto && painel.current) {
+    if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && expandido && painel.current) {
       e.preventDefault();
       const itens = Array.from(painel.current.querySelectorAll<HTMLElement>(FOCAVEIS));
       if (!itens.length) return;
@@ -594,10 +613,10 @@ export const TailorUserMenu: React.FC<TailorUserMenuProps> = ({ nome, detalhe, p
       <button
         ref={botao}
         type="button"
-        aria-expanded={aberto}
+        aria-expanded={expandido}
         aria-label={recolhido ? `Menu de ${nome}` : undefined}
         title={recolhido ? nome : undefined}
-        onClick={() => setAberto((a) => !a)}
+        onClick={() => (expandido ? fechar() : abrir())}
         className={cn('flex w-full items-center gap-[13px] py-[13px] text-left transition-colors motion-reduce:transition-none', tom.hover, FOCO, recolhido ? 'justify-center px-0' : 'px-[21px]')}
       >
         {avatar}
@@ -607,7 +626,7 @@ export const TailorUserMenu: React.FC<TailorUserMenuProps> = ({ nome, detalhe, p
               <span className={cn('block truncate font-tailor text-sm font-semibold leading-tight', tom.forte)}>{nome}</span>
               {detalhe && <span className={cn('mt-[2px] block truncate font-tailor text-[11px] leading-tight', tom.fraco)}>{detalhe}</span>}
             </span>
-            <Svg d={ICONE_CHEVRON} className={cn('size-[13px] shrink-0 transition-transform motion-reduce:transition-none', tom.fraco, !aberto && 'rotate-180')} />
+            <Svg d={ICONE_CHEVRON} className={cn('size-[13px] shrink-0 transition-transform motion-reduce:transition-none', tom.fraco, !expandido && 'rotate-180')} />
           </>
         )}
       </button>
@@ -615,8 +634,10 @@ export const TailorUserMenu: React.FC<TailorUserMenuProps> = ({ nome, detalhe, p
       {aberto && (
         <div
           ref={painel}
+          aria-hidden={fechando || undefined}
           className={cn(
-            'absolute z-50 border py-[8px]',
+            'tailor-user-menu__panel absolute z-50 border py-[8px]',
+            fechando && 'tailor-user-menu__panel--closing',
             tom.fundo,
             tom.borda,
             recolhido ? 'bottom-0 left-full ml-[8px] w-[233px]' : 'bottom-full left-[8px] right-[8px] mb-[8px]',
@@ -644,16 +665,16 @@ export const TailorUserMenu: React.FC<TailorUserMenuProps> = ({ nome, detalhe, p
                     {acao.rotulo}
                   </>
                 );
-                const fechar = () => {
-                  setAberto(false);
+                const escolher = () => {
+                  fechar();
                   acao.onSelect?.();
                 };
                 return acao.href ? (
-                  <a key={acao.rotulo} href={acao.href} onClick={fechar} className={classeAcao(acao.tom === 'perigo')}>
+                  <a key={acao.rotulo} href={acao.href} onClick={escolher} className={classeAcao(acao.tom === 'perigo')}>
                     {miolo}
                   </a>
                 ) : (
-                  <button key={acao.rotulo} type="button" onClick={fechar} className={classeAcao(acao.tom === 'perigo')}>
+                  <button key={acao.rotulo} type="button" onClick={escolher} className={classeAcao(acao.tom === 'perigo')}>
                     {miolo}
                   </button>
                 );

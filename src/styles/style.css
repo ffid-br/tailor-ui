@@ -289,6 +289,17 @@ textarea.tailor-field__control { padding: 8px 13px; min-height: 89px; }
 :where(.dark, [data-theme="dark"]) .tailor-field { --tailor-field-border: #666666; }
 @keyframes tailor-field-nudge { 0%, 100% { transform: none; } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-2px); } }
 
+/* TailorUserMenu — o painel nasce do ponto no canto junto do avatar e recolhe nele. */
+.tailor-user-menu__panel { animation: tailor-user-menu-in 0.382s var(--tailor-ease-out) both; }
+.tailor-user-menu__panel--closing { animation: tailor-user-menu-out 0.236s var(--tailor-ease-in-out) both; }
+.tailor-user-menu__panel::before {
+  content: ''; position: absolute; left: -1px; bottom: -1px; width: 8px; height: 8px; background: var(--tailor-brand-primary);
+  animation: tailor-user-menu-dot 0.618s var(--tailor-ease-in-out) both;
+}
+@keyframes tailor-user-menu-in { from { clip-path: inset(calc(100% - 8px) calc(100% - 8px) 0 0); } to { clip-path: inset(0); } }
+@keyframes tailor-user-menu-out { from { clip-path: inset(0); } to { clip-path: inset(calc(100% - 8px) calc(100% - 8px) 0 0); } }
+@keyframes tailor-user-menu-dot { 0%, 61.8% { opacity: 1; } 100% { opacity: 0; } }
+
 /* PontoMalha e a malha da entrada: se desenham a partir do ponto e somem, em 2φ (3,236s). */
 .tailor-malha__linha {
   stroke-dasharray: 1;
@@ -420,6 +431,8 @@ textarea.tailor-field__control { padding: 8px 13px; min-height: 89px; }
   .tailor-loader__ok-ponto { animation: none; opacity: 0; }
   .tailor-skeleton::after { animation: none; display: none; }
   .tailor-field--error .tailor-field__control { animation: none; }
+  .tailor-user-menu__panel, .tailor-user-menu__panel--closing, .tailor-user-menu__panel::before { animation: none; }
+  .tailor-user-menu__panel::before { display: none; }
   .tailor-toast { animation: none; }
   .tailor-result, .tailor-result > * { animation: none !important; }
   .tailor-loader__reticencias::after { animation: none; content: '...'; }
