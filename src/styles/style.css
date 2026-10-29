@@ -86,9 +86,20 @@
 }
 .tailor-ph__description { margin: 0; max-width: 610px; font-size: 16px; line-height: 1.618; color: var(--tailor-brand-text-muted); }
 .tailor-ph__aside { display: flex; flex-shrink: 0; flex-wrap: wrap; align-items: center; gap: 13px; }
-.tailor-ph__stat { text-align: right; }
-.tailor-ph__stat-value { display: block; font-size: 26px; font-weight: 500; line-height: 1; font-variant-numeric: tabular-nums; font-family: var(--tailor-brand-heading-font); }
-.tailor-ph__stat-label { display: block; margin-top: 8px; font-size: 13px; color: var(--tailor-brand-text-muted); }
+/* Faixa de números: cada um com o fio à esquerda (a cor do tom), rótulo em cima e o número grande embaixo. */
+.tailor-ph__stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(144px, 1fr)); gap: 21px 34px; margin: 0; }
+.tailor-ph__stat { --tailor-stat-color: var(--tailor-brand-border); min-width: 0; padding: 2px 0 2px 13px; border-left: 3px solid var(--tailor-stat-color); }
+.tailor-ph__stat--danger { --tailor-stat-color: #FF0040; }
+.tailor-ph__stat--warning { --tailor-stat-color: #FF9033; }
+.tailor-ph__stat--success { --tailor-stat-color: #008548; }
+.tailor-ph__stat-label { margin: 0; font-size: 13px; line-height: 1.382; color: var(--tailor-brand-text-muted); }
+.tailor-ph__stat-value {
+  margin: 5px 0 0; font-size: 34px; font-weight: 500; line-height: 1; font-variant-numeric: lining-nums tabular-nums;
+  font-family: var(--tailor-brand-heading-font); color: var(--tailor-brand-text);
+}
+.tailor-ph__stat--danger .tailor-ph__stat-value { color: #D10035; }
+.tailor-ph__stat--warning .tailor-ph__stat-value { color: #B35A00; }
+@media (max-width: 639px) { .tailor-ph__stat-value { font-size: 26px; } }
 .tailor-ph__below { min-width: 0; }
 
 /* TailorTabela — relatório. Medidas em --tailor-table-*, cores da marca. */
