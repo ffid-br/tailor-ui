@@ -203,13 +203,12 @@
 .tailor-aviso--erro { --tailor-aviso-cor: #FF0040; }
 .tailor-aviso::before {
   content: ''; position: absolute; left: 0; top: 0; bottom: 0; background: var(--tailor-aviso-cor);
-  animation: tailor-aviso-varre 0.618s var(--tailor-ease-in-out) both;
+  width: 3px;
 }
 .tailor-aviso > * { position: relative; }
 @keyframes tailor-aviso-entra { from { transform: translateY(-21px); opacity: 0; } to { transform: none; opacity: 1; } }
-@keyframes tailor-aviso-varre { 0% { width: 0; } 45% { width: 100%; } 100% { width: 5px; } }
 .tailor-aviso__icone { width: 21px; height: 21px; flex-shrink: 0; overflow: visible; stroke: var(--tailor-aviso-cor); fill: var(--tailor-aviso-cor); }
-.tailor-aviso .tailor-loader__check { animation-delay: 0.45s; }
+.tailor-aviso .tailor-loader__check { animation-delay: 0s; }
 .tailor-aviso__texto { flex: 1; min-width: 0; }
 .tailor-aviso__titulo { margin: 0; font-size: 15px; font-weight: 500; line-height: 1.382; }
 .tailor-aviso__detalhe { margin: 3px 0 0; font-size: 13px; line-height: 1.5; color: rgb(255 255 255 / 0.7); }
@@ -224,6 +223,37 @@
   transform-origin: left; animation: tailor-aviso-tempo var(--tailor-aviso-duracao, 4s) linear both;
 }
 @keyframes tailor-aviso-tempo { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+/* TailorDigitando — o ponto da marca como cursor. */
+.tailor-digitando__leitor { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.tailor-digitando__cursor {
+  display: inline-block; width: 0.5em; height: 0.5em; margin-left: 0.12em; vertical-align: baseline;
+  background: var(--tailor-digitando-cursor, var(--tailor-marca-primaria));
+}
+
+/* TailorConclusao — a cor varre o painel, o ícone e o título se escrevem, e tudo recolhe no ponto. */
+.tailor-conclusao {
+  --tailor-conclusao-cor: var(--tailor-marca-primaria);
+  --tailor-conclusao-texto: #000;
+  position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 13px; padding: 34px 21px; text-align: center; font-family: var(--tailor-font);
+  background: var(--tailor-conclusao-cor); color: var(--tailor-conclusao-texto);
+  --tailor-digitando-cursor: var(--tailor-conclusao-texto);
+  animation: tailor-conclusao-entra 0.382s var(--tailor-ease-in-out) both;
+}
+.tailor-conclusao--erro { --tailor-conclusao-cor: #FF0040; --tailor-conclusao-texto: #fff; }
+.tailor-conclusao--saindo { animation: tailor-conclusao-sai 0.618s var(--tailor-ease-in-out) both; }
+@keyframes tailor-conclusao-entra { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes tailor-conclusao-sai {
+  0%   { clip-path: inset(0 0 0 0); }
+  70%  { clip-path: inset(calc(50% - 4px) calc(50% - 4px)); opacity: 1; }
+  100% { clip-path: inset(calc(50% - 4px) calc(50% - 4px)); opacity: 0; }
+}
+.tailor-conclusao__icone { width: 55px; height: 55px; overflow: visible; stroke: var(--tailor-conclusao-texto); }
+.tailor-conclusao .tailor-loader__check { animation-delay: 0.3s; }
+.tailor-conclusao__titulo { margin: 0; min-height: 1.1em; font-size: 26px; font-weight: 500; line-height: 1.1; }
+.tailor-conclusao__detalhe { font-size: 15px; line-height: 1.5; opacity: 0.8; }
+.tailor-conclusao__acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 8px; }
 
 /* PontoMalha e a malha da entrada: se desenham a partir do ponto e somem, em 2φ (3,236s). */
 .tailor-malha__linha {
@@ -355,8 +385,8 @@
   .tailor-loader__corredor, .tailor-loader__volta { animation: none; }
   .tailor-loader__ok-ponto { animation: none; opacity: 0; }
   .tailor-esq::after { animation: none; display: none; }
-  .tailor-aviso, .tailor-aviso::before { animation: none; }
-  .tailor-aviso::before { width: 5px; }
+  .tailor-aviso { animation: none; }
+  .tailor-conclusao, .tailor-conclusao > * { animation: none !important; }
   .tailor-loader__reticencias::after { animation: none; content: '...'; }
   .tailor-ponto-pisca { animation: none; }
   .tailor-mascote__corpo, .tailor-mascote__olho, .tailor-mascote__verde { animation: none; }

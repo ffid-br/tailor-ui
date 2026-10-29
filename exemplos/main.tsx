@@ -12,6 +12,8 @@ import {
   TailorEsqueleto,
   TailorAvisos,
   avisar,
+  TailorDigitando,
+  TailorConclusao,
   TailorMarca,
   TailorMobileBar,
   TailorPageHeader,
@@ -161,6 +163,65 @@ function FormularioDemo() {
         {fase === 'salvando' ? <TailorLoader variant="compact" label="Salvando" className="text-black dark:text-black [--tailor-loader-ponto:#000]" /> : 'Salvar'}
       </button>
     </form>
+  );
+}
+
+/** Arte de parceiro fictícia, para o exemplo de loader com marca. */
+const LOGO_PARCEIRO = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="233" height="55" viewBox="0 0 233 55"><rect width="55" height="55" fill="#0040FF"/><text x="68" y="36" font-family="Arial" font-size="22" font-weight="700" fill="#0040FF">Imobiliária Sol</text></svg>');
+
+/** Progresso que avança sozinho e recomeça. */
+function ProgressoDemo() {
+  const [p, setP] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setP((v) => (v >= 100 ? 0 : v + 4)), 300);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <TailorLoader logo={LOGO_PARCEIRO} label="Carregando funil" progresso={p} semRespiro
+      etapas={['Conectando ao servidor', 'Buscando leads', 'Organizando métricas', 'Montando gráficos']}
+      mensagens={['Cruzando origens e etapas', 'Separando quem respondeu', 'Quase lá']} />
+  );
+}
+
+/** Modal que termina em sucesso ou erro, recolhe no ponto e fecha. */
+function ModalDemo() {
+  const [aberto, setAberto] = useState(false);
+  const [fase, setFase] = useState<'editando' | 'salvando' | 'sucesso' | 'erro'>('editando');
+  const salvar = (falhar: boolean) => {
+    setFase('salvando');
+    setTimeout(() => setFase(falhar ? 'erro' : 'sucesso'), 1236);
+  };
+  const fechar = () => { setAberto(false); setFase('editando'); };
+  return (
+    <>
+      <button type="button" className="rounded-md bg-black px-4 py-2 text-sm font-semibold text-white dark:bg-white dark:text-black" onClick={() => setAberto(true)}>Abrir modal</button>
+      {aberto && (
+        <div className="fixed inset-0 z-[900] flex items-center justify-center bg-black/60 p-4">
+          <div role="dialog" aria-modal="true" aria-label="Novo contato" className="relative w-full max-w-md overflow-hidden bg-white p-6 text-black dark:bg-neutral-950 dark:text-white">
+            <h3 className="text-xl font-medium">Novo contato</h3>
+            <label className="mt-4 grid gap-2 text-[13px] font-medium">
+              Nome
+              <input defaultValue="Maria Souza" className="h-10 border border-neutral-400 bg-transparent px-3 text-sm font-normal" />
+            </label>
+            <div className="mt-6 flex flex-wrap justify-end gap-2">
+              <button type="button" className="h-10 border border-black px-4 text-sm dark:border-white" onClick={fechar}>Cancelar</button>
+              <button type="button" className="h-10 border border-black px-4 text-sm dark:border-white" disabled={fase === 'salvando'} onClick={() => salvar(true)}>Salvar com erro</button>
+              <button type="button" className="flex h-10 items-center bg-tailor-green px-4 text-sm font-medium text-black" disabled={fase === 'salvando'} onClick={() => salvar(false)}>
+                {fase === 'salvando' ? <TailorLoader variant="compact" label="Salvando" className="text-black dark:text-black [--tailor-loader-ponto:#000]" /> : 'Salvar'}
+              </button>
+            </div>
+            {fase === 'sucesso' && <TailorConclusao tipo="sucesso" titulo="Contato salvo" detalhe="Maria Souza entrou no funil Vendas" aoFechar={fechar} />}
+            {fase === 'erro' && (
+              <TailorConclusao tipo="erro" titulo="Não deu para salvar" detalhe="Sem conexão. Nada foi perdido."
+                acoes={<>
+                  <button type="button" className="h-10 border border-white px-4 text-sm" onClick={() => setFase('editando')}>Voltar ao formulário</button>
+                  <button type="button" className="h-10 bg-white px-4 text-sm font-medium text-black" onClick={() => salvar(false)}>Tentar de novo</button>
+                </>} />
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -353,6 +414,9 @@ const colunas: TailorTabelaColuna<Corretor>[] = [
             <Exemplo titulo="caixa" codigo={`<TailorLoader variant="caixa" label="Buscando conversas" />`}>
               <TailorLoader variant="caixa" label="Buscando conversas" />
             </Exemplo>
+            <Exemplo titulo="parceiro, progresso e mensagens" codigo={`<TailorLoader\n  logo={whitelabel.logos.rectangular_light}\n  logoEscuro={whitelabel.logos.rectangular_dark}\n  label="Carregando funil"\n  progresso={progresso}\n  etapas={['Conectando ao servidor', 'Buscando leads', 'Organizando métricas', 'Montando gráficos']}\n  mensagens={['Cruzando origens e etapas', 'Separando quem respondeu', 'Quase lá']}\n/>`}>
+              <ProgressoDemo />
+            </Exemplo>
             <Exemplo titulo="sucesso" codigo={`<TailorLoader sucesso label="Relatório pronto" />\n<TailorLoader variant="compact" sucesso label="Salvo" />`}>
               <SucessoDemo />
             </Exemplo>
@@ -369,6 +433,12 @@ const colunas: TailorTabelaColuna<Corretor>[] = [
                 <button type="button" className={botao} onClick={() => avisar.erro('Não deu para salvar', { detalhe: 'Sem conexão. Tente de novo.' })}>Erro</button>
                 <button type="button" className={botao} onClick={() => avisar.info('Sincronizando contatos')}>Info</button>
               </div>
+            </Exemplo>
+            <Exemplo titulo="modal concluído (TailorConclusao)" codigo={`<div className="relative ...">   {/* o painel do modal */}\n  ...formulário...\n  {ok && <TailorConclusao tipo="sucesso" titulo="Contato salvo" detalhe="Maria Souza" aoFechar={fechar} />}\n  {erro && <TailorConclusao tipo="erro" titulo="Não deu para salvar" acoes={<button>Tentar de novo</button>} />}\n</div>`}>
+              <ModalDemo />
+            </Exemplo>
+            <Exemplo titulo="TailorDigitando" codigo={`<TailorDigitando textos={['Cruzando origens e etapas', 'Separando quem respondeu', 'Quase lá']} />`}>
+              <p className="text-2xl font-medium"><TailorDigitando textos={['Cruzando origens e etapas', 'Separando quem respondeu', 'Quase lá']} /></p>
             </Exemplo>
             <Exemplo titulo="formulário" codigo={`<button disabled={salvando}>\n  {salvando ? <TailorLoader variant="compact" label="Salvando" /> : 'Salvar'}\n</button>\n\n// deu certo: o formulário vira o sucesso, e o aviso confirma\n{salvo && <TailorLoader sucesso label="Contato salvo" detail="Maria Souza" />}`}>
               <FormularioDemo />

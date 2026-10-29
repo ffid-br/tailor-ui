@@ -92,3 +92,14 @@ describe('TailorLoader sucesso', () => {
     expect(container.querySelector('.tailor-loader__check')).not.toBeNull();
   });
 });
+
+describe('TailorLoader do parceiro', () => {
+  it('mostra a arte, o progresso e marca a etapa atual', () => {
+    const { container } = render(
+      <TailorLoader logo="/parceiro.svg" progresso={60} etapas={['Conectando', 'Buscando', 'Organizando', 'Montando']} />
+    );
+    expect(container.querySelector('img')).toHaveAttribute('src', '/parceiro.svg');
+    expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow', '60');
+    expect(screen.getByText('Organizando')).toHaveClass('font-medium');
+  });
+});

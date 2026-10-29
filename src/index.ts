@@ -50,3 +50,7 @@ export { TailorEsqueleto } from './components/TailorEsqueleto';
 export type { TailorEsqueletoProps } from './components/TailorEsqueleto';
 export { TailorAvisos, avisar, fecharAviso } from './components/TailorAvisos';
 export type { TipoDoAviso, OpcoesDoAviso } from './components/TailorAvisos';
+export { TailorDigitando } from './components/TailorDigitando';
+export type { TailorDigitandoProps } from './components/TailorDigitando';
+export { TailorConclusao } from './components/TailorConclusao';
+export type { TailorConclusaoProps } from './components/TailorConclusao';

@@ -274,6 +274,8 @@ Um jeito só em todo app:
 | Carregamento sem forma conhecida | `<TailorLoader />` |
 | Botão salvando | `<TailorLoader variant="compact" label="Salvando" />` dentro do botão |
 | Formulário salvo | `<TailorLoader sucesso label="Contato salvo" />` no lugar do formulário + `avisar.sucesso(...)` |
+| Modal concluído (ou falhou) | `<TailorConclusao tipo="sucesso" titulo="Contato salvo" aoFechar={fechar} />` dentro do painel (`position: relative`) |
+| Relatório de parceiro carregando | `<TailorLoader logo={...} logoEscuro={...} progresso={p} etapas={[...]} mensagens={[...]} />` |
 | Retorno de ação em qualquer tela | `avisar.sucesso`, `avisar.erro`, `avisar.info` |
 
 ```tsx
@@ -358,7 +360,10 @@ Página pública: https://ffid-br.github.io/tailor-ui/ (publicada pelo workflow 
 ## Mudanças
 
 ### 0.7.0
-- `TailorAvisos` + `avisar.sucesso/erro/info`: avisos (toasts) da marca, no lugar de react-toastify e react-hot-toast.
+- `TailorDigitando`: o ponto da marca como cursor; escreve, apaga e escreve a próxima frase.
+- `TailorConclusao`: fim de modal ou formulário. A cor do resultado varre o painel, o título é escrito, e tudo recolhe no ponto antes de `aoFechar`.
+- `TailorLoader`: `logo`/`logoEscuro` (arte do parceiro ou cliente), `progresso`, `etapas` e `mensagens` (escritas pelo ponto). Cobre o `ReportLoadingScreen` do bi.
+- `TailorAvisos` + `avisar.sucesso/erro/info`: avisos (toasts) da marca: o ponto escreve o título e vira check ou X. No lugar de react-toastify e react-hot-toast.
 - `TailorEsqueleto`: esqueleto de texto, bloco, tabela e cartões com a linha verde varrendo. `TailorTabela carregando` passou a usar.
 - `TailorLoader`: o ponto corre uma espiral Fibonacci com rastro verde (no `compact`, dá a volta num quadrado). Prop nova `sucesso`: a malha nasce verde e o ponto vira check, rótulo padrão "Pronto".
 - `CinematicIntro`: `overline` e `slogan` sem texto padrão (saíram "Alfaiataria digital" e "Tecnologia sob medida…", que o site não usa mais). Sem eles, a abertura mostra só a marca.

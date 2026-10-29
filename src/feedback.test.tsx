@@ -1,5 +1,5 @@
 import { act, render, screen, fireEvent } from '@testing-library/react';
-import { TailorAvisos, TailorEsqueleto, avisar } from './index';
+import { TailorAvisos, TailorConclusao, TailorDigitando, TailorEsqueleto, avisar } from './index';
 
 describe('TailorAvisos', () => {
   it('mostra sucesso como status e erro como alert; fecha no botão', () => {
@@ -28,5 +28,38 @@ describe('TailorEsqueleto', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Carregando');
     expect(container.querySelectorAll('.tailor-esq__linha')).toHaveLength(3);
     expect(container.querySelectorAll('.tailor-esq__barra')).toHaveLength(9);
+  });
+});
+
+describe('TailorDigitando', () => {
+  it('escreve letra a letra, mas o leitor de tela recebe a frase inteira', () => {
+    vi.useFakeTimers();
+    const terminou = vi.fn();
+    const { container } = render(<TailorDigitando textos={['Oi']} umaVez aoTerminar={terminou} />);
+    expect(container.querySelector('.tailor-digitando__leitor')).toHaveTextContent('Oi');
+    act(() => { vi.advanceTimersByTime(60); });
+    act(() => { vi.advanceTimersByTime(60); });
+    act(() => { vi.advanceTimersByTime(10); });
+    expect(terminou).toHaveBeenCalled();
+    expect(container.querySelector('.tailor-digitando__cursor')).toBeNull();
+    vi.useRealTimers();
+  });
+});
+
+describe('TailorConclusao', () => {
+  it('sucesso fecha sozinho; erro espera e mostra as ações', () => {
+    vi.useFakeTimers();
+    const fechar = vi.fn();
+    const { rerender } = render(<TailorConclusao tipo="sucesso" titulo="Salvo" aoFechar={fechar} />);
+    expect(screen.getByRole('status')).toHaveTextContent('Salvo');
+    act(() => { vi.advanceTimersByTime(2400); });
+    act(() => { vi.advanceTimersByTime(700); });
+    expect(fechar).toHaveBeenCalledTimes(1);
+    rerender(<TailorConclusao tipo="erro" titulo="Falhou" aoFechar={fechar} acoes={<button>Tentar de novo</button>} />);
+    act(() => { vi.advanceTimersByTime(10000); });
+    expect(fechar).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('alert')).toHaveTextContent('Falhou');
+    expect(screen.getByRole('button', { name: 'Tentar de novo' })).toBeInTheDocument();
+    vi.useRealTimers();
   });
 });
