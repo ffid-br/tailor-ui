@@ -288,6 +288,7 @@ Um jeito só em todo app:
 | Tela ou bloco chegando | `<TailorSkeleton />` com `shape` `text`, `table`, `cards` ou `block` |
 | Carregamento sem forma conhecida | `<TailorLoader />` |
 | Campo obrigatório vazio ou inválido | `<TailorField label="Nome" required error="Preencha o nome."><input /></TailorField>`: borda e ponto vermelhos, mensagem ligada ao campo |
+| Ícone girando num botão | `{saving ? <TailorLoader variant="dot" label="Salvando" /> : <SaveIcon />}` |
 | Botão salvando | `<TailorLoader variant="compact" label="Salvando" />` dentro do botão |
 | Formulário salvo | `<TailorLoader success label="Contato salvo" />` no lugar do formulário + `toast.success(...)` |
 | Modal concluído (ou falhou) | `<TailorResult status="success" title="Contato salvo" onClose={close} />` dentro do painel (`position: relative`) |
@@ -376,6 +377,9 @@ Página pública: https://ffid-br.github.io/tailor-ui/ (publicada pelo workflow 
 
 
 ## Mudanças
+
+### 0.7.1
+- `TailorLoader variant="dot"`: só o ponto, do tamanho do ícone (1em), para trocar spinners dentro de botões. O rótulo vai para o leitor de tela.
 
 ### 0.7.0
 API em inglês, pensando na internacionalização. O que saiu na 0.6.0 mudou de nome sem alias (nenhum app usava ainda); o que os apps já usam ganhou nome em inglês e o antigo segue funcionando até a 1.0.

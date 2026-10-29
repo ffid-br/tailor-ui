@@ -162,6 +162,14 @@
   50%  { transform: translate(8px, 8px); }
   75%  { transform: translate(0, 8px); }
 }
+/* dot: o mesmo quadrado, em % para caber em qualquer tamanho de ícone (1em). */
+.tailor-loader__dot { background: var(--tailor-loader-dot, var(--tailor-brand-primary)); animation: tailor-loader-dot 1.236s steps(1, end) infinite; }
+@keyframes tailor-loader-dot {
+  0%   { transform: translate(0, 0); }
+  25%  { transform: translate(161.8%, 0); }
+  50%  { transform: translate(161.8%, 161.8%); }
+  75%  { transform: translate(0, 161.8%); }
+}
 /* Sucesso: a malha nasce verde do ponto, o ponto estoura e o check se desenha. Uma vez só. */
 .tailor-loader__ok-malha .tailor-malha__linha { animation: tailor-ok-malha 0.618s var(--tailor-ease-in-out) both; }
 @keyframes tailor-ok-malha { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; opacity: 0.5; } }
@@ -427,7 +435,7 @@ textarea.tailor-field__control { padding: 8px 13px; min-height: 89px; }
 @media (prefers-reduced-motion: reduce) {
   .tailor-malha__linha { animation: none; stroke-dashoffset: 0; }
   .tailor-loader__rastro, .tailor-loader__check, .tailor-loader__ok-malha .tailor-malha__linha { animation: none; stroke-dashoffset: 0; opacity: 1; }
-  .tailor-loader__corredor, .tailor-loader__volta { animation: none; }
+  .tailor-loader__corredor, .tailor-loader__volta, .tailor-loader__dot { animation: none; }
   .tailor-loader__ok-ponto { animation: none; opacity: 0; }
   .tailor-skeleton::after { animation: none; display: none; }
   .tailor-field--error .tailor-field__control { animation: none; }

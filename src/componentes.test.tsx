@@ -103,3 +103,10 @@ describe('TailorLoader do parceiro', () => {
     expect(screen.getByText('Organizando')).toHaveClass('font-medium');
   });
 });
+
+describe('TailorLoader dot', () => {
+  it('só o ponto, com o rótulo para o leitor de tela', () => {
+    render(<TailorLoader variant="dot" label="Salvando" className="h-4 w-4" />);
+    expect(screen.getByRole('status', { name: 'Salvando' })).toHaveClass('h-4');
+  });
+});

@@ -45,11 +45,12 @@ export type TailorLoaderProps = {
   /**
    * `inline`: no lugar do conteúdo. `overlay`: tela inteira, bloqueia.
    * `compact`: uma linha (ponto + rótulo), para botões e listas.
+   * `dot`: só o ponto, do tamanho da fonte (1em), no lugar de um ícone; o rótulo vai para o leitor de tela.
    * `box`: numa caixa própria de 377px, com fundo e borda — para painéis
    * estreitos e fundos com estampa (chat), onde o inline ficaria transparente.
    */
   /** `caixa` é o nome antigo de `box` (obsoleto). */
-  variant?: 'inline' | 'overlay' | 'compact' | 'box' | 'caixa';
+  variant?: 'inline' | 'overlay' | 'compact' | 'box' | 'dot' | 'caixa';
   /** Troca a corrida pelo sucesso animado (a malha nasce verde e o ponto vira check). Rótulo padrão: o texto `done` do idioma. */
   success?: boolean;
   /** Tira o respiro externo do `inline`/`box` (quem chama já tem espaçamento). */
@@ -156,6 +157,14 @@ export const TailorLoader: React.FC<TailorLoaderProps> = ({
   const { messages: m } = useTailorLocale();
   const label = rotulo ?? (sucesso ? m.done : m.loading);
   const semRespiro = noPadding ?? semRespiroAntigo ?? false;
+  if (variant === 'dot') {
+    return (
+      <span role="status" aria-label={label} className={cn('relative inline-block size-[1em] shrink-0 align-[-0.125em]', className)}>
+        <span className="tailor-loader__dot absolute left-0 top-0 block size-[38.2%]" aria-hidden="true" />
+      </span>
+    );
+  }
+
   if (variant === 'compact') {
     return (
       <span role="status" aria-live="polite" className={cn('inline-flex items-center gap-[8px] text-sm text-black dark:text-white', className)}>
