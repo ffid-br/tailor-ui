@@ -106,7 +106,7 @@ function CabecalhoComMarca() {
           description="Quem chegou esta semana e o que falta para cada um avançar."
           breadcrumbs={[{ label: 'Início', href: '#cabecalho' }, { label: 'Comercial', href: '#cabecalho' }, { label: 'Leads' }]}
           badge={<span className="border border-current px-2 py-0.5 text-xs">Beta</span>}
-          stats={[{ label: 'novos', value: 128 }, { label: 'sem resposta', value: 17 }]}
+          stats={[{ label: 'Novos', value: 128 }, { label: 'Sem resposta', value: 17, tone: 'danger' }, { label: 'Taxa de resposta', value: '86,7%', tone: 'warning' }, { label: 'Em dia', value: 42, tone: 'success' }]}
           actions={<button type="button" className="h-10 bg-black px-4 text-sm font-medium text-white dark:bg-white dark:text-black">Novo lead</button>}
         />
         <div className="mt-6">
@@ -398,7 +398,7 @@ const { theme, dark } = themeFromWhitelabel(cliente.account_info.whitelabel);
     title="Leads"
     description="Quem chegou esta semana e o que falta para cada um avançar."
     breadcrumbs={[{ label: 'Início', href: '/' }, { label: 'Comercial', href: '/comercial' }, { label: 'Leads' }]}
-    stats={[{ label: 'novos', value: 128 }, { label: 'sem resposta', value: 17 }]}
+    stats={[{ label: 'Novos', value: 128 }, { label: 'Sem resposta', value: 17, tone: 'danger' }, { label: 'Taxa de resposta', value: '86,7%', tone: 'warning' }, { label: 'Em dia', value: 42, tone: 'success' }]}
     actions={<Botao>Novo lead</Botao>}
     renderLink={({ href, ...p }) => <NavLink to={href} {...p} />}
   />

@@ -22,8 +22,12 @@ export type TailorPageHeaderProps = {
   back?: { label: string; href?: string; onClick?: () => void };
   /** Ao lado do título: status, plano, contagem. */
   badge?: React.ReactNode;
-  /** Números do topo, quando ajudam a decidir o que fazer aqui. */
-  stats?: Array<{ label: string; value: React.ReactNode }>;
+  /**
+   * Números do topo, quando ajudam a decidir o que fazer aqui. Ficam numa faixa própria,
+   * abaixo do título. `tone` pinta o fio e o número: `danger` (crítico), `warning` (atenção),
+   * `success` (em dia). Sem tone, neutro.
+   */
+  stats?: Array<{ label: string; value: React.ReactNode; tone?: 'danger' | 'warning' | 'success'; hint?: string }>;
   /** Botões e busca, à direita. */
   actions?: React.ReactNode;
   /** Abaixo, na largura toda: abas, filtros, barra de busca. */
@@ -46,7 +50,7 @@ export function TailorPageHeader({
   renderLink = linkPadrao, className,
 }: TailorPageHeaderProps) {
   const { messages } = useTailorLocale();
-  const temLateral = Boolean(stats?.length || actions);
+  const temLateral = Boolean(actions);
   return (
     <header className={cn('tailor-ph', className)}>
       <div className="tailor-ph__row">
@@ -93,17 +97,19 @@ export function TailorPageHeader({
         </div>
 
         {temLateral && (
-          <div className="tailor-ph__aside">
-            {stats?.map((st) => (
-              <div key={st.label} className="tailor-ph__stat">
-                <span className="tailor-ph__stat-value">{st.value}</span>
-                <span className="tailor-ph__stat-label">{st.label}</span>
-              </div>
-            ))}
-            {actions}
-          </div>
+          <div className="tailor-ph__aside">{actions}</div>
         )}
       </div>
+      {stats && stats.length > 0 && (
+        <dl className="tailor-ph__stats">
+          {stats.map((st) => (
+            <div key={st.label} className={cn('tailor-ph__stat', st.tone && `tailor-ph__stat--${st.tone}`)} title={st.hint}>
+              <dt className="tailor-ph__stat-label">{st.label}</dt>
+              <dd className="tailor-ph__stat-value">{st.value}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
       {children && <div className="tailor-ph__below">{children}</div>}
     </header>
   );

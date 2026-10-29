@@ -221,7 +221,7 @@ const { theme, dark } = themeFromWhitelabel(client.account_info?.whitelabel);
     breadcrumbs={[{ label: 'Início', href: '/' }, { label: 'Leads' }]}
     back={{ label: 'Voltar', onClick: () => navigate(-1) }}
     badge={<Badge>Beta</Badge>}
-    stats={[{ label: 'novos', value: 128 }]}
+    stats={[{ label: 'Novos', value: 128 }, { label: 'Sem resposta', value: 17, tone: 'danger' }]}
     actions={<Button>Novo lead</Button>}
     renderLink={({ href, ...p }) => <NavLink to={href} {...p} />}
   >
@@ -378,6 +378,9 @@ Página pública: https://ffid-br.github.io/tailor-ui/ (publicada pelo workflow 
 
 
 ## Mudanças
+
+### 0.10.0
+- `TailorPageHeader`: os `stats` saem do lado do título e ganham uma faixa própria, abaixo dele. Cada número tem rótulo em cima, valor grande embaixo e um fio à esquerda. `tone` (`danger`, `warning`, `success`) pinta o fio e o número; `hint` vira o title. Algarismos alinhados (`lining-nums`), para o Raleway não desalinhar "598". A lateral fica só para `actions`.
 
 ### 0.8.0
 - `TailorButton`: botão da marca (`primary`, `secondary`, `ghost`, `dark`, `danger`; `sm`/`md`/`lg`; só ícone). `loading` troca o ícone pelo ponto correndo e bloqueia o clique; `done` mostra o check. O primário segue `--tailor-brand-primary` e o texto `--tailor-brand-on-primary` (o `themeFromWhitelabel` escolhe preto ou branco pelo contraste).

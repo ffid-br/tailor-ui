@@ -17,12 +17,19 @@ describe('TailorPageHeader', () => {
     expect(screen.getByText('CRM')).toBeInTheDocument();
   });
 
-  it('back sem href vira botão; lateral só aparece com stats ou actions', () => {
+  it('back sem href vira botão; lateral só aparece com actions', () => {
     const back = vi.fn();
     const { container } = render(<TailorPageHeader title="Lead" back={{ label: 'Voltar', onClick: back }} />);
     fireEvent.click(screen.getByRole('button', { name: /Voltar/ }));
     expect(back).toHaveBeenCalled();
     expect(container.querySelector('.tailor-ph__aside')).toBeNull();
+  });
+
+  it('números numa faixa própria, como lista de termos, com o tom na classe', () => {
+    const { container } = render(<TailorPageHeader title="Alucinação" stats={[{ label: 'Taxa', value: '5,9%', tone: 'warning' }, { label: 'Analisadas', value: 598 }]} />);
+    expect(container.querySelector('.tailor-ph__aside')).toBeNull();
+    expect(screen.getByText('Taxa').tagName).toBe('DT');
+    expect(screen.getByText('5,9%').closest('.tailor-ph__stat')).toHaveClass('tailor-ph__stat--warning');
   });
 });
 
