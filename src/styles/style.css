@@ -181,11 +181,16 @@
 .tailor-skeleton__cards { display: grid; gap: 13px; grid-template-columns: repeat(auto-fit, minmax(144px, 1fr)); }
 .tailor-skeleton__card { display: grid; gap: 13px; padding: 21px; border: 1px solid var(--tailor-brand-border); }
 .tailor-skeleton::after {
-  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 2px;
+  content: ''; position: absolute; left: 0; top: 0; width: 8px; height: 8px;
   background: var(--tailor-brand-primary);
-  animation: tailor-skeleton-scan 1.618s var(--tailor-ease-in-out) infinite alternate;
+  animation: tailor-skeleton-dot 2.618s var(--tailor-ease-in-out) infinite;
 }
-@keyframes tailor-skeleton-scan { from { top: 0; } to { top: calc(100% - 2px); } }
+/* O ponto atravessa o topo uma vez e some; o resto fica parado. */
+@keyframes tailor-skeleton-dot {
+  0%     { left: 0; opacity: 1; }
+  61.8%  { left: calc(100% - 8px); opacity: 1; }
+  70%, 100% { left: calc(100% - 8px); opacity: 0; }
+}
 :where(.dark, [data-theme="dark"]) .tailor-skeleton { --tailor-skeleton-bar: #1F1F1F; }
 
 /* TailorAvisos — caixa preta; a cor do tipo entra varrendo e recolhe na borda; barra do tempo. */
@@ -198,7 +203,7 @@
   --tailor-toast-color: var(--tailor-brand-primary);
   position: relative; overflow: hidden; pointer-events: auto; display: flex; align-items: flex-start; gap: 13px;
   padding: 16px 13px 18px 21px; background: #000; color: #fff; font-family: var(--tailor-font);
-  animation: tailor-toast-in 0.382s var(--tailor-ease-out) both;
+  animation: tailor-toast-in 0.5s var(--tailor-ease-in-out) both;
 }
 .tailor-toast--error { --tailor-toast-color: #FF0040; }
 .tailor-toast::before {
@@ -206,7 +211,8 @@
   width: 3px;
 }
 .tailor-toast > * { position: relative; }
-@keyframes tailor-toast-in { from { transform: translateY(-21px); opacity: 0; } to { transform: none; opacity: 1; } }
+/* O aviso abre a partir do ponto do ícone (centro do ícone de 21px: 31,5px da esquerda, 26,5px do topo). */
+@keyframes tailor-toast-in { from { clip-path: inset(22.5px calc(100% - 35.5px) calc(100% - 30.5px) 27.5px); } to { clip-path: inset(0); } }
 .tailor-toast__icon { width: 21px; height: 21px; flex-shrink: 0; overflow: visible; stroke: var(--tailor-toast-color); fill: var(--tailor-toast-color); }
 .tailor-toast .tailor-loader__check { animation-delay: 0s; }
 .tailor-toast__text { flex: 1; min-width: 0; }
@@ -239,18 +245,24 @@
   gap: 13px; padding: 34px 21px; text-align: center; font-family: var(--tailor-font);
   background: var(--tailor-result-color); color: var(--tailor-result-text);
   --tailor-typewriter-cursor: var(--tailor-result-text);
-  animation: tailor-result-in 0.382s var(--tailor-ease-in-out) both;
+  --tailor-result-x: 50%;
+  --tailor-result-y: 50%;
+  animation: tailor-result-in 0.5s var(--tailor-ease-in-out) both;
 }
 .tailor-result--error { --tailor-result-color: #FF0040; --tailor-result-text: #fff; }
 .tailor-result--leaving { animation: tailor-result-out 0.618s var(--tailor-ease-in-out) both; }
-@keyframes tailor-result-in { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+/* O ponto: um quadrado de 8px no centro do botão de origem (ou do painel). */
+@keyframes tailor-result-in {
+  from { clip-path: inset(calc(var(--tailor-result-y) - 4px) calc(100% - var(--tailor-result-x) - 4px) calc(100% - var(--tailor-result-y) - 4px) calc(var(--tailor-result-x) - 4px)); }
+  to   { clip-path: inset(0); }
+}
 @keyframes tailor-result-out {
-  0%   { clip-path: inset(0 0 0 0); }
-  70%  { clip-path: inset(calc(50% - 4px) calc(50% - 4px)); opacity: 1; }
-  100% { clip-path: inset(calc(50% - 4px) calc(50% - 4px)); opacity: 0; }
+  0%   { clip-path: inset(0); }
+  70%  { clip-path: inset(calc(var(--tailor-result-y) - 4px) calc(100% - var(--tailor-result-x) - 4px) calc(100% - var(--tailor-result-y) - 4px) calc(var(--tailor-result-x) - 4px)); opacity: 1; }
+  100% { clip-path: inset(calc(var(--tailor-result-y) - 4px) calc(100% - var(--tailor-result-x) - 4px) calc(100% - var(--tailor-result-y) - 4px) calc(var(--tailor-result-x) - 4px)); opacity: 0; }
 }
 .tailor-result__icon { width: 55px; height: 55px; overflow: visible; stroke: var(--tailor-result-text); }
-.tailor-result .tailor-loader__check { animation-delay: 0.3s; }
+.tailor-result .tailor-loader__check { animation-delay: 0.45s; }
 .tailor-result__title { margin: 0; min-height: 1.1em; font-size: 26px; font-weight: 500; line-height: 1.1; }
 .tailor-result__description { font-size: 15px; line-height: 1.5; opacity: 0.8; }
 .tailor-result__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 8px; }

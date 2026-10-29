@@ -187,7 +187,11 @@ function ProgressoDemo() {
 function ModalDemo() {
   const [aberto, setAberto] = useState(false);
   const [fase, setFase] = useState<'editando' | 'salvando' | 'sucesso' | 'erro'>('editando');
+  const [origem, setOrigem] = useState<React.RefObject<HTMLButtonElement | null>>({ current: null });
+  const salvarRef = useRef<HTMLButtonElement>(null);
+  const erroRef = useRef<HTMLButtonElement>(null);
   const salvar = (falhar: boolean) => {
+    setOrigem(falhar ? erroRef : salvarRef);
     setFase('salvando');
     setTimeout(() => setFase(falhar ? 'erro' : 'sucesso'), 1236);
   };
@@ -205,14 +209,14 @@ function ModalDemo() {
             </label>
             <div className="mt-6 flex flex-wrap justify-end gap-2">
               <button type="button" className="h-10 border border-black px-4 text-sm dark:border-white" onClick={fechar}>Cancelar</button>
-              <button type="button" className="h-10 border border-black px-4 text-sm dark:border-white" disabled={fase === 'salvando'} onClick={() => salvar(true)}>Salvar com erro</button>
-              <button type="button" className="flex h-10 items-center bg-tailor-green px-4 text-sm font-medium text-black" disabled={fase === 'salvando'} onClick={() => salvar(false)}>
+              <button ref={erroRef} type="button" className="h-10 border border-black px-4 text-sm dark:border-white" disabled={fase === 'salvando'} onClick={() => salvar(true)}>Salvar com erro</button>
+              <button ref={salvarRef} type="button" className="flex h-10 items-center bg-tailor-green px-4 text-sm font-medium text-black" disabled={fase === 'salvando'} onClick={() => salvar(false)}>
                 {fase === 'salvando' ? <TailorLoader variant="compact" label="Salvando" className="text-black dark:text-black [--tailor-loader-dot:#000]" /> : 'Salvar'}
               </button>
             </div>
-            {fase === 'sucesso' && <TailorResult status="success" title="Contato salvo" description="Maria Souza entrou no funil Vendas" onClose={fechar} />}
+            {fase === 'sucesso' && <TailorResult status="success" title="Contato salvo" description="Maria Souza entrou no funil Vendas" origin={origem} onClose={fechar} />}
             {fase === 'erro' && (
-              <TailorResult status="error" title="Não deu para salvar" description="Sem conexão. Nada foi perdido."
+              <TailorResult status="error" origin={origem} title="Não deu para salvar" description="Sem conexão. Nada foi perdido."
                 actions={<>
                   <button type="button" className="h-10 border border-white px-4 text-sm" onClick={() => setFase('editando')}>Voltar ao formulário</button>
                   <button type="button" className="h-10 bg-white px-4 text-sm font-medium text-black" onClick={() => salvar(false)}>Tentar de novo</button>
@@ -434,7 +438,7 @@ const columns: TailorTableColumn<Corretor>[] = [
                 <button type="button" className={botao} onClick={() => toast.info('Sincronizando contatos')}>Info</button>
               </div>
             </Exemplo>
-            <Exemplo titulo="modal concluído (TailorResult)" codigo={`<div className="relative ...">   {/* o painel do modal */}\n  ...formulário...\n  {ok && <TailorResult status="success" title="Contato salvo" description="Maria Souza" onClose={fechar} />}\n  {erro && <TailorResult status="error" title="Não deu para salvar" actions={<button>Tentar de novo</button>} />}\n</div>`}>
+            <Exemplo titulo="modal concluído (TailorResult)" codigo={`<div className="relative ...">   {/* o painel do modal */}\n  ...formulário...\n  {ok && <TailorResult status="success" origin={salvarRef} title="Contato salvo" description="Maria Souza" onClose={fechar} />}\n  {erro && <TailorResult status="error" origin={origem} title="Não deu para salvar" actions={<button>Tentar de novo</button>} />}\n</div>`}>
               <ModalDemo />
             </Exemplo>
             <Exemplo titulo="TailorTypewriter" codigo={`<TailorTypewriter texts={['Cruzando origens e etapas', 'Separando quem respondeu', 'Quase lá']} />`}>

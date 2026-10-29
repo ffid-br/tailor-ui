@@ -42,7 +42,8 @@ const Icone: React.FC<{ type: TailorToastType; escrito: boolean }> = ({ type, es
 
 function ItemToast({ item }: { item: Toast }) {
   const { messages } = useTailorLocale();
-  const [escrito, setEscrito] = useState(typeof item.title !== 'string');
+  const digita = typeof item.title === 'string' && item.type !== 'error';
+  const [escrito, setEscrito] = useState(!digita);
   useEffect(() => {
     const t = setTimeout(() => toast.dismiss(item.id), item.duration);
     return () => clearTimeout(t);
@@ -53,8 +54,8 @@ function ItemToast({ item }: { item: Toast }) {
       <Icone type={item.type} escrito={escrito} />
       <div className="tailor-toast__text">
         <p className="tailor-toast__title">
-          {typeof item.title === 'string'
-            ? <TailorTypewriter texts={[item.title]} once onDone={() => setEscrito(true)} />
+          {digita
+            ? <TailorTypewriter texts={[item.title as string]} once onDone={() => setEscrito(true)} />
             : item.title}
         </p>
         {item.description && <p className="tailor-toast__description">{item.description}</p>}
