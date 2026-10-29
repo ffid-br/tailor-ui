@@ -10,6 +10,8 @@ export type TailorTheme = {
   primary?: string;
   /** Destaque como texto sobre o fundo (precisa de contraste; no Tailor é o verde-ink). */
   primaryText?: string;
+  /** Texto sobre a primária (botão primário). Do whitelabel: preto ou branco, o que tiver mais contraste. */
+  onPrimary?: string;
   text?: string;
   textMuted?: string;
   border?: string;
@@ -27,6 +29,7 @@ export type TailorTheme = {
 const VARIAVEL: Record<keyof TailorTheme, string> = {
   primary: '--tailor-brand-primary',
   primaryText: '--tailor-brand-primary-text',
+  onPrimary: '--tailor-brand-on-primary',
   text: '--tailor-brand-text',
   textMuted: '--tailor-brand-text-muted',
   border: '--tailor-brand-border',
@@ -127,6 +130,7 @@ export function themeFromWhitelabel(wl?: TailorWhitelabel | null): { theme: Tail
   const theme: TailorTheme = {
     primary: primaria,
     primaryText: primaria && contrast(primaria, fundo) >= 4.5 ? primaria : texto,
+    onPrimary: primaria ? (contrast(primaria, '#000000') >= contrast(primaria, '#FFFFFF') ? '#000000' : '#FFFFFF') : undefined,
     text: texto,
     textMuted: hex(c.text_muted),
     border: hex(c.border),

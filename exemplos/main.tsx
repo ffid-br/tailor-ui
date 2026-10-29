@@ -15,6 +15,7 @@ import {
   TailorTypewriter,
   TailorResult,
   TailorField,
+  TailorButton,
   TailorBrand,
   TailorMobileBar,
   TailorPageHeader,
@@ -243,6 +244,20 @@ function ModalDemo() {
   );
 }
 
+/** Salvar de verdade: ponto correndo, depois o check por um instante. */
+function BotaoDemo() {
+  const [fase, setFase] = useState<'parado' | 'salvando' | 'salvo'>('parado');
+  const salvar = () => {
+    setFase('salvando');
+    setTimeout(() => { setFase('salvo'); setTimeout(() => setFase('parado'), 1618); }, 1618);
+  };
+  return (
+    <TailorButton loading={fase === 'salvando'} loadingText="Salvando" done={fase === 'salvo'} onClick={salvar}>
+      {fase === 'salvo' ? 'Salvo' : 'Salvar alterações'}
+    </TailorButton>
+  );
+}
+
 function Exemplo({ titulo, codigo, children, escuro }: { titulo: string; codigo: string; children: React.ReactNode; escuro?: boolean }) {
   return (
     <div className="overflow-hidden rounded-lg border border-neutral-200 dark:border-neutral-800">
@@ -271,6 +286,7 @@ const SECOES = [
   { id: 'cabecalho', rotulo: 'TailorPageHeader', icone: Quadrado },
   { id: 'tabela', rotulo: 'TailorTable', icone: Quadrado },
   { id: 'loader', rotulo: 'TailorLoader', icone: Circulo },
+  { id: 'botao', rotulo: 'TailorButton', icone: Quadrado },
   { id: 'feedback', rotulo: 'Avisos e esqueleto', icone: Circulo },
   { id: 'intro', rotulo: 'CinematicIntro', icone: Quadrado },
   { id: 'ponto', rotulo: 'PontoMalha', icone: Circulo },
@@ -441,6 +457,28 @@ const columns: TailorTableColumn<Corretor>[] = [
             <Exemplo titulo="overlay" codigo={`<TailorLoader variant="overlay" label="Entrando" />`}>
               <button type="button" className={botao} onClick={() => setOverlay(true)}>Mostrar por 2s</button>
               {overlay && <TailorLoader variant="overlay" label="Entrando" />}
+            </Exemplo>
+          </Secao>
+
+          <Secao id="botao" titulo="TailorButton" descricao="Cantos retos, um primário por vista. Carregando, o ícone vira o ponto correndo; feito, vira o check. O primário segue a cor da marca do cliente.">
+            <Exemplo titulo="variantes" codigo={`<TailorButton>Salvar alterações</TailorButton>\n<TailorButton variant="secondary">Cancelar</TailorButton>\n<TailorButton variant="ghost">Ver detalhes</TailorButton>\n<TailorButton variant="dark">Exportar</TailorButton>\n<TailorButton variant="danger">Excluir contato</TailorButton>\n<TailorButton variant="ghost" aria-label="Fechar" icon={<X />} />`}>
+              <div className="flex flex-wrap items-center gap-2">
+                <TailorButton>Salvar alterações</TailorButton>
+                <TailorButton variant="secondary">Cancelar</TailorButton>
+                <TailorButton variant="ghost">Ver detalhes</TailorButton>
+                <TailorButton variant="dark">Exportar</TailorButton>
+                <TailorButton variant="danger">Excluir contato</TailorButton>
+                <TailorButton variant="ghost" aria-label="Fechar" icon={<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 3l10 10M13 3L3 13" /></svg>} />
+              </div>
+            </Exemplo>
+            <Exemplo titulo="tamanhos e estados" codigo={`<TailorButton size="sm">Pequeno</TailorButton>\n<TailorButton size="lg">Grande</TailorButton>\n<TailorButton loading={saving} loadingText="Salvando" done={saved} onClick={save}>Salvar alterações</TailorButton>\n<TailorButton disabled>Indisponível</TailorButton>`}>
+              <div className="flex flex-wrap items-center gap-2">
+                <TailorButton size="sm">Pequeno</TailorButton>
+                <TailorButton size="lg">Grande</TailorButton>
+                <BotaoDemo />
+                <TailorButton variant="secondary" loading loadingText="Atualizando">Atualizar</TailorButton>
+                <TailorButton disabled>Indisponível</TailorButton>
+              </div>
             </Exemplo>
           </Secao>
 

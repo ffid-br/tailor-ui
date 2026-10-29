@@ -28,6 +28,7 @@
      cor do cliente (accounts, brandTheme) leva o cabeçalho junto. */
   --tailor-brand-primary: var(--color-tailor-green, var(--tailor-green));
   --tailor-brand-primary-text: var(--color-tailor-ink, var(--tailor-ink));
+  --tailor-brand-on-primary: #000000;
   --tailor-brand-text: var(--tailor-black);
   --tailor-brand-text-muted: #666666;
   --tailor-brand-border: #E5E5E5;
@@ -308,6 +309,44 @@ textarea.tailor-field__control { padding: 8px 13px; min-height: 89px; }
 @keyframes tailor-user-menu-out { from { clip-path: inset(0); } to { clip-path: inset(calc(100% - 8px) calc(100% - 8px) 0 0); } }
 @keyframes tailor-user-menu-dot { 0%, 61.8% { opacity: 1; } 100% { opacity: 0; } }
 
+/* TailorButton — cantos retos; carregando, o ícone vira o ponto correndo; feito, vira o check. */
+.tailor-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; flex-shrink: 0;
+  height: 40px; padding: 0 21px; border: 1px solid transparent; border-radius: var(--tailor-brand-radius, 0);
+  font-family: var(--tailor-brand-body-font, var(--tailor-font)); font-size: 14px; font-weight: 500; line-height: 1; white-space: nowrap;
+  cursor: pointer; transition: background-color 0.15s var(--tailor-ease-out), color 0.15s var(--tailor-ease-out), border-color 0.15s var(--tailor-ease-out);
+}
+.tailor-btn:focus-visible { outline: 2px solid var(--tailor-brand-text); outline-offset: 2px; }
+.tailor-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.tailor-btn--loading { cursor: wait; }
+.tailor-btn--sm { height: 32px; padding: 0 13px; font-size: 13px; }
+.tailor-btn--lg { height: 48px; padding: 0 34px; font-size: 16px; }
+.tailor-btn--icon-only { padding: 0; width: 40px; }
+.tailor-btn--icon-only.tailor-btn--sm { width: 32px; }
+.tailor-btn--icon-only.tailor-btn--lg { width: 48px; }
+.tailor-btn--full { width: 100%; }
+.tailor-btn--primary { background: var(--tailor-brand-primary); color: var(--tailor-brand-on-primary); }
+.tailor-btn--primary:not(:disabled):hover { background: color-mix(in srgb, var(--tailor-brand-primary) 88%, #000); }
+.tailor-btn--secondary { background: transparent; color: var(--tailor-brand-text); border-color: currentColor; }
+.tailor-btn--ghost { background: transparent; color: var(--tailor-brand-text); }
+.tailor-btn--secondary:not(:disabled):hover, .tailor-btn--ghost:not(:disabled):hover { background: color-mix(in srgb, var(--tailor-brand-text) 6%, transparent); }
+.tailor-btn--dark { background: #000; color: #fff; }
+.tailor-btn--dark:not(:disabled):hover { background: #333; }
+:where(.dark, [data-theme="dark"]) .tailor-btn--dark { background: #fff; color: #000; }
+:where(.dark, [data-theme="dark"]) .tailor-btn--dark:not(:disabled):hover { background: #E5E5E5; }
+.tailor-btn--danger { background: #FF0040; color: #fff; }
+.tailor-btn--danger:not(:disabled):hover { background: #D6003A; }
+.tailor-btn__icon { display: inline-flex; width: 1.15em; height: 1.15em; }
+.tailor-btn__icon > svg { width: 100%; height: 100%; }
+.tailor-btn__dot { position: relative; display: inline-block; width: 1em; height: 1em; }
+.tailor-btn__dot > span {
+  position: absolute; left: 0; top: 0; width: 38.2%; height: 38.2%; background: currentColor;
+  animation: tailor-loader-dot 1.236s steps(1, end) infinite;
+}
+.tailor-btn--secondary .tailor-btn__dot > span, .tailor-btn--ghost .tailor-btn__dot > span { background: var(--tailor-brand-primary); }
+.tailor-btn__check { width: 1.15em; height: 1.15em; overflow: visible; stroke: currentColor; }
+.tailor-btn__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
 /* PontoMalha e a malha da entrada: se desenham a partir do ponto e somem, em 2φ (3,236s). */
 .tailor-malha__linha {
   stroke-dasharray: 1;
@@ -435,7 +474,7 @@ textarea.tailor-field__control { padding: 8px 13px; min-height: 89px; }
 @media (prefers-reduced-motion: reduce) {
   .tailor-malha__linha { animation: none; stroke-dashoffset: 0; }
   .tailor-loader__rastro, .tailor-loader__check, .tailor-loader__ok-malha .tailor-malha__linha { animation: none; stroke-dashoffset: 0; opacity: 1; }
-  .tailor-loader__corredor, .tailor-loader__volta, .tailor-loader__dot { animation: none; }
+  .tailor-loader__corredor, .tailor-loader__volta, .tailor-loader__dot, .tailor-btn__dot > span { animation: none; }
   .tailor-loader__ok-ponto { animation: none; opacity: 0; }
   .tailor-skeleton::after { animation: none; display: none; }
   .tailor-field--error .tailor-field__control { animation: none; }

@@ -288,6 +288,7 @@ Um jeito só em todo app:
 | Tela ou bloco chegando | `<TailorSkeleton />` com `shape` `text`, `table`, `cards` ou `block` |
 | Carregamento sem forma conhecida | `<TailorLoader />` |
 | Campo obrigatório vazio ou inválido | `<TailorField label="Nome" required error="Preencha o nome."><input /></TailorField>`: borda e ponto vermelhos, mensagem ligada ao campo |
+| Botão | `<TailorButton loading={saving} loadingText="Salvando" done={saved}>Salvar</TailorButton>` |
 | Ícone girando num botão | `{saving ? <TailorLoader variant="dot" label="Salvando" /> : <SaveIcon />}` |
 | Botão salvando | `<TailorLoader variant="compact" label="Salvando" />` dentro do botão |
 | Formulário salvo | `<TailorLoader success label="Contato salvo" />` no lugar do formulário + `toast.success(...)` |
@@ -377,6 +378,9 @@ Página pública: https://ffid-br.github.io/tailor-ui/ (publicada pelo workflow 
 
 
 ## Mudanças
+
+### 0.8.0
+- `TailorButton`: botão da marca (`primary`, `secondary`, `ghost`, `dark`, `danger`; `sm`/`md`/`lg`; só ícone). `loading` troca o ícone pelo ponto correndo e bloqueia o clique; `done` mostra o check. O primário segue `--tailor-brand-primary` e o texto `--tailor-brand-on-primary` (o `themeFromWhitelabel` escolhe preto ou branco pelo contraste).
 
 ### 0.7.1
 - `TailorLoader variant="dot"`: só o ponto, do tamanho do ícone (1em), para trocar spinners dentro de botões. O rótulo vai para o leitor de tela.

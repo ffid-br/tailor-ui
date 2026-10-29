@@ -1,5 +1,5 @@
 import { act, render, screen, fireEvent } from '@testing-library/react';
-import { TailorField, TailorToaster, TailorResult, TailorTypewriter, TailorSkeleton, toast } from './index';
+import { TailorButton, TailorField, TailorToaster, TailorResult, TailorTypewriter, TailorSkeleton, toast } from './index';
 
 describe('TailorToaster', () => {
   it('mostra sucesso como status e erro como alert; fecha no botão', () => {
@@ -73,5 +73,24 @@ describe('TailorField', () => {
     rerender(<TailorField label="Nome" required error="Preencha o nome."><input /></TailorField>);
     expect(input).toHaveAttribute('aria-invalid', 'true');
     expect(input).toHaveAccessibleDescription('Preencha o nome.');
+  });
+});
+
+describe('TailorButton', () => {
+  it('carregando: ocupado, sem clique, texto de carregando', () => {
+    const clique = vi.fn();
+    const { rerender } = render(<TailorButton onClick={clique}>Salvar</TailorButton>);
+    fireEvent.click(screen.getByRole('button', { name: 'Salvar' }));
+    expect(clique).toHaveBeenCalledTimes(1);
+    rerender(<TailorButton onClick={clique} loading loadingText="Salvando">Salvar</TailorButton>);
+    const b = screen.getByRole('button', { name: 'Salvando' });
+    expect(b).toHaveAttribute('aria-busy', 'true');
+    fireEvent.click(b);
+    expect(clique).toHaveBeenCalledTimes(1);
+  });
+
+  it('só ícone vira quadrado e usa o aria-label', () => {
+    render(<TailorButton aria-label="Fechar" icon={<svg />} variant="ghost" />);
+    expect(screen.getByRole('button', { name: 'Fechar' })).toHaveClass('tailor-btn--icon-only');
   });
 });

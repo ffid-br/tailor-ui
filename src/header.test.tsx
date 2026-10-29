@@ -59,6 +59,7 @@ describe('themeFromWhitelabel', () => {
   it('primária escura com contraste vira texto também; dark gera tema escuro', () => {
     const { theme, dark } = themeFromWhitelabel({ colors: { primary: '#002a57', dark: { primary: '#4da3ff', text: '#ffffff' } } });
     expect(theme.primaryText).toBe('#002a57');
+    expect(theme.onPrimary).toBe('#FFFFFF');
     expect(dark?.primaryText).toBe('#4da3ff');
   });
 });
