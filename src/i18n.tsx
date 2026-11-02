@@ -15,6 +15,11 @@ export type TailorMessages = {
   dismiss: string;
   skip: string;
   required: string;
+  news: string;
+  newsSubtitle: string;
+  seePrevious: string;
+  close: string;
+  unseen: (count: string) => string;
 };
 
 const PT_BR: TailorMessages = {
@@ -31,6 +36,11 @@ const PT_BR: TailorMessages = {
   dismiss: 'Fechar aviso',
   skip: 'Pular',
   required: 'obrigatório',
+  news: 'Novidades',
+  newsSubtitle: 'O que mudou.',
+  seePrevious: 'Ver anteriores',
+  close: 'Fechar',
+  unseen: (n) => `${n} novas`,
 };
 
 const EN: TailorMessages = {
@@ -47,9 +57,35 @@ const EN: TailorMessages = {
   dismiss: 'Dismiss',
   skip: 'Skip',
   required: 'required',
+  news: "What's new",
+  newsSubtitle: 'What changed.',
+  seePrevious: 'See earlier',
+  close: 'Close',
+  unseen: (n) => `${n} new`,
 };
 
-export const TAILOR_MESSAGES: Record<string, TailorMessages> = { 'pt-BR': PT_BR, en: EN };
+const ES: TailorMessages = {
+  loading: 'Cargando',
+  done: 'Listo',
+  empty: 'Ningún registro en el período.',
+  total: 'Total',
+  pagination: 'Paginación',
+  page: (p, t) => `Página ${p} de ${t}`,
+  rows: (n) => `${n} registros`,
+  previous: 'Anterior',
+  next: 'Siguiente',
+  breadcrumb: 'Ruta',
+  dismiss: 'Cerrar aviso',
+  skip: 'Omitir',
+  required: 'obligatorio',
+  news: 'Novedades',
+  newsSubtitle: 'Qué cambió.',
+  seePrevious: 'Ver anteriores',
+  close: 'Cerrar',
+  unseen: (n) => `${n} nuevas`,
+};
+
+export const TAILOR_MESSAGES: Record<string, TailorMessages> = { 'pt-BR': PT_BR, en: EN, es: ES };
 
 export type TailorLocale = {
   /** BCP 47. Formata números e datas; escolhe os textos (`pt-BR` e `en` inclusos; outro idioma cai no `en`). */
