@@ -59,6 +59,8 @@ describe('TailorSidebar', () => {
     const link = barra().getByRole('link', { name: 'Início' });
     expect(link).toHaveAttribute('title', 'Início');
     expect(barra().getByRole('link', { name: 'Mensagens (3)' })).toHaveAttribute('title', 'Mensagens (3)');
+    expect(barra().getByText('3')).toBeInTheDocument();
+    expect(barra().getByText('99+').className).toContain('bg-red-600');
     expect(barra().getByRole('button', { name: 'Expandir barra lateral' })).toBeInTheDocument();
   });
 
