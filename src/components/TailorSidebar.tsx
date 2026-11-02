@@ -62,7 +62,6 @@ type Tom = {
   hover: string;
   ativo: string;
   chip: string;
-  ponto: string;
   avatar: string;
   perigo: string;
 };
@@ -79,7 +78,6 @@ const TONS: Record<SuperficieSidebar, Tom> = {
     hover: 'hover:bg-neutral-50 hover:text-black dark:hover:bg-white/5 dark:hover:text-white',
     ativo: 'bg-neutral-100 text-black dark:bg-white/10 dark:text-white',
     chip: 'bg-neutral-900 text-white dark:bg-white dark:text-black',
-    ponto: 'bg-neutral-900 dark:bg-white',
     avatar: 'bg-black text-tailor-green dark:bg-white/10',
     perigo: 'text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-500/10',
   },
@@ -92,7 +90,6 @@ const TONS: Record<SuperficieSidebar, Tom> = {
     hover: 'hover:bg-neutral-50 hover:text-black',
     ativo: 'bg-neutral-100 text-black',
     chip: 'bg-neutral-900 text-white',
-    ponto: 'bg-neutral-900',
     avatar: 'bg-black text-tailor-green',
     perigo: 'text-red-600 hover:bg-red-50',
   },
@@ -105,7 +102,6 @@ const TONS: Record<SuperficieSidebar, Tom> = {
     hover: 'hover:bg-white/5 hover:text-white',
     ativo: 'bg-white/10 text-white',
     chip: 'bg-white text-black',
-    ponto: 'bg-white',
     avatar: 'bg-white/10 text-tailor-green',
     perigo: 'text-red-400 hover:bg-red-500/10',
   },
@@ -199,7 +195,18 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({ item, nivel = 0 }) => 
         <Icone className="size-[18px] stroke-[1.5]" />
       </span>
       {recolhido ? (
-        badge && <span aria-hidden="true" className={cn('absolute left-1/2 top-[5px] ml-[6px] size-[8px]', alerta ? 'bg-red-600' : tom.ponto)} />
+        // Número no trilho também: quem está em outra tela precisa ver quantas esperam, não só que há algo.
+        badge && (
+          <span
+            aria-hidden="true"
+            className={cn(
+              'absolute left-1/2 top-[2px] ml-[3px] inline-flex h-[15px] min-w-[15px] items-center justify-center px-[3px] font-tailor-num text-[10px] font-medium leading-none tabular-nums',
+              alerta ? 'bg-red-600 text-white' : tom.chip,
+            )}
+          >
+            {textoBadge(item.badge)}
+          </span>
+        )
       ) : (
         <>
           <span className="min-w-0 flex-1 truncate">{item.rotulo}</span>
