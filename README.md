@@ -378,7 +378,23 @@ npm run build    # dist/: index.es.js, index.umd.js, types/, style.css, theme.cs
 Página pública: https://ffid-br.github.io/tailor-ui/ (publicada pelo workflow `exemplos.yml` a cada push na `main`).
 
 
+## Novidades (changelog do app)
+
+```tsx
+const NOVIDADES: TailorNovidade[] = [ // mais recente primeiro
+  { id: '2026-11-02', data: '2026-11-02', tela: 'Campanhas', titulo: 'Filtro por período', itens: ['Escolha o intervalo no topo.'] },
+];
+
+<TailorNovidades novidades={NOVIDADES} chave="crm" usuario={user.id} />
+```
+
+Gatilho com contador verde das não vistas (9+); abrir marca como visto (localStorage `tailor-novidades:<chave>:<usuario>`). Para botão próprio: `useNovidades` (`{ naoVistas, marcarVistas }`) + `TailorNovidadesDialog` (`aberto`, `onFechar`, `novidades`, `limite = 5`). Substitui os avisos "O que mudou" nas telas.
+
 ## Mudanças
+
+### 0.13.0
+- `TailorNovidades`, `TailorNovidadesDialog` e `useNovidades`: changelog compartilhado dos apps. Textos em pt-BR, en e es (novo idioma `es` nos textos dos componentes).
+
 
 ### 0.10.0
 - `TailorPageHeader`: os `stats` saem do lado do título e ganham uma faixa própria, abaixo dele. Cada número tem rótulo em cima, valor grande embaixo e um fio à esquerda. `tone` (`danger`, `warning`, `success`) pinta o fio e o número; `hint` vira o title. Algarismos alinhados (`lining-nums`), para o Raleway não desalinhar "598". A lateral fica só para `actions`.

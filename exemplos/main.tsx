@@ -11,6 +11,7 @@ import {
   TailorLoader,
   TailorSkeleton,
   TailorToaster,
+  TailorNovidades,
   toast,
   TailorTypewriter,
   TailorResult,
@@ -489,6 +490,12 @@ const columns: TailorTableColumn<Corretor>[] = [
                 <button type="button" className={botao} onClick={() => toast.error('Não deu para salvar', { description: 'Sem conexão. Tente de novo.' })}>Erro</button>
                 <button type="button" className={botao} onClick={() => toast.info('Sincronizando contatos')}>Info</button>
               </div>
+            </Exemplo>
+            <Exemplo titulo="TailorNovidades" codigo={`const NOVIDADES = [\n  { id: '2026-11-02', data: '2026-11-02', tela: 'Campanhas', titulo: 'Filtro por período', itens: ['Escolha o intervalo no topo.'] },\n]; // mais recente primeiro\n\n<TailorNovidades novidades={NOVIDADES} chave="crm" usuario={user.id} />`}>
+              <TailorNovidades chave="exemplo" novidades={[
+                { id: '2026-11-02', data: '2026-11-02', tela: 'Campanhas', titulo: 'Filtro por período', itens: ['Escolha o intervalo no topo da tela.', 'O total acompanha o filtro.'] },
+                { id: '2026-10-28', data: '2026-10-28', titulo: 'Contatos importados', itens: ['A importação mostra quantas linhas entraram.'] },
+              ]} />
             </Exemplo>
             <Exemplo titulo="modal concluído (TailorResult)" codigo={`<div className="relative ...">   {/* o painel do modal */}\n  ...formulário...\n  {ok && <TailorResult status="success" origin={salvarRef} title="Contato salvo" description="Maria Souza" onClose={fechar} />}\n  {erro && <TailorResult status="error" origin={origem} title="Não deu para salvar" actions={<button>Tentar de novo</button>} />}\n</div>`}>
               <ModalDemo />

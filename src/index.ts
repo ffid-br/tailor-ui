@@ -60,3 +60,5 @@ export { TailorField } from './components/TailorField';
 export type { TailorFieldProps } from './components/TailorField';
 export { TailorButton } from './components/TailorButton';
 export type { TailorButtonProps } from './components/TailorButton';
+export { TailorNovidades, TailorNovidadesDialog, useNovidades } from './components/TailorNovidades';
+export type { TailorNovidade, TailorNovidadesProps, TailorNovidadesDialogProps } from './components/TailorNovidades';
