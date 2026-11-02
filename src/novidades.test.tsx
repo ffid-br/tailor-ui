@@ -45,6 +45,18 @@ describe('TailorNovidades', () => {
     expect(gatilho).toHaveFocus();
   });
 
+  it('Tab e Shift+Tab ciclam dentro do modal', () => {
+    render(<TailorNovidades novidades={lista(7)} chave="crm" limite={2} />);
+    fireEvent.click(screen.getByRole('button', { name: /Novidades/ }));
+    const fechar = screen.getByRole('button', { name: 'Fechar' });
+    const mais = screen.getByRole('button', { name: 'Ver anteriores' });
+    mais.focus();
+    expect(fireEvent.keyDown(mais, { key: 'Tab' })).toBe(false);
+    expect(fechar).toHaveFocus();
+    expect(fireEvent.keyDown(fechar, { key: 'Tab', shiftKey: true })).toBe(false);
+    expect(mais).toHaveFocus();
+  });
+
   it('funciona com storage bloqueado', () => {
     const get = vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('x'); });
     const set = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('x'); });

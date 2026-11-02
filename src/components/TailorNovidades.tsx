@@ -52,6 +52,7 @@ export function TailorNovidadesDialog({ aberto, onFechar, novidades, limite = 5,
   const { messages, locale } = useTailorLocale();
   const [todas, setTodas] = useState(false);
   const fechar = useRef<HTMLButtonElement>(null);
+  const caixa = useRef<HTMLDivElement>(null);
   const onFecharRef = useRef(onFechar);
   onFecharRef.current = onFechar;
 
@@ -59,7 +60,16 @@ export function TailorNovidadesDialog({ aberto, onFechar, novidades, limite = 5,
     if (!aberto) return;
     const gatilho = document.activeElement as HTMLElement | null;
     fechar.current?.focus();
-    const tecla = (e: KeyboardEvent) => { if (e.key === 'Escape') onFecharRef.current(); };
+    const tecla = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') return onFecharRef.current();
+      if (e.key !== 'Tab') return;
+      const foco = caixa.current?.querySelectorAll<HTMLElement>('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+      if (!foco?.length) return;
+      const primeiro = foco[0], ultimo = foco[foco.length - 1], atual = document.activeElement;
+      if (!caixa.current?.contains(atual)) { e.preventDefault(); primeiro.focus(); }
+      else if (e.shiftKey && atual === primeiro) { e.preventDefault(); ultimo.focus(); }
+      else if (!e.shiftKey && atual === ultimo) { e.preventDefault(); primeiro.focus(); }
+    };
     document.addEventListener('keydown', tecla);
     return () => { document.removeEventListener('keydown', tecla); gatilho?.focus?.(); setTodas(false); };
   }, [aberto]);
@@ -71,7 +81,7 @@ export function TailorNovidadesDialog({ aberto, onFechar, novidades, limite = 5,
 
   return createPortal(
     <div className="tailor-nov__overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) onFechar(); }}>
-      <div className="tailor-nov" role="dialog" aria-modal="true" aria-labelledby="tailor-nov-titulo">
+      <div ref={caixa} className="tailor-nov" role="dialog" aria-modal="true" aria-labelledby="tailor-nov-titulo">
         <header className="tailor-nov__head">
           <div>
             <h2 id="tailor-nov-titulo" className="tailor-nov__title">{titulo ?? messages.news}</h2>
