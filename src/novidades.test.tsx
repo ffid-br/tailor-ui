@@ -1,10 +1,16 @@
 import { render, screen, fireEvent } from '@testing-library/react';
+import { vi } from 'vitest';
 import { TailorNovidades, useNovidades, type TailorNovidade } from './index';
 
 const lista = (n: number): TailorNovidade[] =>
   Array.from({ length: n }, (_, i) => ({ id: `2026-10-${String(30 - i).padStart(2, '0')}`, data: `2026-10-${String(30 - i).padStart(2, '0')}`, titulo: `Mudança ${i + 1}`, itens: [`Item ${i + 1}`], tela: i === 0 ? 'Campanhas' : undefined }));
 
-beforeEach(() => localStorage.clear());
+beforeEach(() => {
+  localStorage.clear();
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.setSystemTime(new Date('2026-11-02T12:00:00Z'));
+});
+afterEach(() => vi.useRealTimers());
 
 describe('TailorNovidades', () => {
   it('conta não vistas (9+) e abrir marca vistas', () => {
@@ -14,6 +20,18 @@ describe('TailorNovidades', () => {
     fireEvent.click(gatilho);
     expect(localStorage.getItem('tailor-novidades:crm:u1')).toBe('2026-10-30');
     expect(gatilho).not.toHaveTextContent('9+');
+  });
+
+  it('duas instâncias ficam em sincronia', () => {
+    render(<><TailorNovidades novidades={lista(3)} chave="crm" rotulo="A" /><TailorNovidades novidades={lista(3)} chave="crm" rotulo="B" /></>);
+    fireEvent.click(screen.getByRole('button', { name: /^A/ }));
+    expect(screen.getByRole('button', { name: /^B/ })).not.toHaveTextContent('3');
+  });
+
+  it('quem nunca viu conta só os últimos 30 dias', () => {
+    const velhas = [...lista(2), { id: '2026-09-01', data: '2026-09-01', titulo: 'Antiga', itens: ['x'] }];
+    render(<TailorNovidades novidades={velhas} chave="crm" />);
+    expect(screen.getByRole('button', { name: /Novidades/ })).toHaveTextContent('2');
   });
 
   it('conta só as entradas acima da última vista', () => {

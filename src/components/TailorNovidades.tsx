@@ -14,24 +14,35 @@ export type TailorNovidade = {
 };
 
 const chaveDe = (chave: string, usuario?: string) => `tailor-novidades:${chave}:${usuario || 'anon'}`;
+const EVENTO = 'tailor-novidades-vistas';
+const desde30Dias = () => new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
 const ler = (k: string) => { try { return localStorage.getItem(k); } catch { return null; } };
 
 /**
  * Quantas novidades (lista com a mais recente primeiro) são mais novas que a última vista.
- * Nunca viu: todas. Guarda o id mais recente visto no localStorage; storage bloqueado só não lembra.
+ * Nunca viu: só as dos últimos 30 dias, para o histórico antigo não chegar como novo. Guarda o id mais recente visto no localStorage; storage bloqueado só não lembra.
  */
 export function useNovidades(novidades: TailorNovidade[], { chave, usuario }: { chave: string; usuario?: string }) {
   const k = chaveDe(chave, usuario);
   const [visto, setVisto] = useState<string | null>(() => ler(k));
-  useEffect(() => { setVisto(ler(k)); }, [k]);
+  useEffect(() => {
+    setVisto(ler(k));
+    // Duas instâncias (barra do celular + lateral) ficam em sincronia; 'storage' cobre outras abas.
+    const doEvento = (e: Event) => { const d = (e as CustomEvent<{ k: string; id: string }>).detail; if (d?.k === k) setVisto(d.id); };
+    const daAba = () => setVisto(ler(k));
+    window.addEventListener(EVENTO, doEvento);
+    window.addEventListener('storage', daAba);
+    return () => { window.removeEventListener(EVENTO, doEvento); window.removeEventListener('storage', daAba); };
+  }, [k]);
   const i = visto ? novidades.findIndex((n) => n.id === visto) : -1;
   // id fora da lista (entrada removida): ids começam pela data, então compara como texto.
-  const naoVistas = !visto ? novidades.length : i === -1 ? novidades.filter((n) => n.id > visto).length : i;
+  const naoVistas = !visto ? novidades.filter((n) => n.data >= desde30Dias()).length : i === -1 ? novidades.filter((n) => n.id > visto).length : i;
   const marcarVistas = useCallback(() => {
     const id = novidades[0]?.id;
     if (!id) return;
     setVisto(id);
     try { localStorage.setItem(k, id); } catch { /* sem storage: só não lembra */ }
+    window.dispatchEvent(new CustomEvent(EVENTO, { detail: { k, id } }));
   }, [k, novidades]);
   return { naoVistas, marcarVistas };
 }

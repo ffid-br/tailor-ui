@@ -392,7 +392,12 @@ Gatilho com contador verde das não vistas (9+); abrir marca como visto (localSt
 
 ## Mudanças
 
-### 0.13.0
+### 0.13.1
+
+- Quem nunca abriu as Novidades conta só as dos últimos 30 dias.
+- Dois botões na mesma tela (barra do celular e lateral) atualizam o contador juntos.
+
+## 0.13.0
 - `TailorNovidades`, `TailorNovidadesDialog` e `useNovidades`: changelog compartilhado dos apps. Textos em pt-BR, en e es (novo idioma `es` nos textos dos componentes).
 
 
