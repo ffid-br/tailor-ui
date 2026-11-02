@@ -130,6 +130,10 @@
 .tailor-table__arrow { opacity: 0.35; }
 .tailor-table__arrow--active { opacity: 1; color: var(--tailor-brand-primary-text); }
 .tailor-table__clickable { cursor: pointer; }
+/* Linha aberta (renderExpanded): o detalhe fica colado na linha, sem hover nem borda entre os dois. */
+.tailor-table__row--open td { background: color-mix(in srgb, var(--tailor-brand-text) 3%, transparent); }
+.tailor-table tbody tr.tailor-table__expanded td { border-top: 0; padding: var(--tailor-table-expanded-padding, 13px 21px 21px); background: color-mix(in srgb, var(--tailor-brand-text) 3%, transparent); }
+.tailor-table tbody tr.tailor-table__expanded:hover td { background: color-mix(in srgb, var(--tailor-brand-text) 3%, transparent); }
 .tailor-table__clickable:focus-visible, .tailor-table button:focus-visible { outline: 3px solid var(--tailor-brand-primary); outline-offset: -3px; }
 .tailor-table__state { padding: 34px 13px; text-align: center; color: var(--tailor-brand-text-muted); }
 .tailor-table tfoot td { border-top: 1px solid var(--tailor-brand-text); font-weight: 600; }
