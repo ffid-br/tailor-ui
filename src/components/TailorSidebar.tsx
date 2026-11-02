@@ -497,7 +497,7 @@ export const TailorSidebar: React.FC<TailorSidebarProps> = ({
     <>
       <aside
         className={cn(
-          'sticky top-0 flex h-screen shrink-0 flex-col border-r transition-[width] duration-200 ease-out motion-reduce:transition-none',
+          'sticky top-0 z-30 flex h-screen shrink-0 flex-col border-r transition-[width] duration-200 ease-out motion-reduce:transition-none',
           SO_DESKTOP[breakpoint],
           tom.borda,
           recolhido ? 'w-20' : 'w-72',
@@ -622,7 +622,7 @@ export const TailorUserMenu: React.FC<TailorUserMenuProps> = ({ nome, detalhe, p
         type="button"
         aria-expanded={expandido}
         aria-label={recolhido ? `Menu de ${nome}` : undefined}
-        title={recolhido ? nome : undefined}
+        title={recolhido && !expandido ? nome : undefined}
         onClick={() => (expandido ? fechar() : abrir())}
         className={cn('flex w-full items-center gap-[13px] py-[13px] text-left transition-colors motion-reduce:transition-none', tom.hover, FOCO, recolhido ? 'justify-center px-0' : 'px-[21px]')}
       >

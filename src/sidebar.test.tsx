@@ -145,4 +145,21 @@ describe('TailorUserMenu', () => {
     expect(sair).toHaveBeenCalled();
     expect(barra().queryByRole('button', { name: 'Sair' })).toBeNull();
   });
+
+  it('recolhido: painel fica acima do conteúdo e o title some com o menu aberto', () => {
+    render(
+      <TailorSidebar
+        produto="Conta"
+        grupos={[]}
+        recolhido
+        rodape={<TailorUserMenu nome="Ana Souza" acoes={[{ rotulo: 'Sair', tom: 'perigo' }]} />}
+      />,
+    );
+    // sticky cria contexto de empilhamento: sem z-index o conteúdo da página cobre o painel.
+    expect(screen.getByRole('complementary')).toHaveClass('z-30');
+    const botao = barra().getByRole('button', { name: 'Menu de Ana Souza' });
+    expect(botao).toHaveAttribute('title', 'Ana Souza');
+    fireEvent.click(botao);
+    expect(botao).not.toHaveAttribute('title');
+  });
 });
