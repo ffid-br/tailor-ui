@@ -262,6 +262,7 @@ Tabela de relatório. `type` formata e alinha: `number`, `currency` e `percent` 
 - Paginação: `pageSize` (navegador) ou `pagination={{ page, totalPages, onPageChange, totalRows }}` (servidor).
 - `total` por coluna monta a linha de total, calculada sobre todas as linhas, não só a página. `sumBy` ajuda.
 - `loading` mostra o esqueleto da tabela; `empty` troca o texto de vazio; `onRowClick` deixa a linha clicável (Enter também); `stickyHeader` prende o cabeçalho.
+- `renderExpanded(row)` abre um detalhe embaixo da linha, na largura da tabela (formulário, mensagem). O app controla o que está aberto: devolva `null` para a linha fechada.
 - Visual por `--tailor-brand-*` e `--tailor-table-*` (`font`, `padding`, `header-padding`, `header`, `sticky-top`, `top`, `background`).
 
 ## Idioma e moeda

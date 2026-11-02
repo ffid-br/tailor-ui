@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { Fragment, useMemo, useState } from 'react';
 import { cn } from '../cn';
 import { useTailorLocale } from '../i18n';
 import { TailorSkeleton } from './TailorSkeleton';
@@ -41,6 +41,9 @@ export type TailorTableProps<T> = {
   /** Paginação no servidor: a tabela só mostra as `rows` que recebeu. */
   pagination?: { page: number; totalPages: number; onPageChange: (page: number) => void; totalRows?: number };
   onRowClick?: (row: T) => void;
+  /** Conteúdo aberto embaixo da linha (detalhe, formulário), na largura da tabela. Quem
+   *  controla o que está aberto é o app: devolva `null` para a linha fechada. */
+  renderExpanded?: (row: T) => React.ReactNode;
   /** Cabeçalho preso ao rolar a página. */
   stickyHeader?: boolean;
   className?: string;
@@ -86,7 +89,7 @@ function comparar(a: unknown, b: unknown, locale: string) {
  */
 export function TailorTable<T>({
   columns, rows, rowKey, caption, loading = false, empty,
-  sort, onSortChange, defaultSort, pageSize, pagination, onRowClick, stickyHeader = false, className,
+  sort, onSortChange, defaultSort, pageSize, pagination, onRowClick, renderExpanded, stickyHeader = false, className,
 }: TailorTableProps<T>) {
   const { locale, currency, messages: m } = useTailorLocale();
   const [ordemLocal, setOrdemLocal] = useState<TailorTableSort | undefined>(defaultSort);
@@ -150,19 +153,27 @@ export function TailorTable<T>({
               <tr><td colSpan={columns.length}><TailorSkeleton shape="table" columns={columns.length} lines={Math.min(pageSize ?? 5, 8)} /></td></tr>
             ) : visiveis.length === 0 ? (
               <tr><td colSpan={columns.length} className="tailor-table__state">{empty ?? m.empty}</td></tr>
-            ) : visiveis.map((r, i) => (
-              <tr key={rowKey(r, i)}
-                className={cn(onRowClick && 'tailor-table__clickable')}
-                onClick={onRowClick ? () => onRowClick(r) : undefined}
-                onKeyDown={onRowClick ? (e) => { if (e.key === 'Enter') onRowClick(r); } : undefined}
-                tabIndex={onRowClick ? 0 : undefined}>
-                {columns.map((c) => (
-                  <td key={c.key} className={cn(`tailor-table--${alinhamento(c)}`, c.type === 'id' && 'tailor-table__id')}>
-                    {c.cell ? c.cell(r) : fmt(ler(c, r), c.type)}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            ) : visiveis.map((r, i) => {
+              const aberto = renderExpanded?.(r);
+              return (
+                <Fragment key={rowKey(r, i)}>
+                  <tr
+                    className={cn(onRowClick && 'tailor-table__clickable', aberto != null && 'tailor-table__row--open')}
+                    onClick={onRowClick ? () => onRowClick(r) : undefined}
+                    onKeyDown={onRowClick ? (e) => { if (e.key === 'Enter') onRowClick(r); } : undefined}
+                    tabIndex={onRowClick ? 0 : undefined}>
+                    {columns.map((c) => (
+                      <td key={c.key} className={cn(`tailor-table--${alinhamento(c)}`, c.type === 'id' && 'tailor-table__id')}>
+                        {c.cell ? c.cell(r) : fmt(ler(c, r), c.type)}
+                      </td>
+                    ))}
+                  </tr>
+                  {aberto != null && (
+                    <tr className="tailor-table__expanded"><td colSpan={columns.length}>{aberto}</td></tr>
+                  )}
+                </Fragment>
+              );
+            })}
           </tbody>
           {temTotal && !loading && rows.length > 0 && (
             <tfoot>

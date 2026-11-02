@@ -62,4 +62,13 @@ describe('TailorTable', () => {
     expect(formatValue('2026-10-28T12:00:00', 'date')).toBe('28/10/2026');
     expect(formatValue('2026-10-28T12:00:00', 'date', 'en-US')).toBe('10/28/2026');
   });
+  it('renderExpanded abre o detalhe embaixo da linha, na largura da tabela', () => {
+    render(<TailorTable caption="Corretores" columns={columns} rows={rows} rowKey={(r) => r.id}
+      renderExpanded={(r) => (r.id === 'a2' ? <p>Detalhe da Ana</p> : null)} />);
+    const detalhe = screen.getByText('Detalhe da Ana').closest('td')!;
+    expect(detalhe).toHaveAttribute('colspan', '4');
+    expect(detalhe.closest('tr')).toHaveClass('tailor-table__expanded');
+    expect(screen.getByText('Ana').closest('tr')).toHaveClass('tailor-table__row--open');
+    expect(screen.queryAllByText(/Detalhe/)).toHaveLength(1);
+  });
 });
