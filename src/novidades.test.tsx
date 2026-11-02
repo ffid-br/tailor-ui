@@ -22,6 +22,12 @@ describe('TailorNovidades', () => {
     expect(gatilho).not.toHaveTextContent('9+');
   });
 
+  it('duas instâncias ficam em sincronia', () => {
+    render(<><TailorNovidades novidades={lista(3)} chave="crm" rotulo="A" /><TailorNovidades novidades={lista(3)} chave="crm" rotulo="B" /></>);
+    fireEvent.click(screen.getByRole('button', { name: /^A/ }));
+    expect(screen.getByRole('button', { name: /^B/ })).not.toHaveTextContent('3');
+  });
+
   it('quem nunca viu conta só os últimos 30 dias', () => {
     const velhas = [...lista(2), { id: '2026-09-01', data: '2026-09-01', titulo: 'Antiga', itens: ['x'] }];
     render(<TailorNovidades novidades={velhas} chave="crm" />);
