@@ -73,7 +73,7 @@ export function TailorInsight({ status, takeaway, why, nextAction, sources, conf
       <>
         <p className="tailor-insight__takeaway">{takeaway}</p>
         {why && <p className="tailor-insight__why">{why}</p>}
-        {nextAction && <div className="tailor-insight__actions"><TailorAction action={nextAction} variant="primary" size="sm" /></div>}
+        {nextAction && <div className="tailor-insight__actions"><TailorAction action={nextAction} variant="secondary" size="sm" /></div>}
         {sources && sources.length > 0 && <p className="tailor-insight__sources">Fontes: {sources.join(', ')}</p>}
         {(onRefresh || onFeedback) && (
           <div className="tailor-insight__foot">

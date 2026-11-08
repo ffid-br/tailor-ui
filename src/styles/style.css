@@ -631,7 +631,7 @@ textarea.tailor-field__control { padding: var(--tailor-space-xs) var(--tailor-sp
 .tailor-stat--action:hover .tailor-stat__value { text-decoration: underline; text-decoration-color: var(--tailor-brand-primary); text-decoration-thickness: 3px; text-underline-offset: 4px; }
 .tailor-stat-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--tailor-stat-min, 200px)), 1fr)); gap: var(--tailor-space-lg) 0; }
 .tailor-stat-group > * { padding: 0 var(--tailor-space-lg); border-left: 1px solid var(--tailor-brand-border); }
-.tailor-stat-group > :first-child { padding-left: 0; border-left: 0; }
+.tailor-stat-group:not(.tailor-stat-group--bordered) > :first-child { padding-left: 0; border-left: 0; }
 .tailor-stat-group--bordered { gap: var(--tailor-space-sm); }
 .tailor-stat-group--bordered > * { padding: var(--tailor-space-md); border: 1px solid var(--tailor-brand-border); }
 
