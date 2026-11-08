@@ -1,0 +1,91 @@
+import { act, render, screen, waitFor } from '@testing-library/react';
+import { vi } from 'vitest';
+import { TAILOR_APPS, appIconSvg, appPorChave, tailorTitle, TailorAppIcon, TailorHandoff, TailorHandoffSaida, handoffPendente } from './index';
+
+// Vite lê os SVGs como texto; o tsconfig não carrega os tipos do Vite.
+const SVGS = (import.meta as unknown as { glob: (p: string, o: object) => Record<string, string> }).glob('./assets/apps/*.svg', { query: '?raw', import: 'default', eager: true });
+
+describe('registro de apps', () => {
+  it('os SVGs de src/assets/apps estão em dia com o registro (npm run icones)', () => {
+    expect(Object.keys(SVGS).map((k) => k.split('/').pop()).sort()).toEqual(Object.values(TAILOR_APPS).map((a) => a.favicon).sort());
+    Object.values(TAILOR_APPS).forEach((a) => expect(SVGS[`./assets/apps/${a.favicon}`]).toBe(appIconSvg(a)));
+  });
+
+  it('nenhum par de apps repete letra nem a combinação de cores', () => {
+    const apps = Object.values(TAILOR_APPS);
+    expect(new Set(apps.map((a) => a.letra)).size).toBe(apps.length);
+    expect(new Set(apps.map((a) => a.glifo.join())).size).toBe(apps.length);
+    expect(new Set(apps.map((a) => [a.tile, a.tinta, a.ponto].join())).size).toBe(apps.length);
+  });
+
+  it('resolve chave de produto e monta o título', () => {
+    expect(appPorChave('gpt')?.id).toBe('genius');
+    expect(appPorChave('pilot')?.nome).toBe('Marketing');
+    expect(appPorChave('hma')).toBeUndefined();
+    expect(tailorTitle('pilot', 'Campanhas')).toBe('Campanhas | Marketing | Tailor.ia');
+    expect(tailorTitle('accounts')).toBe('Conta | Tailor.ia');
+  });
+});
+
+describe('TailorAppIcon', () => {
+  it('mostra o ícone pelo nome do app e ignora chave desconhecida', () => {
+    const { container } = render(<><TailorAppIcon app="gpt" /><TailorAppIcon app="hma" /></>);
+    expect(screen.getByAltText('Genius')).toBeInTheDocument();
+    expect(container.querySelectorAll('img')).toHaveLength(1);
+  });
+});
+
+describe('handoffPendente', () => {
+  it('detecta os parâmetros de SSO', () => {
+    expect(handoffPendente('?ffid_jwt=a')).toBe(true);
+    expect(handoffPendente('?access_token=a&refresh_token=b')).toBe(true);
+    expect(handoffPendente('?next=/x')).toBe(false);
+    expect(handoffPendente('')).toBe(false);
+  });
+});
+
+describe('TailorHandoff', () => {
+  afterEach(() => vi.useRealTimers());
+
+  it('mostra "Abrindo <app>" com o esqueleto do app e some quando inativo', async () => {
+    const { container, rerender } = render(<TailorHandoff app="pilot" ativo />);
+    expect(screen.getByText('Abrindo Marketing')).toBeInTheDocument();
+    expect(container.querySelector('[data-tailor-handoff-sidebar]')).toHaveClass('w-72');
+    expect(container.querySelector('[data-tailor-handoff-header]')).toBeInTheDocument();
+    expect(screen.queryByText('Entrar de novo')).toBeNull();
+    rerender(<TailorHandoff app="pilot" ativo={false} sidebar="recolhida" />);
+    await waitFor(() => expect(container.querySelector('[data-tailor-handoff]')).toBeNull());
+  });
+
+  it('sidebar recolhida usa 80px e "nenhuma" tira a barra', () => {
+    const { container, rerender } = render(<TailorHandoff app="crm" ativo sidebar="recolhida" />);
+    expect(container.querySelector('[data-tailor-handoff-sidebar]')).toHaveClass('w-20');
+    rerender(<TailorHandoff app="crm" ativo sidebar="nenhuma" />);
+    expect(container.querySelector('[data-tailor-handoff-sidebar]')).toBeNull();
+  });
+
+  it('passado o limite, avisa e oferece "Entrar de novo"', () => {
+    vi.useFakeTimers();
+    const retry = vi.fn();
+    render(<TailorHandoff app="bi" ativo timeoutMs={1000} onTentarDeNovo={retry} />);
+    expect(screen.queryByText('Entrar de novo')).toBeNull();
+    act(() => { vi.advanceTimersByTime(1000); });
+    expect(screen.getByText('Está demorando mais que o normal.')).toBeInTheDocument();
+    screen.getByText('Entrar de novo').click();
+    expect(retry).toHaveBeenCalledTimes(1);
+  });
+
+  it('token recusado troca o loader pela ação', () => {
+    render(<TailorHandoff app="nr1" ativo falhou onTentarDeNovo={() => {}} />);
+    expect(screen.getByText('Não foi possível entrar')).toBeInTheDocument();
+    expect(screen.getByText('Entrar de novo')).toBeInTheDocument();
+    expect(screen.queryByText('Validando acesso')).toBeNull();
+  });
+
+  it('a saída mostra "Abrindo CRM" só quando ativa', () => {
+    const { rerender } = render(<TailorHandoffSaida app="crm" ativo />);
+    expect(screen.getAllByText('Abrindo CRM').length).toBeGreaterThan(0);
+    rerender(<TailorHandoffSaida app="crm" ativo={false} />);
+    expect(screen.queryByText('Abrindo CRM')).toBeNull();
+  });
+});

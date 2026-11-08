@@ -36,6 +36,11 @@ import {
   type TailorWhitelabel,
   TailorSidebar,
   TailorUserMenu,
+  TAILOR_APPS,
+  TailorAppIcon,
+  TailorHandoff,
+  TailorHandoffSaida,
+  tailorTitle,
   type TailorSidebarGrupo,
 } from '../src';
 import { Simulador } from './Simulador';
@@ -280,6 +285,27 @@ function Exemplo({ titulo, codigo, children, escuro }: { titulo: string; codigo:
   );
 }
 
+/** Simula a validação do token: 2,6s e some; ou recusa, e oferece "Entrar de novo". */
+function HandoffDemo() {
+  const botao = 'rounded-md bg-black px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-800 dark:bg-white dark:text-black';
+  const [estado, setEstado] = useState<'parado' | 'validando' | 'recusado'>('parado');
+  const [saida, setSaida] = useState(false);
+  useEffect(() => {
+    if (estado !== 'validando') return;
+    const t = setTimeout(() => setEstado('parado'), 2618);
+    return () => clearTimeout(t);
+  }, [estado]);
+  return (
+    <div className="flex flex-wrap gap-3">
+      <button type="button" className={botao} onClick={() => setEstado('validando')}>Abrir Marketing (2,6s)</button>
+      <button type="button" className={botao} onClick={() => setEstado('recusado')}>Token recusado</button>
+      <button type="button" className={botao} onClick={() => { setSaida(true); setTimeout(() => setSaida(false), 2618); }}>Saída no app de origem</button>
+      <TailorHandoff app="pilot" ativo={estado !== 'parado'} falhou={estado === 'recusado'} onTentarDeNovo={() => setEstado('validando')} />
+      <TailorHandoffSaida app="crm" ativo={saida} />
+    </div>
+  );
+}
+
 function DemoExplica() {
   const [tour, setTour] = useState(false);
   const botao = 'rounded-md bg-black px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-800 dark:bg-white dark:text-black';
@@ -322,6 +348,7 @@ const SECOES = [
   { id: 'equipe', rotulo: 'EquipeDock', icone: Pessoa },
   { id: 'sidebar', rotulo: 'TailorSidebar', icone: Menu },
   { id: 'entrada', rotulo: 'Login → app', icone: Sair },
+  { id: 'apps', rotulo: 'Ícones e entrada entre apps', icone: Sair },
 ];
 
 function App() {
@@ -763,6 +790,33 @@ const columns: TailorTableColumn<Corretor>[] = [
             >
               <EntrarOverlay ativo={entrando} origemRef={botaoRef} />
               <button ref={botaoRef} type="button" className={botao} onClick={() => setEntrando(true)}>Entrar (simula 2s)</button>
+            </Exemplo>
+          </Secao>
+
+          <Secao id="apps" titulo="Ícones dos apps e entrada entre apps" descricao="Um ícone por app (o mesmo do favicon), em 16 e 32px, e a tela que cobre a validação do token com a geometria do app.">
+            <Exemplo
+              titulo="TailorAppIcon e tailorTitle"
+              codigo={`
+<TailorAppIcon app="pilot" size={34} />
+document.title = tailorTitle('pilot', 'Campanhas'); // Campanhas | Marketing | Tailor.ia`}
+            >
+              <div className="flex flex-wrap items-end gap-6">
+                {Object.values(TAILOR_APPS).map((a) => (
+                  <div key={a.id} className="flex flex-col items-center gap-2 text-xs text-neutral-500">
+                    <div className="flex items-end gap-2"><TailorAppIcon app={a.id} size={16} /><TailorAppIcon app={a.id} size={32} /><TailorAppIcon app={a.id} size={55} /></div>
+                    <span>{a.nome}</span>
+                  </div>
+                ))}
+              </div>
+              <p className="mt-4 text-sm text-neutral-600 dark:text-neutral-400">{tailorTitle('pilot', 'Campanhas')}</p>
+            </Exemplo>
+            <Exemplo
+              titulo="TailorHandoff"
+              codigo={`
+const [validando, setValidando] = useState(handoffPendente); // primeiro quadro já é a transição
+<TailorHandoff app="pilot" ativo={validando} falhou={recusou} onTentarDeNovo={irParaLogin} />`}
+            >
+              <HandoffDemo />
             </Exemplo>
           </Secao>
         </main>
