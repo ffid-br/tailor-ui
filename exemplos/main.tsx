@@ -21,6 +21,11 @@ import {
   resetTour,
   TailorField,
   TailorButton,
+  TailorStat,
+  TailorStatGroup,
+  TailorEmpty,
+  TailorMonogram,
+  TailorInsight,
   TailorBrand,
   TailorMobileBar,
   TailorPageHeader,
@@ -303,6 +308,7 @@ function Secao({ id, titulo, descricao, children }: { id: string; titulo: string
 const SECOES = [
   { id: 'cabecalho', rotulo: 'TailorPageHeader', icone: Quadrado },
   { id: 'tabela', rotulo: 'TailorTable', icone: Quadrado },
+  { id: 'dados', rotulo: 'Dados e leitura', icone: Quadrado },
   { id: 'loader', rotulo: 'TailorLoader', icone: Circulo },
   { id: 'botao', rotulo: 'TailorButton', icone: Quadrado },
   { id: 'explica', rotulo: 'Explicar a tela', icone: Quadrado },
@@ -454,6 +460,60 @@ const columns: TailorTableColumn<Corretor>[] = [
             >
               <TailorTable caption="Desempenho por corretor (sem marca)" columns={COLUNAS} rows={CORRETORES} rowKey={(c) => c.id}
                 defaultSort={{ key: 'leads', direction: 'desc' }} pageSize={4} stickyHeader />
+            </Exemplo>
+          </Secao>
+
+          <Secao id="dados" titulo="Dados e leitura" descricao="Cada número com contexto, estado vazio que convida a agir, quem é quem pela cor e a leitura da IA.">
+            <Exemplo
+              titulo="TailorStat e TailorStatGroup"
+              codigo={`
+<TailorStatGroup label="Resumo da semana">
+  <TailorStat label="Respostas" value={312} previous={260} meaning="de cada 10 que leram, 3 responderam" />
+  <TailorStat label="Custo por lead" value={18.4} format="currency" previous={15} goodWhen="down" />
+  <TailorStat label="Vendas" value={42} goal={60} />
+</TailorStatGroup>
+<TailorStat variant="inline" label="Leads hoje" value={37} previous={30} />`}
+            >
+              <div className="space-y-6">
+                <TailorStatGroup label="Resumo da semana">
+                  <TailorStat label="Respostas" value={312} previous={260} meaning="de cada 10 que leram, 3 responderam" />
+                  <TailorStat label="Custo por lead" value={18.4} format="currency" previous={15} goodWhen="down" />
+                  <TailorStat label="Vendas" value={42} goal={60} />
+                </TailorStatGroup>
+                <p className="text-sm">Hoje: <TailorStat variant="inline" label="Leads" value={37} previous={30} /> <TailorStat variant="compact" label="Carregando" value={0} loading /></p>
+              </div>
+            </Exemplo>
+            <Exemplo
+              titulo="TailorEmpty e TailorMonogram"
+              codigo={`
+<TailorEmpty title="Nenhuma campanha ainda" description="Crie a primeira e acompanhe as respostas aqui."
+  action={{ label: 'Criar campanha', onClick: criar }} secondaryAction={{ label: 'Ver exemplo', href: '#dados' }} />
+<TailorMonogram id="u-1" name="Maria da Silva" />
+<TailorMonogram id="u-2" name="João de Souza" size="lg" />`}
+            >
+              <div className="space-y-6">
+                <TailorEmpty title="Nenhuma campanha ainda" description="Crie a primeira e acompanhe as respostas aqui." action={{ label: 'Criar campanha', onClick: () => toast.success('Criar campanha') }} secondaryAction={{ label: 'Ver exemplo', href: '#dados' }} />
+                <div className="flex items-center gap-3">
+                  {['Maria da Silva', 'João de Souza', 'Ana Paula', 'Bruno', 'Érica do Prado', 'Caio Lima', 'Dora', 'Rui Costa'].map((n, i) => <TailorMonogram key={n} id={`u-${i}`} name={n} size={i === 1 ? 'lg' : 'md'} />)}
+                </div>
+              </div>
+            </Exemplo>
+            <Exemplo
+              titulo="TailorInsight"
+              codigo={`
+<TailorInsight status="ready" takeaway="As respostas subiram 20% esta semana." why="A mensagem nova é mais curta."
+  nextAction={{ label: 'Repetir a mensagem', onClick: repetir }} sources={['Campanhas de outubro']}
+  confidence="alta" generatedAt={new Date()} onRefresh={atualizar} onFeedback={votar} />
+<TailorInsight status="loading" />
+<TailorInsight status="error" onRefresh={atualizar} />
+<TailorInsight status="empty" />`}
+            >
+              <div className="space-y-8">
+                <TailorInsight status="ready" takeaway="As respostas subiram 20% esta semana." why="A mensagem nova é mais curta e chega no fim da tarde." nextAction={{ label: 'Repetir a mensagem', onClick: () => toast.success('Repetindo') }} sources={['Campanhas de outubro']} confidence="alta" generatedAt={new Date()} onRefresh={() => {}} onFeedback={() => {}} />
+                <TailorInsight status="loading" />
+                <TailorInsight status="error" onRefresh={() => {}} />
+                <TailorInsight status="empty" />
+              </div>
             </Exemplo>
           </Secao>
 

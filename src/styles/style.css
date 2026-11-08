@@ -604,3 +604,95 @@ textarea.tailor-field__control { padding: 8px 13px; min-height: 89px; }
 .tailor-nov__entry-title { margin: 4px 0 0; font-size: 16px; font-weight: 500; }
 .tailor-nov__list { margin: 13px 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 14px; line-height: 1.5; }
 .tailor-nov__more { align-self: flex-start; padding: 8px 0; border: 0; background: none; cursor: pointer; font: inherit; font-size: 14px; color: var(--tailor-brand-text); text-decoration: underline; text-underline-offset: 3px; }
+
+/* TailorStat — número com contexto. Sem cartão: tipografia e um fio entre os indicadores. */
+:where(:root) { --tailor-stat-good: var(--tailor-brand-primary-text); --tailor-stat-bad: #B8002B; }
+:where(.dark, [data-theme="dark"]) { --tailor-stat-bad: #FF6B8A; }
+.tailor-stat { display: flex; flex-direction: column; gap: 5px; min-width: 0; padding: 0; border: 0; background: none; text-align: left; font-family: var(--tailor-brand-body-font, var(--tailor-font)); color: var(--tailor-brand-text); text-decoration: none; }
+.tailor-stat__label { font-size: 13px; color: var(--tailor-brand-text-muted); }
+.tailor-stat__main { display: flex; align-items: baseline; flex-wrap: wrap; gap: 5px 13px; }
+.tailor-stat__value { font-family: var(--tailor-font-num); font-size: 34px; font-weight: 500; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.tailor-stat__delta { display: inline-flex; align-items: center; gap: 3px; font-size: 13px; font-weight: 500; font-variant-numeric: tabular-nums; color: var(--tailor-brand-text-muted); }
+.tailor-stat__delta--good { color: var(--tailor-stat-good); }
+.tailor-stat__delta--bad { color: var(--tailor-stat-bad); }
+.tailor-stat__arrow { width: 12px; height: 12px; flex-shrink: 0; }
+.tailor-stat__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.tailor-stat__sub, .tailor-stat__hint { font-size: 12px; color: var(--tailor-brand-text-muted); font-variant-numeric: tabular-nums; }
+.tailor-stat__meaning { font-size: 14px; line-height: 1.4; max-width: 34ch; }
+.tailor-stat__goal { display: grid; gap: 5px; max-width: 233px; }
+.tailor-stat__goal-text { font-size: 12px; color: var(--tailor-brand-text-muted); font-variant-numeric: tabular-nums; }
+.tailor-stat__goal-track { display: block; height: 3px; background: var(--tailor-brand-border); }
+.tailor-stat__goal-fill { display: block; height: 100%; background: var(--tailor-brand-primary); }
+.tailor-stat--compact { gap: 3px; }
+.tailor-stat--compact .tailor-stat__value { font-size: 21px; }
+.tailor-stat--inline { display: inline-flex; flex-direction: row; align-items: baseline; gap: 8px; }
+.tailor-stat--inline .tailor-stat__main { display: contents; }
+.tailor-stat--inline .tailor-stat__label { order: -1; }
+.tailor-stat--inline .tailor-stat__value { font-size: inherit; font-weight: 600; }
+.tailor-stat--action { cursor: pointer; }
+.tailor-stat--action:hover .tailor-stat__value { text-decoration: underline; text-decoration-color: var(--tailor-brand-primary); text-decoration-thickness: 3px; text-underline-offset: 4px; }
+.tailor-stat--action:focus-visible { outline: 2px solid var(--tailor-brand-text); outline-offset: 4px; }
+.tailor-stat-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--tailor-stat-min, 200px)), 1fr)); gap: 34px 0; }
+.tailor-stat-group > * { padding: 0 34px; border-left: 1px solid var(--tailor-brand-border); }
+.tailor-stat-group > :first-child { padding-left: 0; border-left: 0; }
+.tailor-stat-group--bordered { gap: 13px; }
+.tailor-stat-group--bordered > * { padding: 21px; border: 1px solid var(--tailor-brand-border); }
+
+/* TailorEmpty */
+.tailor-empty { display: flex; flex-direction: column; align-items: flex-start; gap: 13px; max-width: 55ch; padding: 34px 0; font-family: var(--tailor-brand-body-font, var(--tailor-font)); color: var(--tailor-brand-text); }
+.tailor-empty__art { color: var(--tailor-brand-border); }
+.tailor-empty__dot { fill: var(--tailor-brand-primary); }
+.tailor-empty__title { margin: 0; font-size: 21px; font-weight: var(--tailor-brand-heading-weight, 500); line-height: 1.2; }
+.tailor-empty__description { font-size: 14px; line-height: 1.5; color: var(--tailor-brand-text-muted); }
+.tailor-empty__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+a.tailor-btn { text-decoration: none; }
+
+/* TailorMonogram — 8 pares fundo/texto (AA nos dois temas, conferido no teste). */
+:root {
+  --tailor-mono-0-bg: #E3F5C2; --tailor-mono-0-fg: #2B4A00;
+  --tailor-mono-1-bg: #D6E8FF; --tailor-mono-1-fg: #12335E;
+  --tailor-mono-2-bg: #FFE0CC; --tailor-mono-2-fg: #6B2A00;
+  --tailor-mono-3-bg: #F3D9F5; --tailor-mono-3-fg: #5A1A63;
+  --tailor-mono-4-bg: #CFF1EC; --tailor-mono-4-fg: #0B4A42;
+  --tailor-mono-5-bg: #FFD9DF; --tailor-mono-5-fg: #7A0F26;
+  --tailor-mono-6-bg: #FFF0B8; --tailor-mono-6-fg: #5C4300;
+  --tailor-mono-7-bg: #E4E4E4; --tailor-mono-7-fg: #1F1F1F;
+}
+:where(.dark, [data-theme="dark"]) {
+  --tailor-mono-0-bg: #2B4A00; --tailor-mono-0-fg: #D9F5A5;
+  --tailor-mono-1-bg: #12335E; --tailor-mono-1-fg: #CFE2FF;
+  --tailor-mono-2-bg: #6B2A00; --tailor-mono-2-fg: #FFD9C2;
+  --tailor-mono-3-bg: #5A1A63; --tailor-mono-3-fg: #F0CFF3;
+  --tailor-mono-4-bg: #0B4A42; --tailor-mono-4-fg: #C2EFE8;
+  --tailor-mono-5-bg: #7A0F26; --tailor-mono-5-fg: #FFD0D8;
+  --tailor-mono-6-bg: #5C4300; --tailor-mono-6-fg: #FFE9A8;
+  --tailor-mono-7-bg: #333333; --tailor-mono-7-fg: #EEEEEE;
+}
+.tailor-monogram { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; width: 34px; height: 34px; border-radius: var(--tailor-brand-radius, 0); font-family: var(--tailor-brand-body-font, var(--tailor-font)); font-size: 13px; font-weight: 600; line-height: 1; letter-spacing: 0.02em; user-select: none; }
+.tailor-monogram--sm { width: 21px; height: 21px; font-size: 9px; }
+.tailor-monogram--lg { width: 55px; height: 55px; font-size: 21px; }
+.tailor-monogram__img { width: 100%; height: 100%; object-fit: cover; }
+.tailor-monogram--tone-0 { background: var(--tailor-mono-0-bg); color: var(--tailor-mono-0-fg); }
+.tailor-monogram--tone-1 { background: var(--tailor-mono-1-bg); color: var(--tailor-mono-1-fg); }
+.tailor-monogram--tone-2 { background: var(--tailor-mono-2-bg); color: var(--tailor-mono-2-fg); }
+.tailor-monogram--tone-3 { background: var(--tailor-mono-3-bg); color: var(--tailor-mono-3-fg); }
+.tailor-monogram--tone-4 { background: var(--tailor-mono-4-bg); color: var(--tailor-mono-4-fg); }
+.tailor-monogram--tone-5 { background: var(--tailor-mono-5-bg); color: var(--tailor-mono-5-fg); }
+.tailor-monogram--tone-6 { background: var(--tailor-mono-6-bg); color: var(--tailor-mono-6-fg); }
+.tailor-monogram--tone-7 { background: var(--tailor-mono-7-bg); color: var(--tailor-mono-7-fg); }
+
+/* TailorInsight — leitura da IA: um fio verde à esquerda, texto corrido, sem cartão. */
+.tailor-insight { display: grid; gap: 8px; max-width: 72ch; padding: 3px 0 3px 21px; border-left: 3px solid var(--tailor-brand-primary); font-family: var(--tailor-brand-body-font, var(--tailor-font)); color: var(--tailor-brand-text); }
+.tailor-insight--error { border-left-color: var(--tailor-stat-bad); }
+.tailor-insight--empty { border-left-color: var(--tailor-brand-border); }
+.tailor-insight__meta { display: flex; flex-wrap: wrap; gap: 3px 13px; font-size: 12px; color: var(--tailor-brand-text-muted); }
+.tailor-insight__ai { font-weight: 600; color: var(--tailor-brand-text); }
+.tailor-insight__takeaway { margin: 0; font-size: 18px; font-weight: 500; line-height: 1.4; }
+.tailor-insight__why { margin: 0; font-size: 14px; line-height: 1.5; color: var(--tailor-brand-text-muted); }
+.tailor-insight__actions { margin-top: 5px; }
+.tailor-insight__sources { margin: 0; font-size: 12px; color: var(--tailor-brand-text-muted); }
+.tailor-insight__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 21px; font-size: 12px; color: var(--tailor-brand-text-muted); }
+.tailor-insight__feedback { display: inline-flex; align-items: center; gap: 13px; }
+.tailor-insight__link { padding: 0; border: 0; background: none; font: inherit; color: var(--tailor-brand-primary-text); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.tailor-insight__link[aria-pressed="true"] { font-weight: 700; text-decoration-thickness: 2px; }
+.tailor-insight__link:focus-visible { outline: 2px solid var(--tailor-brand-text); outline-offset: 2px; }
