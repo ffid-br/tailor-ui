@@ -41,7 +41,7 @@ export function EquipeDock({ agentes, abertoInicial = false, titulo = 'Equipe', 
   const ativos = agentes.slice(1).filter((a) => a.estado && NA_ATIVA.includes(a.estado));
 
   return (
-    <div className={cn('fixed bottom-4 right-4 z-40 flex flex-col items-end gap-2 font-tailor', className)}>
+    <div className={cn('fixed bottom-4 right-4 z-[var(--tailor-z-sticky)] flex flex-col items-end gap-2 font-tailor', className)}>
       {aberto && (
         <section id={`${id}-painel`} aria-label={titulo}
           className="flex max-h-[70vh] w-[min(360px,calc(100vw-32px))] flex-col border border-black bg-white text-black">

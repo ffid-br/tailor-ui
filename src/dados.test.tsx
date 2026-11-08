@@ -3,7 +3,8 @@ import {
   TailorEmpty, TailorInsight, TailorMonogram, TailorStat, TailorStatGroup,
   contrast, monogramInitials, monogramTone, statDelta, MONOGRAM_TONES,
 } from './index';
-import css from './styles/style.css?raw';
+import css from './styles/tokens.css?raw';
+import styleCss from './styles/style.css?raw';
 
 describe('statDelta', () => {
   it('calcula a variação e a direção', () => {
@@ -142,7 +143,10 @@ describe('TailorInsight', () => {
     expect(screen.getByText('A mensagem ficou mais curta.')).toBeInTheDocument();
     expect(screen.getByText('Fontes: Campanhas de outubro, Funil Vendas')).toBeInTheDocument();
     expect(screen.getByText('Confiança média')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: 'Repetir a mensagem' }));
+    const proxima = screen.getByRole('button', { name: 'Repetir a mensagem' });
+    expect(proxima).toHaveClass('tailor-btn--secondary');
+    expect(proxima).not.toHaveClass('tailor-btn--primary');
+    fireEvent.click(proxima);
     expect(go).toHaveBeenCalled();
   });
 
@@ -175,5 +179,21 @@ describe('TailorInsight', () => {
   it('empty explica que faltam dados', () => {
     render(<TailorInsight status="empty" />);
     expect(screen.getByText('Ainda não há dados suficientes para uma leitura.')).toBeInTheDocument();
+  });
+});
+
+describe('TailorStatGroup bordered', () => {
+  it('o primeiro item tem o mesmo padding e a mesma borda dos outros (a regra do primeiro filho não vale para bordered)', () => {
+    const { container } = render(
+      <TailorStatGroup bordered label="Resumo">
+        <TailorStat label="A" value={1} /><TailorStat label="B" value={2} />
+      </TailorStatGroup>,
+    );
+    const itens = Array.from(container.querySelector('.tailor-stat-group')!.children);
+    expect(itens[0].className).toBe(itens[1].className);
+    expect(container.querySelector('.tailor-stat-group')).toHaveClass('tailor-stat-group--bordered');
+    const regrasPrimeiro = styleCss.match(/[^{}]*:first-child[^{}]*\{[^}]*\}/g)!.filter((r) => r.includes('.tailor-stat-group'));
+    expect(regrasPrimeiro.length).toBeGreaterThan(0);
+    for (const r of regrasPrimeiro) expect(r).toContain(':not(.tailor-stat-group--bordered)');
   });
 });

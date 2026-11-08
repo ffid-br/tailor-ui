@@ -57,8 +57,8 @@ describe('TailorTable', () => {
     expect(screen.getByRole('button', { name: 'Next' })).toBeInTheDocument();
   });
 
-  it('formatValue: vazio vira traço, data no idioma', () => {
-    expect(formatValue(null)).toBe('–');
+  it('formatValue: vazio vira hífen, data no idioma', () => {
+    expect(formatValue(null)).toBe('-');
     expect(formatValue('2026-10-28T12:00:00', 'date')).toBe('28/10/2026');
     expect(formatValue('2026-10-28T12:00:00', 'date', 'en-US')).toBe('10/28/2026');
   });

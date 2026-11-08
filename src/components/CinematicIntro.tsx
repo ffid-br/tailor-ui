@@ -54,7 +54,7 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: PHI.c, ease: EASE }}
-      className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-black font-tailor text-white"
+      className="fixed inset-0 z-[var(--tailor-z-modal)] flex items-center justify-center overflow-hidden bg-black font-tailor text-white"
     >
       {/* A malha: quatro quadrantes espelhados a partir do ponto áureo da tela (38,2% do topo). */}
       <svg aria-hidden="true" className="absolute left-1/2 top-[38.2%] h-[200vmax] w-[200vmax] -translate-x-1/2 -translate-y-1/2 stroke-white/15" viewBox="-440 -440 880 880">
@@ -91,7 +91,7 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({
         transition={{ delay: PHI.e - PHI.a, duration: PHI.c, ease: EASE }}
       />
 
-      <div className="absolute left-1/2 top-[38.2%] flex w-full -translate-x-1/2 -translate-y-1/2 flex-col items-center px-[21px] text-center">
+      <div className="absolute left-1/2 top-[38.2%] flex w-full -translate-x-1/2 -translate-y-1/2 flex-col items-center px-tailor-md text-center">
         <motion.img
           src={logo}
           alt="Tailor.ia"
@@ -102,7 +102,7 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({
         />
         {produto && (
           <motion.p
-            className="mt-[13px] text-[26px] font-semibold leading-none text-white"
+            className="mt-tailor-sm text-[26px] font-semibold leading-none text-white"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: PHI.e, duration: PHI.c, ease: EASE }}
@@ -111,7 +111,7 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({
           </motion.p>
         )}
         {overline && <motion.p
-          className="mt-[55px] flex items-center gap-[8px] text-[11px] font-medium uppercase tracking-[0.14em] text-tailor-green"
+          className="mt-tailor-xl flex items-center gap-tailor-xs text-[11px] font-medium uppercase tracking-[0.14em] text-tailor-green"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: PHI.f - PHI.b, duration: PHI.c, ease: EASE }}
@@ -119,7 +119,7 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({
           <span className="inline-block h-2 w-2 bg-tailor-green" aria-hidden="true" /> {overline}
         </motion.p>}
         {slogan && <motion.p
-          className={`${overline ? 'mt-[13px]' : 'mt-[55px]'} max-w-[377px] text-base leading-[1.618] text-white/75 sm:max-w-[610px] sm:text-[26px] sm:leading-[1.382]`}
+          className={`${overline ? 'mt-tailor-sm' : 'mt-tailor-xl'} max-w-[377px] text-base leading-[1.618] text-white/75 sm:max-w-[610px] sm:text-[26px] sm:leading-[1.382]`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: PHI.f, duration: PHI.c, ease: EASE }}

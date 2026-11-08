@@ -1,14 +1,132 @@
 /*
  * Tailor.ia — tokens para o Tailwind v4 do app consumidor.
  * Importe no CSS de entrada, depois de `@import "tailwindcss";`.
- * Gera as classes nomeadas usadas pelos componentes: bg-tailor-green,
- * text-tailor-ink, fill-tailor-green, font-tailor, font-tailor-num...
+ * Fonte dos valores: skill tailor-brand-manual (tailor-tokens.css). As variáveis
+ * CSS equivalentes (`--tailor-*`) vêm de `@ffid-br/tailor-ui/style.css` ou `tokens.css`.
+ * Gera classes como bg-tailor-green, text-tailor-green-ink, border-tailor-border,
+ * p-tailor-md, text-tailor-h2, font-tailor, ease-tailor-out...
  */
 @theme {
+  /* Marca (60% branco, 30% preto, 10% verde) */
+  --color-tailor-white: #FFFFFF;
+  --color-tailor-black: #000000;
   --color-tailor-green: #90F208;
   --color-tailor-green-hover: #7FD909;
-  --color-tailor-ink: #3C6600;
-  --color-tailor-black: #000000;
+  --color-tailor-green-press: #6FBE00;
+  --color-tailor-green-ink: #3C6600;   /* verde como TEXTO sobre claro */
+  --color-tailor-green-tint: #F2FCDF;
+  --color-tailor-black-hover: #333333;
+  /* DEPRECADO: "ink" aqui é o verde escuro. Apps costumam usar "ink" querendo dizer preto:
+     use tailor-black (preto) ou tailor-green-ink (verde escuro). */
+  --color-tailor-ink: var(--color-tailor-green-ink);
+
+  /* Cinzas */
+  --color-tailor-gray-700: #666666;
+  --color-tailor-gray-500: #999999;
+  --color-tailor-gray-100: #F2F2F2;
+  --color-tailor-ink-900: #333333;
+  --color-tailor-bg-subtle: #F7F7F7;
+  --color-tailor-border: #D9D9D9;
+  --color-tailor-border-strong: #999999;
+
+  /* Apoio e sinalização (forte 700, médio 500, claro 100) */
+  --color-tailor-support-green-700: #004D1A;
+  --color-tailor-support-green-500: #008548;
+  --color-tailor-support-green-100: #DAF2E2;
+  --color-tailor-blue-700: #0040FF;
+  --color-tailor-blue-500: #99B2FF;
+  --color-tailor-blue-100: #E5ECFF;
+  --color-tailor-red-700: #FF0040;
+  --color-tailor-red-500: #FF7462;
+  --color-tailor-red-100: #FFA391;
+  --color-tailor-orange-700: #FF9033;
+  --color-tailor-orange-500: #FFBB55;
+  --color-tailor-orange-100: #FFD364;
+  --color-tailor-yellow-700: #FFD71D;
+  --color-tailor-yellow-500: #FFE45A;
+  --color-tailor-yellow-100: #FFF799;
+  --color-tailor-danger-hover: #D6003A;
+  --color-tailor-danger-on-dark: #FF5C82;
+  --color-tailor-fg-inverse-secondary: #CFCFCF;
+
+  /* Semânticos e tints de estado */
+  --color-tailor-success: #008548;
+  --color-tailor-info: #0040FF;
+  --color-tailor-warning: #FF9033;
+  --color-tailor-danger: #FF0040;
+  --color-tailor-success-tint: #DAF2E2;
+  --color-tailor-info-tint: #E5ECFF;
+  --color-tailor-warning-tint: #FFEEDD;
+  --color-tailor-danger-tint: #FFE0E8;
+  --color-tailor-green-a05: rgba(144,242,8,.05);
+  --color-tailor-green-a10: rgba(144,242,8,.10);
+  --color-tailor-green-a25: rgba(144,242,8,.25);
+  --color-tailor-green-a40: rgba(144,242,8,.40);
+  --color-tailor-focus-ring: rgba(144,242,8,.45);
+  --color-tailor-scrim: rgba(0,0,0,.55);
+
+  /* Tipografia: Raleway; pesos até 600 (nunca bold) */
   --font-tailor: "Raleway", "Roboto", system-ui, sans-serif;
   --font-tailor-num: "Roboto", "Raleway", system-ui, sans-serif;
+  --font-tailor-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-weight-tailor-light: 300;
+  --font-weight-tailor-regular: 400;
+  --font-weight-tailor-medium: 500;
+  --font-weight-tailor-semibold: 600;
+  --tracking-tailor-label: 0.14em;   /* = --tailor-tracking-label */
+  --text-tailor-hero: clamp(40px, 5vw, 64px);
+  --text-tailor-hero--line-height: 1.05;
+  --text-tailor-h1: 40px;
+  --text-tailor-h1--line-height: 1.1;
+  --text-tailor-h2: 30px;
+  --text-tailor-h2--line-height: 1.15;
+  --text-tailor-h3: 22px;
+  --text-tailor-h3--line-height: 1.25;
+  --text-tailor-h4: 17px;
+  --text-tailor-h4--line-height: 1.3;
+  --text-tailor-body-lg: 18px;
+  --text-tailor-body-lg--line-height: 1.6;
+  --text-tailor-body: 15px;
+  --text-tailor-body--line-height: 1.55;
+  --text-tailor-body-sm: 13px;
+  --text-tailor-body-sm--line-height: 1.5;
+  --text-tailor-label: 13px;
+  --text-tailor-label--line-height: 1.2;
+  --text-tailor-overline: 11px;
+  --text-tailor-overline--line-height: 1.2;
+  --text-tailor-kpi: 40px;
+  --text-tailor-kpi--line-height: 1;
+  --text-tailor-kpi-app: 34px;
+  --text-tailor-kpi-app--line-height: 1;
+  --text-tailor-mono: 13px;
+  --text-tailor-mono--line-height: 1.5;
+
+  /* Espaçamento: múltiplos do ponto de 8 px (4 só para micro-espaço) */
+  --spacing-tailor-half: 4px;
+  --spacing-tailor-xs: 8px;
+  --spacing-tailor-sm: 16px;
+  --spacing-tailor-md: 24px;
+  --spacing-tailor-lg: 40px;
+  --spacing-tailor-xl: 64px;
+  --spacing-tailor-2xl: 104px;
+  --spacing-tailor-3xl: 168px;
+
+  /* Forma: cantos sempre retos */
+  --radius-tailor: 0px;
+
+  /* Motion */
+  --ease-tailor-out: cubic-bezier(.16,1,.3,1);
+  --ease-tailor-in-out: cubic-bezier(.65,0,.35,1);
+  --ease-tailor-exit: cubic-bezier(.4,0,1,1);
+  --tailor-dur-fast: 120ms;
+  --tailor-dur-med: 220ms;
+  --tailor-dur-slow: 400ms;
+
+  /* Camadas (z-index). Use z-(--tailor-z-modal) etc.; nunca valor arbitrário */
+  --tailor-z-base: 0;
+  --tailor-z-sticky: 40;
+  --tailor-z-drawer: 60;
+  --tailor-z-modal: 100;
+  --tailor-z-palette: 120;
+  --tailor-z-toast: 130;
 }
