@@ -368,6 +368,47 @@ Num botão da cor da marca, troque a cor do ponto do loader: `className="[--tail
 - `TailorTour`: `steps` (`{ target, title, text }`; `target` é o valor de `data-tour` ou um seletor CSS), `open` (true), `storageKey` (conclusão ou pulo lembrados), `onClose`, `onSkip`. Passo sem elemento na tela é pulado; `resetTour(storageKey)` deixa refazer. Sem animação com `prefers-reduced-motion`.
 - `TailorResult celebrate`: no sucesso, painel Ink com check Lime e uma rajada curta de faíscas; parada com `prefers-reduced-motion`.
 
+## Ícones dos apps e entrada entre apps
+
+Cada app tem um ícone (o favicon) e um nome, num registro só (`TAILOR_APPS`): `accounts` (Conta, C), `crm` (CRM, R), `pilot` (Marketing, M), `bi` (BI, B), `genius` (Genius, G) e `nr1` (NR1, N). A diferença é a letra primeiro e a cor depois, na grade 8x8 com o ponto verde logo depois da letra; em 16px nenhum par se confunde. O mesmo registro alimenta o launcher, a barra lateral e a transição.
+
+```tsx
+import { TailorAppIcon, appPorChave, tailorTitle } from '@ffid-br/tailor-ui';
+
+<TailorAppIcon app="pilot" size={34} />          {/* também aceita a chave do /clients/uses: "gpt", "ffid.ai.studio" */}
+appPorChave('gpt')?.nome;                         // "Genius"
+document.title = tailorTitle('pilot', 'Campanhas'); // "Campanhas | Marketing | Tailor.ia"
+```
+
+**Título da aba:** `<Página> | <App> | Tailor.ia` (sem página: `<App> | Tailor.ia`). Com várias abas o navegador corta o título e sobra o começo: quem separa um app do outro é o ícone, não o texto.
+
+**Favicon no `index.html`** (copie do pacote para o `public/` ou importe pelo bundler):
+
+```html
+<link rel="icon" type="image/svg+xml" href="/icons/apps/pilot.svg" />
+```
+
+Os arquivos saem em `@ffid-br/tailor-ui/icons/apps/<app>.svg`. Mudou o desenho em `src/apps.ts`? Rode `npm run icones` e commite os SVGs (um teste confere que estão em dia).
+
+### `TailorHandoff`: entrar em outro app com token na URL
+
+Cobre a viewport enquanto o destino valida o `ffid_jwt`, com a geometria do app (barra lateral de 288px com a marca no topo, barra de 55px no celular). Quando some, o app já está embaixo no mesmo lugar: nada pula. Menos movimento: sem fade.
+
+```tsx
+import { TailorHandoff, handoffPendente } from '@ffid-br/tailor-ui';
+
+// handoffPendente() no estado inicial: o primeiro quadro já é a transição, sem login nem app vazio.
+const [validando, setValidando] = useState(handoffPendente);
+const [recusou, setRecusou] = useState(false);
+
+<TailorHandoff app="pilot" ativo={validando} falhou={recusou} onTentarDeNovo={() => (location.href = '/login')} />
+```
+
+- `falhou`: troca o loader por "Não foi possível entrar" e a ação "Entrar de novo".
+- `timeoutMs` (13000): sem resposta nesse tempo, avisa que está demorando e oferece a mesma ação.
+- `sidebar`: `expandida` (padrão), `recolhida` ou `nenhuma`; `breakpoint`: `lg` (padrão) ou `md`, o mesmo da `TailorSidebar`.
+- `TailorHandoffSaida app="crm" ativo`: avisinho "Abrindo CRM" no canto do app de origem, para o clique no launcher.
+
 ## Receita: transição login → app
 
 1. **No login**: marque a entrada ao enviar, desmarque se der erro e mostre o preto crescendo do botão.

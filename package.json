@@ -25,10 +25,12 @@
     "./dist/style.css": "./dist/style.css",
     "./dist/theme.css": "./dist/theme.css",
     "./tailor-logo.png": "./dist/tailor-logo.png",
-    "./tailor-logo-branco.png": "./dist/tailor-logo-branco.png"
+    "./tailor-logo-branco.png": "./dist/tailor-logo-branco.png",
+    "./icons/apps/*": "./dist/icons/apps/*"
   },
   "scripts": {
-    "build": "vite build && cp src/styles/style.css src/styles/theme.css src/assets/*.png dist/",
+    "build": "vite build && cp src/styles/style.css src/styles/theme.css src/assets/*.png dist/ && mkdir -p dist/icons/apps && cp src/assets/apps/* dist/icons/apps/",
+    "icones": "node scripts/gerar-icones-apps.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
