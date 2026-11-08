@@ -1,0 +1,232 @@
+/* ==========================================================================
+   Tailor.ia | Design Tokens (CSS)
+   Fonte: Guia da Marca Tailor.ia, AGO.26.V1 (material em elaboração)
+   Regra de proporção: 60% branco, 30% preto, 10% verde (o verde é acento)
+   ========================================================================== */
+
+:root {
+  /* ---- Cores da marca ------------------------------------------------- */
+  --tailor-white: #FFFFFF;           /* fundo padrão; todo material nasce branco */
+  --tailor-black: #000000;           /* texto, campos cheios, páginas de conteúdo */
+  --tailor-green: #90F208;           /* verde neon: o detalhe, o ponto, a ação, o destaque */
+
+  /* Gradiente (fundo para uso específico) */
+  --tailor-gradient-start: #00B36B;  /* verde 1 (aprox. do guia) */
+  --tailor-gradient-end:   #90F208;  /* verde neon */
+  --tailor-gradient: linear-gradient(90deg, var(--tailor-gradient-start), var(--tailor-gradient-end));
+
+  /* ---- Apoio e sinalização (3 tons cada: forte, médio, claro) ---------- */
+  --tailor-gray-700: #666666;
+  --tailor-gray-500: #999999;
+  --tailor-gray-100: #F2F2F2;
+
+  --tailor-support-green-700: #004D1A;
+  --tailor-support-green-500: #008548;
+  --tailor-support-green-100: #DAF2E2;
+
+  --tailor-blue-700: #0040FF;
+  --tailor-blue-500: #99B2FF;
+  --tailor-blue-100: #E5ECFF;
+
+  --tailor-red-700: #FF0040;         /* valor do guia ilegível na V07; ver nota no manual */
+  --tailor-red-500: #FF7462;
+  --tailor-red-100: #FFA391;
+
+  --tailor-orange-700: #FF9033;
+  --tailor-orange-500: #FFBB55;
+  --tailor-orange-100: #FFD364;
+
+  --tailor-yellow-700: #FFD71D;
+  --tailor-yellow-500: #FFE45A;
+  --tailor-yellow-100: #FFF799;
+
+  /* Tons neutros observados nas páginas do guia (capas de seção). "ink" aqui e neutro, nunca verde; o verde escuro e so --tailor-green-ink */
+  --tailor-ink-900: #333333;         /* fundo escuro de abertura de capítulo */
+  --tailor-ink-700: #666666;
+  --tailor-ink-500: #999999;
+
+  /* ---- Derivados para interface (não constam no guia; derivados do verde) */
+  --tailor-green-ink: #3C6600;       /* verde legível como TEXTO sobre fundo claro (7,9:1). Verde neon nunca é texto sobre claro */
+  --tailor-green-tint: #F2FCDF;      /* fundo suave de destaque */
+  --tailor-green-hover: #7FD909;     /* hover do botão primário */
+  --tailor-green-press: #6FBE00;     /* pressed do botão primário */
+  --tailor-green-a05: rgba(144,242,8,.05);
+  --tailor-green-a10: rgba(144,242,8,.10);
+  --tailor-green-a25: rgba(144,242,8,.25);
+  --tailor-green-a40: rgba(144,242,8,.40);
+  --tailor-focus-ring: rgba(144,242,8,.45);   /* anel de foco: o unico box-shadow permitido (0 0 0 3px, sem blur) */
+  --tailor-black-hover: #333333;     /* hover do botao dark */
+  --tailor-danger-hover: #D6003A;    /* hover do botao danger */
+  --tailor-fg-inverse-secondary: #CFCFCF; /* texto secundario sobre preto (toast, card escuro) */
+  --tailor-danger-on-dark: #FF5C82;  /* vermelho legivel sobre preto (TL;DR, card escuro) */
+
+  /* Tints de estado (12% da cor forte sobre branco). Texto sobre tint é sempre preto; a cor vive no ponto quadrado */
+  --tailor-success-tint: var(--tailor-support-green-100);
+  --tailor-info-tint: var(--tailor-blue-100);
+  --tailor-warning-tint: #FFEEDD;
+  --tailor-danger-tint: #FFE0E8;
+
+  /* ---- Semânticos ------------------------------------------------------ */
+  --tailor-bg: var(--tailor-white);
+  --tailor-bg-subtle: #F7F7F7;
+  --tailor-fg: var(--tailor-black);
+  --tailor-fg-secondary: var(--tailor-gray-700);
+  --tailor-accent: var(--tailor-green);
+  --tailor-accent-text: var(--tailor-green-ink);
+  --tailor-muted: var(--tailor-gray-700);
+  --tailor-surface: var(--tailor-gray-100);
+  --tailor-border: #D9D9D9;
+  --tailor-border-strong: var(--tailor-gray-500);
+  --tailor-success: var(--tailor-support-green-500);
+  --tailor-info: var(--tailor-blue-700);
+  --tailor-danger: var(--tailor-red-700);
+  --tailor-warning: var(--tailor-orange-700);
+  --tailor-scrim: rgba(0,0,0,.55);
+
+  /* ---- Motion (herdado do DS v4) ---------------------------------------- */
+  --tailor-ease-out: cubic-bezier(.16,1,.3,1);     /* padrão: entradas, hover, reveals */
+  --tailor-ease-in-out: cubic-bezier(.65,0,.35,1); /* troca claro/escuro, trocas de layout */
+  --tailor-ease-exit: cubic-bezier(.4,0,1,1);      /* saídas: dismiss, fade-out */
+  --tailor-ease-linear: linear;                    /* spinners, progress indeterminate, ticker */
+  --tailor-dur-fast: 120ms;                        /* hover, cor, borda, focus ring */
+  --tailor-dur-med: 220ms;                         /* switches, reveals, drawers */
+  --tailor-dur-slow: 400ms;                        /* troca de tema, blinds, count-up */
+
+  /* ---- Camadas (z-index): nunca valor arbitrário ------------------------ */
+  --tailor-z-base: 0;
+  --tailor-z-sticky: 40;    /* header, barra de progresso */
+  --tailor-z-drawer: 60;    /* índice lateral, painéis */
+  --tailor-z-modal: 100;    /* dialog + scrim 55% */
+  --tailor-z-palette: 120;  /* command palette + scrim 60% */
+  --tailor-z-toast: 130;    /* feedback flutuante, sempre por cima */
+
+  /* ---- Escala tipográfica de interface (Raleway; pesos até 600) --------- */
+  --tailor-text-hero: 500 clamp(40px,5vw,64px)/1.05 var(--tailor-font-primary);
+  --tailor-text-h1: 500 40px/1.1 var(--tailor-font-primary);
+  --tailor-text-h2: 500 30px/1.15 var(--tailor-font-primary);
+  --tailor-text-h3: 500 22px/1.25 var(--tailor-font-primary);
+  --tailor-text-h4: 500 17px/1.3 var(--tailor-font-primary);
+  --tailor-text-body-lg: 400 18px/1.6 var(--tailor-font-primary);
+  --tailor-text-body: 400 15px/1.55 var(--tailor-font-primary);
+  --tailor-text-body-sm: 400 13px/1.5 var(--tailor-font-primary);
+  --tailor-text-label: 500 13px/1.2 var(--tailor-font-primary);
+  --tailor-text-overline: 500 11px/1.2 var(--tailor-font-primary);   /* caixa alta + tracking .14em */
+  --tailor-text-kpi: 500 40px/1 var(--tailor-font-primary);          /* numero-heroi em slide e landing */
+  --tailor-text-kpi-app: 500 34px/1 var(--tailor-font-primary);      /* numero-heroi em app logado */
+  --tailor-text-mono: 400 13px/1.5 "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --tailor-font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ---- Tamanhos de controle ------------------------------------------- */
+  --tailor-control-sm: 32px;
+  --tailor-control-md: 40px;
+  --tailor-control-lg: 48px;
+  --tailor-touch-min: 44px;  /* alvo mínimo em superfícies touch */
+
+  /* ---- Tipografia ------------------------------------------------------ */
+  --tailor-font-primary: "Raleway", "Roboto", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --tailor-font-system:  "Roboto", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+
+  /* Pesos permitidos: light, regular, medium, semibold (nunca bold/black) */
+  --tailor-weight-light: 300;
+  --tailor-weight-regular: 400;
+  --tailor-weight-medium: 500;
+  --tailor-weight-semibold: 600;
+
+  --tailor-letter-spacing: 0;        /* 0 pt de espaçamento entre letras, sempre */
+  --tailor-tracking-label: 0.14em;   /* exceção: overline e rótulos de navegação em caixa alta */
+
+  /* Entrelinha de impresso e slides: até 15 pt -> tamanho + 5 pt; a partir de 15 pt -> tamanho + 10 pt. Interface usa as razões de --tailor-text-* */
+  --tailor-leading-small: calc(1em + 5pt);
+  --tailor-leading-large: calc(1em + 10pt);
+
+  /* ---- Escala Fibonacci (o ponto = 1 unidade) -------------------------- */
+  --tailor-unit: 8px;                /* tamanho do ponto na tela; ajustar por contexto */
+  --tailor-fib-1:  calc(var(--tailor-unit) * 1);
+  --tailor-fib-2:  calc(var(--tailor-unit) * 2);
+  --tailor-fib-3:  calc(var(--tailor-unit) * 3);
+  --tailor-fib-5:  calc(var(--tailor-unit) * 5);
+  --tailor-fib-8:  calc(var(--tailor-unit) * 8);
+  --tailor-fib-13: calc(var(--tailor-unit) * 13);
+  --tailor-fib-21: calc(var(--tailor-unit) * 21);
+  --tailor-fib-34: calc(var(--tailor-unit) * 34);
+  --tailor-fib-55: calc(var(--tailor-unit) * 55);
+
+  /* Espaçamentos de interface: multiplos Fibonacci do ponto de 8 px (8, 16, 24, 40, 64, 104, 168); meio ponto = 4 px so para micro-espacos.
+     Numeros puros da sequencia (3, 5, 13, 21 px) nao sao espacamento de interface. */
+  --tailor-space-half: 4px;
+  --tailor-space-xs: var(--tailor-fib-1);    /* 8 */
+  --tailor-space-sm: var(--tailor-fib-2);    /* 16 */
+  --tailor-space-md: var(--tailor-fib-3);    /* 24 */
+  --tailor-space-lg: var(--tailor-fib-5);    /* 40 */
+  --tailor-space-xl: var(--tailor-fib-8);    /* 64 */
+  --tailor-space-2xl: var(--tailor-fib-13);  /* 104 */
+  --tailor-space-3xl: var(--tailor-fib-21);  /* 168 */
+
+  /* ---- Logo ------------------------------------------------------------ */
+  --tailor-logo-ratio: 4.27;         /* largura / altura do logotipo */
+  --tailor-logo-min-height: 20px;    /* mínimo 20 px */
+  --tailor-logo-clearspace: 4;       /* margem de segurança = 4x o ponto, em todos os lados */
+
+  /* ---- Formas ---------------------------------------------------------- */
+  --tailor-radius: 0;                /* cantos sempre retos */
+  --tailor-icon-grid: 8;             /* ícones em grade 8x8, traço de 1 ponto */
+  --tailor-icon-stroke: 1;
+}
+
+/* Tema escuro: inverte apenas os neutros; o verde continua sendo o acento.
+   Use [data-theme="dark"] no root ou .tailor-dark em uma seção (hero, dashboard escuro). */
+[data-theme="dark"], .tailor-dark, .dark {
+  --tailor-bg: var(--tailor-black);
+  --tailor-bg-subtle: #141414;
+  --tailor-fg: var(--tailor-white);
+  --tailor-fg-secondary: #CFCFCF;
+  --tailor-accent-text: var(--tailor-green);   /* sobre escuro o verde neon pode ser texto (14,6:1) */
+  --tailor-surface: #141414;
+  --tailor-muted: var(--tailor-gray-500);
+  --tailor-border: #333333;
+  --tailor-border-strong: #4D4D4D;
+  --tailor-green-tint: rgba(144,242,8,.12);
+  --tailor-success-tint: rgba(0,133,72,.18);
+  --tailor-info-tint: rgba(0,64,255,.18);
+  --tailor-warning-tint: rgba(255,144,51,.18);
+  --tailor-danger-tint: rgba(255,0,64,.18);
+}
+
+/* Contrato de movimento: reduced-motion colapsa tudo. Nunca bounce, nunca parallax. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
+}
+
+/* ==========================================================================
+   Extras do pacote (fora do tailor-tokens.css da skill)
+   ========================================================================== */
+:root {
+  /* Nomes antigos do pacote, mantidos por compatibilidade */
+  --tailor-font: var(--tailor-font-primary);
+  --tailor-font-num: "Roboto", "Raleway", system-ui, sans-serif;
+  /* DEPRECADO: --tailor-ink é o verde escuro (igual a --tailor-green-ink). Apps costumam usar "ink" querendo dizer preto:
+     para preto use --tailor-black; para o verde escuro use --tailor-green-ink. */
+  --tailor-ink: var(--tailor-green-ink);
+}
+
+/* TailorMonogram: 8 pares fundo/texto (AA nos dois temas, conferido no teste). Fora da paleta da skill; decisão pendente. */
+:root {
+  --tailor-mono-0-bg: #E3F5C2; --tailor-mono-0-fg: #2B4A00;
+  --tailor-mono-1-bg: #D6E8FF; --tailor-mono-1-fg: #12335E;
+  --tailor-mono-2-bg: #FFE0CC; --tailor-mono-2-fg: #6B2A00;
+  --tailor-mono-3-bg: #F3D9F5; --tailor-mono-3-fg: #5A1A63;
+  --tailor-mono-4-bg: #CFF1EC; --tailor-mono-4-fg: #0B4A42;
+  --tailor-mono-5-bg: #FFD9DF; --tailor-mono-5-fg: #7A0F26;
+  --tailor-mono-6-bg: #FFF0B8; --tailor-mono-6-fg: #5C4300;
+  --tailor-mono-7-bg: #E4E4E4; --tailor-mono-7-fg: #1F1F1F;
+}
+:where(.dark, [data-theme="dark"]) {
+  --tailor-mono-0-bg: #2B4A00; --tailor-mono-0-fg: #D9F5A5;
+  --tailor-mono-1-bg: #12335E; --tailor-mono-1-fg: #CFE2FF;
+  --tailor-mono-2-bg: #6B2A00; --tailor-mono-2-fg: #FFD9C2;
+  --tailor-mono-3-bg: #5A1A63; --tailor-mono-3-fg: #F0CFF3;
+  --tailor-mono-4-bg: #0B4A42; --tailor-mono-4-fg: #C2EFE8;
+  --tailor-mono-5-bg: #7A0F26; --tailor-mono-5-fg: #FFD0D8;
+  --tailor-mono-6-bg: #5C4300; --tailor-mono-6-fg: #FFE9A8;
+  --tailor-mono-7-bg: #333333; --tailor-mono-7-fg: #EEEEEE;
+}

@@ -51,6 +51,12 @@ export function themeToVars(theme: TailorTheme): Record<string, string> {
   return vars;
 }
 
+// Primária do cliente: o hover escurece a própria cor (o verde da marca tem token próprio).
+const comHover = (t: TailorTheme) => ({
+  ...themeToVars(t),
+  ...(t.primary ? { '--tailor-brand-primary-hover': `color-mix(in srgb, ${t.primary} 88%, var(--tailor-black))` } : {}),
+});
+
 const bloco = (vars: Record<string, string>) =>
   Object.entries(vars).map(([k, v]) => `${k}:${v.replace(/[;{}<]/g, '')}`).join(';');
 
@@ -69,8 +75,8 @@ export type TailorBrandProps = {
 export function TailorBrand({ theme, dark, children }: TailorBrandProps) {
   const id = useId();
   const sel = `[data-tailor-brand="${id}"]`;
-  const css = `${sel}{${bloco(themeToVars(theme))}}`
-    + (dark ? `:where(.dark,[data-theme="dark"]) ${sel}${sel}{${bloco(themeToVars(dark))}}` : '');
+  const css = `${sel}{${bloco(comHover(theme))}}`
+    + (dark ? `:where(.dark,[data-theme="dark"]) ${sel}${sel}{${bloco(comHover(dark))}}` : '');
   return (
     <div className="tailor-brand" data-tailor-brand={id}>
       <style>{css}</style>

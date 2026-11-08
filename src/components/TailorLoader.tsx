@@ -112,15 +112,15 @@ const Progresso: React.FC<{ progresso: number; etapas?: string[]; escuro?: boole
   const atual = etapas?.length ? Math.min(etapas.length - 1, Math.floor((p / 100) * etapas.length)) : -1;
   return (
     <div className="w-full max-w-[233px] text-left">
-      <div className="mb-[5px] text-right font-[family-name:var(--tailor-font-num)] text-[13px] font-medium tabular-nums">{Math.round(p)}%</div>
+      <div className="mb-tailor-half text-right font-[family-name:var(--tailor-font-num)] text-[13px] font-medium tabular-nums">{Math.round(p)}%</div>
       <div className={cn('h-[3px] w-full', escuro ? 'bg-white/15' : 'bg-black/10 dark:bg-white/15')}
         role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(p)}>
         <div className="h-full bg-tailor-green transition-[width] duration-300" style={{ width: `${p}%` }} />
       </div>
       {etapas && etapas.length > 0 && (
-        <ul className="mt-[13px] grid gap-[5px] text-[13px]">
+        <ul className="mt-tailor-sm grid gap-tailor-half text-[13px]">
           {etapas.map((e, i) => (
-            <li key={e} className={cn('flex items-center gap-[8px]', i === atual ? 'font-medium' : escuro ? 'text-white/60' : 'text-neutral-500 dark:text-neutral-400')}>
+            <li key={e} className={cn('flex items-center gap-tailor-xs', i === atual ? 'font-medium' : escuro ? 'text-white/60' : 'text-neutral-500 dark:text-neutral-400')}>
               <span aria-hidden="true" className={cn('block h-[8px] w-[8px] shrink-0',
                 i < atual ? 'bg-tailor-green' : i === atual ? 'tailor-ponto-pisca bg-tailor-green' : escuro ? 'bg-white/20' : 'bg-black/15 dark:bg-white/20')} />
               {e}
@@ -167,7 +167,7 @@ export const TailorLoader: React.FC<TailorLoaderProps> = ({
 
   if (variant === 'compact') {
     return (
-      <span role="status" aria-live="polite" className={cn('inline-flex items-center gap-[8px] text-sm text-black dark:text-white', className)}>
+      <span role="status" aria-live="polite" className={cn('inline-flex items-center gap-tailor-xs text-sm text-black dark:text-white', className)}>
         {sucesso ? (
           <svg className="h-[13px] w-[13px] shrink-0 overflow-visible" viewBox="-12 -12 24 24" aria-hidden="true">
             <polyline className="tailor-loader__check stroke-tailor-green" points={CHECK} pathLength={1} fill="none" strokeWidth={5} strokeLinecap="square" strokeLinejoin="miter" />
@@ -188,18 +188,18 @@ export const TailorLoader: React.FC<TailorLoaderProps> = ({
   if (variant === 'overlay') {
     // A entrada do login: preto, ponto no centro, malha nascendo; o texto fica abaixo do ponto.
     return (
-      <div className="fixed inset-0 z-[1000] cursor-wait bg-black text-white" aria-modal="true" role="dialog">
+      <div className="fixed inset-0 z-[var(--tailor-z-palette)] cursor-wait bg-black text-white" aria-modal="true" role="dialog">
         <PontoMalha />
         {logo && (
-          <div className="absolute inset-x-0 bottom-1/2 mb-[55px] flex justify-center px-[21px]">
+          <div className="absolute inset-x-0 bottom-1/2 mb-tailor-xl flex justify-center px-tailor-md">
             <Logo logo={logo} logoDark={logoDark} escuro />
           </div>
         )}
-        <div role="status" aria-live="polite" className={cn('absolute inset-x-0 top-1/2 mt-[55px] flex flex-col items-center px-[21px] text-center', className)}>
+        <div role="status" aria-live="polite" className={cn('absolute inset-x-0 top-1/2 mt-tailor-xl flex flex-col items-center px-tailor-md text-center', className)}>
           <Rotulo label={label} className="text-[26px] leading-[1.1]" />
-          {detail && <div className="mt-[8px] text-base leading-[1.618] text-white/70">{detail}</div>}
-          {mensagens?.length ? <TailorTypewriter texts={mensagens} className="mt-[8px] text-base text-white/70" /> : null}
-          {progresso !== undefined && <div className="mt-[21px] flex w-full justify-center"><Progresso progresso={progresso} etapas={etapas} escuro /></div>}
+          {detail && <div className="mt-tailor-xs text-base leading-[1.618] text-white/70">{detail}</div>}
+          {mensagens?.length ? <TailorTypewriter texts={mensagens} className="mt-tailor-xs text-base text-white/70" /> : null}
+          {progresso !== undefined && <div className="mt-tailor-md flex w-full justify-center"><Progresso progresso={progresso} etapas={etapas} escuro /></div>}
         </div>
       </div>
     );
@@ -207,16 +207,16 @@ export const TailorLoader: React.FC<TailorLoaderProps> = ({
 
   if (variant === 'box' || variant === 'caixa') {
     return (
-      <div className={cn('flex w-full items-center justify-center', !semRespiro && 'px-[13px] py-[34px]')}>
+      <div className={cn('flex w-full items-center justify-center', !semRespiro && 'px-tailor-sm py-tailor-lg')}>
         <div
           role="status"
           aria-live="polite"
-          className={cn('flex w-full max-w-[377px] items-center gap-[21px] border border-neutral-200 bg-white p-[21px] text-black dark:border-white/10 dark:bg-neutral-950 dark:text-white', className)}
+          className={cn('flex w-full max-w-[377px] items-center gap-tailor-md border border-neutral-200 bg-white p-tailor-md text-black dark:border-white/10 dark:bg-neutral-950 dark:text-white', className)}
         >
           <Malha sucesso={sucesso} />
           <div className="min-w-0">
             <Rotulo sucesso={sucesso} label={label} className="text-base leading-[1.382]" />
-            {detail && <div className="mt-[8px] text-[13px] text-neutral-600 dark:text-neutral-400">{detail}</div>}
+            {detail && <div className="mt-tailor-xs text-[13px] text-neutral-600 dark:text-neutral-400">{detail}</div>}
           </div>
         </div>
       </div>
@@ -224,14 +224,14 @@ export const TailorLoader: React.FC<TailorLoaderProps> = ({
   }
 
   return (
-    <div className={cn('flex w-full items-center justify-center', !semRespiro && 'px-[21px] py-[89px]')}>
-      <div role="status" aria-live="polite" className={cn('flex flex-col items-center gap-[21px] text-center text-black dark:text-white', className)}>
+    <div className={cn('flex w-full items-center justify-center', !semRespiro && 'px-tailor-md py-tailor-2xl')}>
+      <div role="status" aria-live="polite" className={cn('flex flex-col items-center gap-tailor-md text-center text-black dark:text-white', className)}>
         {logo && <Logo logo={logo} logoDark={logoDark} />}
         <Malha sucesso={sucesso} />
         <div>
           <Rotulo sucesso={sucesso} label={label} className="text-[26px] leading-[1.1]" />
-          {detail && <div className="mt-[8px] text-base leading-[1.618] text-neutral-600 dark:text-neutral-400">{detail}</div>}
-          {mensagens?.length && !sucesso ? <TailorTypewriter texts={mensagens} className="mt-[8px] block min-h-[1.618em] text-base text-neutral-600 dark:text-neutral-400" /> : null}
+          {detail && <div className="mt-tailor-xs text-base leading-[1.618] text-neutral-600 dark:text-neutral-400">{detail}</div>}
+          {mensagens?.length && !sucesso ? <TailorTypewriter texts={mensagens} className="mt-tailor-xs block min-h-[1.618em] text-base text-neutral-600 dark:text-neutral-400" /> : null}
         </div>
         {progresso !== undefined && !sucesso && <Progresso progresso={progresso} etapas={etapas} />}
       </div>

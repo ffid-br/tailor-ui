@@ -59,7 +59,7 @@ export function EntrarOverlay({ ativo, origemRef }: EntrarOverlayProps) {
           key="tailor-entrar"
           aria-hidden="true"
           data-tailor-entrar=""
-          className="pointer-events-none fixed inset-0 z-[95] bg-black"
+          className="pointer-events-none fixed inset-0 z-[var(--tailor-z-modal)] bg-black"
           initial={{ clipPath: `circle(0% at ${origem})` }}
           animate={{ clipPath: `circle(150% at ${origem})` }}
           exit={{ clipPath: `circle(0% at ${origem})` }}
@@ -110,7 +110,7 @@ export function EntradaApp() {
     <motion.div
       aria-hidden="true"
       data-tailor-entrada=""
-      className="pointer-events-none fixed inset-0 z-[1000] flex items-center justify-center bg-black"
+      className="pointer-events-none fixed inset-0 z-[var(--tailor-z-palette)] flex items-center justify-center bg-black"
       initial={{ clipPath: 'inset(0% 0% 0% 0%)' }}
       animate={{ clipPath: 'inset(0% 0% 100% 0%)' }}
       transition={{ delay: 1.618, duration: 0.618, ease: EASE }}

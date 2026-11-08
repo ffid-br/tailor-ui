@@ -156,7 +156,7 @@ describe('TailorUserMenu', () => {
       />,
     );
     // sticky cria contexto de empilhamento: sem z-index o conteúdo da página cobre o painel.
-    expect(screen.getByRole('complementary')).toHaveClass('z-30');
+    expect(screen.getByRole('complementary')).toHaveClass('z-[var(--tailor-z-sticky)]');
     const botao = barra().getByRole('button', { name: 'Menu de Ana Souza' });
     expect(botao).toHaveAttribute('title', 'Ana Souza');
     fireEvent.click(botao);

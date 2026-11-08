@@ -28,7 +28,7 @@ export type TailorBrandMarkProps = {
 
 /**
  * Lockup dos apps Tailor: wordmark com 21px de arte + nome do produto em 18px
- * semibold (tailor-ink no claro, branco no escuro). As logos padrão vêm
+ * semibold (tailor-green-ink no claro, branco no escuro). As logos padrão vêm
  * embutidas no pacote; passe `logoClaro`/`logoEscuro` para a marca do cliente.
  */
 export const TailorBrandMark: React.FC<TailorBrandMarkProps> = ({
@@ -49,7 +49,7 @@ export const TailorBrandMark: React.FC<TailorBrandMarkProps> = ({
       className={cn(
         'font-tailor font-semibold leading-none tracking-tight',
         compact ? 'text-sm' : 'text-lg',
-        modo === 'escura' ? 'text-white' : modo === 'clara' ? 'text-tailor-ink' : 'text-tailor-ink dark:text-white',
+        modo === 'escura' ? 'text-white' : modo === 'clara' ? 'text-tailor-green-ink' : 'text-tailor-green-ink dark:text-white',
       )}
     >
       {produto}
