@@ -450,6 +450,15 @@ Gatilho com contador verde das não vistas (9+); abrir marca como visto (localSt
 
 ## Mudanças
 
+### 0.16.0
+
+Espaçamento na escala da marca (4/8/16/24/40/64/104 px, `--tailor-space-*`). **Mudança visual intencional.** Empilha no 0.15.0.
+
+- `padding`, `margin` e `gap` dos componentes saem da sequência crua (3/5/8/13/21/34/55/89) e passam a usar os tokens: 3 e 5 viram 4, 13 vira 16, 21 vira 24, 34 vira 40, 55 vira 64, 89 vira 104.
+- Botão: padding md 24 (era 21), sm 16 (era 13), lg 40 (era 34). Campo: padding 16 (era 13). Cabeçalho de página, tabela, toaster, novidades, tour e sidebar acompanham.
+- Classes Tailwind `p-[21px]` e similares nos componentes viram `p-tailor-md` (vêm do `theme.css`, que o app já importa).
+- Alturas, larguras e tamanhos de ícone não mudaram.
+
 ### 0.15.0
 
 Tokens da marca (fonte: skill `tailor-brand-manual`). Aditivo e compatível.

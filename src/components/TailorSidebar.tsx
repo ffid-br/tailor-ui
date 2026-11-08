@@ -181,7 +181,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({ item, nivel = 0 }) => 
     'group relative flex w-full items-center border-l-2 text-left font-tailor text-sm transition-colors motion-reduce:transition-none',
     gaveta ? 'h-11' : 'h-[34px]',
     FOCO,
-    recolhido ? 'justify-center px-0' : cn('gap-[13px] pr-[13px]', nivel > 0 ? 'pl-[34px]' : 'pl-[13px]'),
+    recolhido ? 'justify-center px-0' : cn('gap-tailor-sm pr-tailor-sm', nivel > 0 ? 'pl-tailor-lg' : 'pl-tailor-sm'),
     item.desabilitado
       ? cn('cursor-not-allowed border-transparent font-medium opacity-60', tom.fraco)
       : ativo
@@ -200,7 +200,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({ item, nivel = 0 }) => 
           <span
             aria-hidden="true"
             className={cn(
-              'absolute left-1/2 top-[2px] ml-[3px] inline-flex h-[15px] min-w-[15px] items-center justify-center px-[3px] font-tailor-num text-[10px] font-medium leading-none tabular-nums',
+              'absolute left-1/2 top-[2px] ml-tailor-half inline-flex h-[15px] min-w-[15px] items-center justify-center px-tailor-half font-tailor-num text-[10px] font-medium leading-none tabular-nums',
               alerta ? 'bg-red-600 text-white' : tom.chip,
             )}
           >
@@ -213,7 +213,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({ item, nivel = 0 }) => 
           {badge && (
             <span
               className={cn(
-                'inline-flex h-[21px] min-w-[21px] shrink-0 items-center justify-center px-[5px] font-tailor-num text-[11px] font-medium leading-none tabular-nums',
+                'inline-flex h-[21px] min-w-[21px] shrink-0 items-center justify-center px-tailor-half font-tailor-num text-[11px] font-medium leading-none tabular-nums',
                 alerta ? 'bg-red-600 text-white' : tom.chip,
               )}
             >
@@ -304,7 +304,7 @@ export const SidebarGroup: React.FC<SidebarGroupProps> = ({ rotulo, itens = [], 
   const { tom, recolhido } = useContext(SidebarContexto);
   return (
     <div>
-      {rotulo && !recolhido && <p className={cn('px-[13px] pb-[8px] font-tailor text-[11px] font-medium', tom.fraco)}>{rotulo}</p>}
+      {rotulo && !recolhido && <p className={cn('px-tailor-sm pb-tailor-xs font-tailor text-[11px] font-medium', tom.fraco)}>{rotulo}</p>}
       <ul aria-label={rotulo} className="space-y-[2px]">
         {itens.map((item) => (
           <SidebarItem key={item.id} item={item} />
@@ -441,7 +441,7 @@ export const TailorSidebar: React.FC<TailorSidebarProps> = ({
             className={cn(
               'flex shrink-0 border-b',
               tom.borda,
-              r ? 'flex-col items-center justify-center gap-[8px] py-[10px]' : 'h-[55px] items-center justify-between gap-[8px] pl-[21px] pr-[13px]',
+              r ? 'flex-col items-center justify-center gap-tailor-xs py-[10px]' : 'h-[55px] items-center justify-between gap-tailor-xs pl-tailor-md pr-tailor-sm',
             )}
           >
             {r ? marcaRecolhida : (marca ?? <TailorBrandMark produto={produto} superficie={superficie} logoClaro={logoClaro} logoEscuro={logoEscuro} />)}
@@ -465,14 +465,14 @@ export const TailorSidebar: React.FC<TailorSidebarProps> = ({
           </div>
 
           {mostraLinha && (
-            <div className={cn('flex shrink-0 items-center gap-[8px] border-b py-[13px]', tom.borda, r ? 'justify-center' : 'px-[13px]')}>
+            <div className={cn('flex shrink-0 items-center gap-tailor-xs border-b py-tailor-sm', tom.borda, r ? 'justify-center' : 'px-tailor-sm')}>
               {!r && accountSelector && <div className="min-w-0 flex-1">{accountSelector}</div>}
               {apps && <div className="flex shrink-0 items-center">{apps}</div>}
             </div>
           )}
 
-          <nav aria-label={ariaLabel} className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-[8px] py-[21px]">
-            <div className="flex flex-col gap-[21px]">
+          <nav aria-label={ariaLabel} className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-tailor-xs py-tailor-md">
+            <div className="flex flex-col gap-tailor-md">
               {grupos.map((grupo, i) => (
                 <SidebarGroup key={grupo.rotulo ?? i} rotulo={grupo.rotulo} itens={grupo.itens} />
               ))}
@@ -483,7 +483,7 @@ export const TailorSidebar: React.FC<TailorSidebarProps> = ({
           {rodape && <div className={cn('shrink-0 border-t', tom.borda)}>{rodape}</div>}
 
           {poweredBy && (
-            <p className={cn('flex h-[34px] shrink-0 items-center justify-center gap-[8px] border-t font-tailor text-[11px]', tom.borda, tom.fraco)}>
+            <p className={cn('flex h-[34px] shrink-0 items-center justify-center gap-tailor-xs border-t font-tailor text-[11px]', tom.borda, tom.fraco)}>
               {!r && <span>Powered by</span>}
               {logoPowered('h-[13px] w-auto')}
             </p>
@@ -613,7 +613,7 @@ export const TailorUserMenu: React.FC<TailorUserMenuProps> = ({ nome, detalhe, p
   );
 
   const classeAcao = (perigo: boolean) =>
-    cn('flex h-[34px] w-full items-center gap-[13px] px-[13px] text-left font-tailor text-sm font-medium transition-colors motion-reduce:transition-none', FOCO, perigo ? tom.perigo : cn(tom.texto, tom.hover));
+    cn('flex h-[34px] w-full items-center gap-tailor-sm px-tailor-sm text-left font-tailor text-sm font-medium transition-colors motion-reduce:transition-none', FOCO, perigo ? tom.perigo : cn(tom.texto, tom.hover));
 
   return (
     <div ref={raiz} className="relative" onKeyDown={teclas}>
@@ -624,7 +624,7 @@ export const TailorUserMenu: React.FC<TailorUserMenuProps> = ({ nome, detalhe, p
         aria-label={recolhido ? `Menu de ${nome}` : undefined}
         title={recolhido && !expandido ? nome : undefined}
         onClick={() => (expandido ? fechar() : abrir())}
-        className={cn('flex w-full items-center gap-[13px] py-[13px] text-left transition-colors motion-reduce:transition-none', tom.hover, FOCO, recolhido ? 'justify-center px-0' : 'px-[21px]')}
+        className={cn('flex w-full items-center gap-tailor-sm py-tailor-sm text-left transition-colors motion-reduce:transition-none', tom.hover, FOCO, recolhido ? 'justify-center px-0' : 'px-tailor-md')}
       >
         {avatar}
         {!recolhido && (
@@ -643,23 +643,23 @@ export const TailorUserMenu: React.FC<TailorUserMenuProps> = ({ nome, detalhe, p
           ref={painel}
           aria-hidden={fechando || undefined}
           className={cn(
-            'tailor-user-menu__panel absolute z-[var(--tailor-z-drawer)] border py-[8px]',
+            'tailor-user-menu__panel absolute z-[var(--tailor-z-drawer)] border py-tailor-xs',
             fechando && 'tailor-user-menu__panel--closing',
             tom.fundo,
             tom.borda,
-            recolhido ? 'bottom-0 left-full ml-[8px] w-[233px]' : 'bottom-full left-[8px] right-[8px] mb-[8px]',
+            recolhido ? 'bottom-0 left-full ml-tailor-xs w-[233px]' : 'bottom-full left-[8px] right-[8px] mb-tailor-xs',
           )}
         >
           {(recolhido || papel) && (
-            <div className={cn('border-b px-[13px] pb-[8px] font-tailor', tom.borda)}>
+            <div className={cn('border-b px-tailor-sm pb-tailor-xs font-tailor', tom.borda)}>
               {recolhido && <p className={cn('truncate text-sm font-semibold', tom.forte)}>{nome}</p>}
               {recolhido && detalhe && <p className={cn('truncate text-[11px]', tom.fraco)}>{detalhe}</p>}
-              {papel && <p className={cn('text-[11px]', tom.fraco, recolhido && 'mt-[5px]')}>{papel}</p>}
+              {papel && <p className={cn('text-[11px]', tom.fraco, recolhido && 'mt-tailor-half')}>{papel}</p>}
             </div>
           )}
-          {children && <div className={cn('border-b px-[13px] py-[8px]', tom.borda)}>{children}</div>}
+          {children && <div className={cn('border-b px-tailor-sm py-tailor-xs', tom.borda)}>{children}</div>}
           {acoes.length > 0 && (
-            <div className="pt-[8px]">
+            <div className="pt-tailor-xs">
               {acoes.map((acao) => {
                 const Icone = acao.icone;
                 const miolo = (
@@ -728,7 +728,7 @@ export const TailorMobileBar: React.FC<TailorMobileBarProps> = ({
 }) => {
   const tom = TONS[superficie];
   return (
-    <header className={cn('sticky top-0 z-[var(--tailor-z-sticky)] flex h-[55px] items-center gap-[8px] border-b pl-[5px] pr-[13px]', SO_MOBILE[breakpoint], tom.fundo, tom.borda, className)}>
+    <header className={cn('sticky top-0 z-[var(--tailor-z-sticky)] flex h-[55px] items-center gap-tailor-xs border-b pl-tailor-half pr-tailor-sm', SO_MOBILE[breakpoint], tom.fundo, tom.borda, className)}>
       <button
         type="button"
         onClick={onAbrirMenu}
