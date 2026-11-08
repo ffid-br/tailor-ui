@@ -1,6 +1,9 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { cn } from '../cn';
 import { TailorTypewriter } from './TailorTypewriter';
+import { useReducedMotion } from '../reducedMotion';
+
+const FAISCAS = [0, 45, 90, 135, 180, 225, 270, 315];
 
 export type TailorResultProps = {
   status: 'success' | 'error';
@@ -18,6 +21,12 @@ export type TailorResultProps = {
   onClose?: () => void;
   /** Botões abaixo do texto (ex.: "Tentar de novo" no erro). */
   actions?: React.ReactNode;
+  /**
+   * Só no sucesso: momento de "concluído" (fim de etapa, meta batida). O painel vira Ink com o
+   * check em Lime e uma única rajada curta de faíscas sai do ícone. Sem movimento para quem
+   * prefere menos (fica só o painel Ink e o check, parados). Padrão: false.
+   */
+  celebrate?: boolean;
   className?: string;
 };
 
@@ -28,7 +37,9 @@ export type TailorResultProps = {
  * mesmo ponto e `onClose` fecha o modal. Cobre o pai, que precisa de
  * `position: relative`.
  */
-export function TailorResult({ status, title, description, origin, closeAfter, onClose, actions, className }: TailorResultProps) {
+export function TailorResult({ status, title, description, origin, closeAfter, onClose, actions, celebrate = false, className }: TailorResultProps) {
+  const reduzir = useReducedMotion();
+  const festa = celebrate && status === 'success';
   const [saindo, setSaindo] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const espera = closeAfter ?? (status === 'success' ? 1600 : false);
@@ -62,13 +73,18 @@ export function TailorResult({ status, title, description, origin, closeAfter, o
     <div
       ref={ref}
       role={status === 'error' ? 'alert' : 'status'}
-      className={cn('tailor-result', `tailor-result--${status}`, saindo && 'tailor-result--leaving', className)}
+      className={cn('tailor-result', `tailor-result--${status}`, festa && 'tailor-result--celebrate', saindo && 'tailor-result--leaving', className)}
     >
       <svg className="tailor-result__icon" viewBox="-12 -12 24 24" aria-hidden="true">
         {status === 'success'
           ? <polyline className="tailor-loader__check" points="-11,0 -4,7 11,-8" pathLength={1} fill="none" strokeWidth={3} strokeLinecap="square" />
           : <path className="tailor-loader__check" d="M-8 -8L8 8M8 -8L-8 8" pathLength={1} fill="none" strokeWidth={3} strokeLinecap="square" />}
       </svg>
+      {festa && !reduzir && (
+        <span className="tailor-result__burst" aria-hidden="true">
+          {FAISCAS.map((a) => <span key={a} className="tailor-result__spark" style={{ '--tailor-spark-angle': `${a}deg` } as React.CSSProperties} />)}
+        </span>
+      )}
       <p className="tailor-result__title">{status === 'success' ? <TailorTypewriter texts={[title]} once /> : title}</p>
       {description && <div className="tailor-result__description">{description}</div>}
       {actions && <div className="tailor-result__actions">{actions}</div>}
