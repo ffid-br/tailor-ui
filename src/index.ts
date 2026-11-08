@@ -71,3 +71,9 @@ export { TailorMonogram, monogramInitials, monogramTone, MONOGRAM_TONES } from '
 export type { TailorMonogramProps } from './components/TailorMonogram';
 export { TailorInsight } from './components/TailorInsight';
 export type { TailorInsightProps } from './components/TailorInsight';
+export { TailorExplain } from './components/TailorExplain';
+export type { TailorExplainProps } from './components/TailorExplain';
+export { TailorGlossary } from './components/TailorGlossary';
+export type { TailorGlossaryProps } from './components/TailorGlossary';
+export { TailorTour, resetTour } from './components/TailorTour';
+export type { TailorTourProps, TailorTourStep } from './components/TailorTour';
