@@ -465,6 +465,8 @@ Tokens da marca (fonte: skill `tailor-brand-manual`). Aditivo e compatível.
 - `TailorNovidadesDialog`: fundo em `--tailor-scrim` (55%).
 - `TailorToaster`: continua no topo (direita no desktop, largura total no celular), agora com camada `--tailor-z-toast` (130, acima de modal e menu) e largura máxima de 420 px.
 - Camadas dos componentes agora vêm da escala `--tailor-z-*`.
+- `TailorStatGroup` `bordered`: o primeiro item perdia padding e borda esquerdos (a regra do primeiro filho vencia); agora todos iguais em grade e em coluna única.
+- `TailorInsight`: `nextAction` vira botão secundário (a página já tem o primário).
 - Teste de marca (`src/marca.test.ts`): falha com hex fora de `tokens.css`, `font-weight` 700 ou sombra decorativa.
 
 ### 0.14.0
