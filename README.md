@@ -467,6 +467,7 @@ Tokens da marca (fonte: skill `tailor-brand-manual`). Aditivo e compatível.
 - Camadas dos componentes agora vêm da escala `--tailor-z-*`.
 - `TailorStatGroup` `bordered`: o primeiro item perdia padding e borda esquerdos (a regra do primeiro filho vencia); agora todos iguais em grade e em coluna única.
 - `TailorInsight`: `nextAction` vira botão secundário (a página já tem o primário).
+- Tokens sincronizados com a skill atualizada: `--tailor-tracking-label` 0.14em (usado no overline e no cabeçalho de tabela), `--tailor-danger-hover`, `--tailor-black-hover`, `--tailor-fg-inverse-secondary`, `--tailor-danger-on-dark`, `--tailor-text-kpi` e `--tailor-text-kpi-app` (o `TailorStat` usa o kpi-app, 34 px).
 - Teste de marca (`src/marca.test.ts`): falha com hex fora de `tokens.css`, `font-weight` 700 ou sombra decorativa.
 
 ### 0.14.0

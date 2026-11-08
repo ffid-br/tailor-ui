@@ -44,3 +44,16 @@ describe('marca: tokens', () => {
     expect(tokens).toMatch(/--tailor-radius:\s*0;/);
   });
 });
+
+describe('marca: sincronia com a skill', () => {
+  it('tem os tokens novos da skill e não tem danger-strong', () => {
+    const t = ler('tokens.css');
+    expect(t).toMatch(/--tailor-tracking-label:\s*0\.14em/);
+    expect(t).toMatch(/--tailor-danger-hover:\s*#D6003A/);
+    expect(t).toMatch(/--tailor-black-hover:\s*#333333/);
+    expect(t).toMatch(/--tailor-danger-on-dark:\s*#FF5C82/);
+    expect(t).toMatch(/--tailor-fg-inverse-secondary:\s*#CFCFCF/);
+    expect(t).toMatch(/--tailor-text-kpi-app:\s*500 34px/);
+    expect(t + ler('style.css') + ler('theme.css')).not.toContain('danger-strong');
+  });
+});
