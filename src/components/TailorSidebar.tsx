@@ -497,7 +497,7 @@ export const TailorSidebar: React.FC<TailorSidebarProps> = ({
     <>
       <aside
         className={cn(
-          'sticky top-0 z-30 flex h-screen shrink-0 flex-col border-r transition-[width] duration-200 ease-out motion-reduce:transition-none',
+          'sticky top-0 z-[var(--tailor-z-sticky)] flex h-screen shrink-0 flex-col border-r transition-[width] duration-200 ease-out motion-reduce:transition-none',
           SO_DESKTOP[breakpoint],
           tom.borda,
           recolhido ? 'w-20' : 'w-72',
@@ -508,7 +508,7 @@ export const TailorSidebar: React.FC<TailorSidebarProps> = ({
       </aside>
 
       {aberto && (
-        <div className={cn('fixed inset-0 z-50 flex', SO_MOBILE[breakpoint])}>
+        <div className={cn('fixed inset-0 z-[var(--tailor-z-drawer)] flex', SO_MOBILE[breakpoint])}>
           <div aria-hidden="true" className="absolute inset-0 bg-black/55" onClick={onFechar} />
           <div
             ref={painelRef}
@@ -643,7 +643,7 @@ export const TailorUserMenu: React.FC<TailorUserMenuProps> = ({ nome, detalhe, p
           ref={painel}
           aria-hidden={fechando || undefined}
           className={cn(
-            'tailor-user-menu__panel absolute z-50 border py-[8px]',
+            'tailor-user-menu__panel absolute z-[var(--tailor-z-drawer)] border py-[8px]',
             fechando && 'tailor-user-menu__panel--closing',
             tom.fundo,
             tom.borda,
@@ -728,7 +728,7 @@ export const TailorMobileBar: React.FC<TailorMobileBarProps> = ({
 }) => {
   const tom = TONS[superficie];
   return (
-    <header className={cn('sticky top-0 z-40 flex h-[55px] items-center gap-[8px] border-b pl-[5px] pr-[13px]', SO_MOBILE[breakpoint], tom.fundo, tom.borda, className)}>
+    <header className={cn('sticky top-0 z-[var(--tailor-z-sticky)] flex h-[55px] items-center gap-[8px] border-b pl-[5px] pr-[13px]', SO_MOBILE[breakpoint], tom.fundo, tom.borda, className)}>
       <button
         type="button"
         onClick={onAbrirMenu}

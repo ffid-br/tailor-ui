@@ -5,17 +5,22 @@
  * `@source` (ver README e ffid-br/account-selector-component#2).
  */
 
-:root {
-  --tailor-white: #FFFFFF;
-  --tailor-black: #000000;
-  --tailor-green: #90F208;
-  --tailor-green-hover: #7FD909;
-  --tailor-ink: #3C6600;
-  --tailor-font: "Raleway", "Roboto", system-ui, sans-serif;
-  --tailor-font-num: "Roboto", "Raleway", system-ui, sans-serif;
-  /* Curvas do manual */
-  --tailor-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --tailor-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+@import "./tokens.css";
+
+/*
+ * Foco: um padrão só em todos os componentes (campo: ver .tailor-field__control:focus).
+ * Linha de 1 px no tom do texto e anel de 3 px no token --tailor-focus-ring.
+ * Em tabela o anel entra para dentro (a célula corta o que sai).
+ */
+:is(
+  .tailor-btn, .tailor-ph__back, .tailor-ph__breadcrumb-link, .tailor-toast__close, .tailor-explain__toggle, .tailor-explain__done,
+  .tailor-glossary__term, .tailor-tour__x, .tailor-tour__btn, .tailor-tour__skip, .tailor-nov__trigger, .tailor-nov__close,
+  .tailor-nov__more, .tailor-stat--action, .tailor-insight__link
+):focus-visible {
+  outline: 1px solid var(--tailor-fg); outline-offset: 0; box-shadow: 0 0 0 4px var(--tailor-focus-ring);
+}
+:is(.tailor-table__clickable, .tailor-table button):focus-visible {
+  outline: 1px solid var(--tailor-fg); outline-offset: -1px; box-shadow: inset 0 0 0 4px var(--tailor-focus-ring);
 }
 
 /*
@@ -27,11 +32,11 @@
   /* Seguem os tokens do Tailwind do app: quem já troca --color-tailor-green pela
      cor do cliente (accounts, brandTheme) leva o cabeçalho junto. */
   --tailor-brand-primary: var(--color-tailor-green, var(--tailor-green));
-  --tailor-brand-primary-text: var(--color-tailor-ink, var(--tailor-ink));
-  --tailor-brand-on-primary: #000000;
+  --tailor-brand-primary-text: var(--color-tailor-green-ink, var(--tailor-green-ink));
+  --tailor-brand-on-primary: var(--tailor-black);
   --tailor-brand-text: var(--tailor-black);
-  --tailor-brand-text-muted: #666666;
-  --tailor-brand-border: #E5E5E5;
+  --tailor-brand-text-muted: var(--tailor-gray-700);
+  --tailor-brand-border: var(--tailor-border);
   --tailor-brand-background: transparent;
   --tailor-brand-heading-font: var(--tailor-font);
   --tailor-brand-body-font: var(--tailor-font);
@@ -42,8 +47,8 @@
 :where(.dark, [data-theme="dark"]) {
   --tailor-brand-primary-text: var(--color-tailor-green, var(--tailor-green));
   --tailor-brand-text: var(--tailor-white);
-  --tailor-brand-text-muted: #A3A3A3;
-  --tailor-brand-border: rgba(255, 255, 255, 0.1);
+  --tailor-brand-text-muted: var(--tailor-muted);
+  --tailor-brand-border: var(--tailor-border);
 }
 .tailor-brand { display: contents; }
 
@@ -70,7 +75,6 @@
 .tailor-ph__breadcrumbs li { display: flex; align-items: center; gap: 6px; }
 .tailor-ph__breadcrumb-link { color: inherit; text-decoration: none; }
 .tailor-ph__breadcrumbs [aria-current="page"] { color: var(--tailor-brand-text); }
-.tailor-ph__back:focus-visible, .tailor-ph__breadcrumb-link:focus-visible { outline: 3px solid var(--tailor-brand-primary); outline-offset: 2px; }
 .tailor-ph__eyebrow {
   display: flex; align-items: center; gap: 8px; margin: 5px 0 0;
   font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
@@ -89,16 +93,16 @@
 /* Faixa de números: cada um com o fio à esquerda (a cor do tom), rótulo em cima e o número grande embaixo. */
 .tailor-ph__stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(144px, 1fr)); gap: 21px 34px; margin: 0; }
 .tailor-ph__stat { --tailor-stat-color: var(--tailor-brand-border); min-width: 0; padding: 2px 0 2px 13px; border-left: 3px solid var(--tailor-stat-color); }
-.tailor-ph__stat--danger { --tailor-stat-color: #FF0040; }
-.tailor-ph__stat--warning { --tailor-stat-color: #FF9033; }
-.tailor-ph__stat--success { --tailor-stat-color: #008548; }
+.tailor-ph__stat--danger { --tailor-stat-color: var(--tailor-red-700); }
+.tailor-ph__stat--warning { --tailor-stat-color: var(--tailor-orange-700); }
+.tailor-ph__stat--success { --tailor-stat-color: var(--tailor-success); }
 .tailor-ph__stat-label { margin: 0; font-size: 13px; line-height: 1.382; color: var(--tailor-brand-text-muted); }
 .tailor-ph__stat-value {
   margin: 5px 0 0; font-size: 34px; font-weight: 500; line-height: 1; font-variant-numeric: lining-nums tabular-nums;
   font-family: var(--tailor-brand-heading-font); color: var(--tailor-brand-text);
 }
-.tailor-ph__stat--danger .tailor-ph__stat-value { color: #D10035; }
-.tailor-ph__stat--warning .tailor-ph__stat-value { color: #B35A00; }
+.tailor-ph__stat--danger .tailor-ph__stat-value { color: var(--tailor-danger-strong); }
+.tailor-ph__stat--warning .tailor-ph__stat-value { color: var(--tailor-fg); }
 @media (max-width: 639px) { .tailor-ph__stat-value { font-size: 26px; } }
 .tailor-ph__below { min-width: 0; }
 
@@ -134,7 +138,6 @@
 .tailor-table__row--open td { background: color-mix(in srgb, var(--tailor-brand-text) 3%, transparent); }
 .tailor-table tbody tr.tailor-table__expanded td { border-top: 0; padding: var(--tailor-table-expanded-padding, 13px 21px 21px); background: color-mix(in srgb, var(--tailor-brand-text) 3%, transparent); }
 .tailor-table tbody tr.tailor-table__expanded:hover td { background: color-mix(in srgb, var(--tailor-brand-text) 3%, transparent); }
-.tailor-table__clickable:focus-visible, .tailor-table button:focus-visible { outline: 3px solid var(--tailor-brand-primary); outline-offset: -3px; }
 .tailor-table__state { padding: 34px 13px; text-align: center; color: var(--tailor-brand-text-muted); }
 .tailor-table tfoot td { border-top: 1px solid var(--tailor-brand-text); font-weight: 600; }
 .tailor-table__pagination {
@@ -197,7 +200,7 @@
 /* TailorEsqueleto — barras retas e a linha da marca varrendo de cima a baixo. */
 .tailor-skeleton { position: relative; overflow: hidden; display: grid; gap: 13px; padding: 2px 0; }
 .tailor-skeleton__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.tailor-skeleton__bar { display: block; height: 13px; background: var(--tailor-skeleton-bar, #F2F2F2); }
+.tailor-skeleton__bar { display: block; height: 13px; background: var(--tailor-skeleton-bar, var(--tailor-gray-100)); }
 .tailor-skeleton__bar--thin { height: 8px; }
 .tailor-skeleton__bar--thick { height: 34px; }
 .tailor-skeleton__row { display: grid; gap: 21px; padding: 8px 0; border-bottom: 1px solid var(--tailor-brand-border); }
@@ -215,21 +218,21 @@
   61.8%  { left: calc(100% - 8px); opacity: 1; }
   70%, 100% { left: calc(100% - 8px); opacity: 0; }
 }
-:where(.dark, [data-theme="dark"]) .tailor-skeleton { --tailor-skeleton-bar: #1F1F1F; }
+:where(.dark, [data-theme="dark"]) .tailor-skeleton { --tailor-skeleton-bar: var(--tailor-ink-900); }
 
 /* TailorAvisos — caixa preta; a cor do tipo entra varrendo e recolhe na borda; barra do tempo. */
 .tailor-toaster {
-  position: fixed; z-index: 1100; right: 21px; top: 21px; display: flex; flex-direction: column; gap: 8px;
-  width: min(377px, calc(100vw - 32px)); pointer-events: none;
+  position: fixed; z-index: var(--tailor-z-toast); right: 21px; top: 21px; display: flex; flex-direction: column; gap: 8px;
+  width: min(420px, calc(100vw - 32px)); pointer-events: none;
 }
 @media (max-width: 640px) { .tailor-toaster { right: 16px; left: 16px; top: 16px; width: auto; } }
 .tailor-toast {
   --tailor-toast-color: var(--tailor-brand-primary);
   position: relative; overflow: hidden; pointer-events: auto; display: flex; align-items: flex-start; gap: 13px;
-  padding: 16px 13px 18px 21px; background: #000; color: #fff; font-family: var(--tailor-font);
+  padding: 16px 13px 18px 21px; background: var(--tailor-black); color: var(--tailor-white); font-family: var(--tailor-font);
   animation: tailor-toast-in 0.5s var(--tailor-ease-in-out) both;
 }
-.tailor-toast--error { --tailor-toast-color: #FF0040; }
+.tailor-toast--error { --tailor-toast-color: var(--tailor-red-700); }
 .tailor-toast::before {
   content: ''; position: absolute; left: 0; top: 0; bottom: 0; background: var(--tailor-toast-color);
   width: 3px;
@@ -246,8 +249,8 @@
   margin: -5px -3px 0 0; width: 34px; height: 34px; flex-shrink: 0; border: 0; background: none; color: rgb(255 255 255 / 0.7);
   font-size: 21px; line-height: 1; cursor: pointer;
 }
-.tailor-toast__close:hover { color: #fff; }
-.tailor-toast__close:focus-visible { outline: 2px solid var(--tailor-toast-color); outline-offset: -2px; }
+.tailor-toast__close:hover { color: var(--tailor-white); }
+.tailor-toast__close:focus-visible { outline-color: var(--tailor-white); }
 .tailor-toast__timer {
   position: absolute !important; left: 0; right: 0; bottom: 0; height: 3px; background: var(--tailor-toast-color);
   transform-origin: left; animation: tailor-toast-timer var(--tailor-toast-duration, 4s) linear both;
@@ -264,8 +267,8 @@
 /* TailorConclusao — a cor varre o painel, o ícone e o título se escrevem, e tudo recolhe no ponto. */
 .tailor-result {
   --tailor-result-color: var(--tailor-brand-primary);
-  --tailor-result-text: #000;
-  position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  --tailor-result-text: var(--tailor-black);
+  position: absolute; inset: 0; z-index: var(--tailor-z-sticky); display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 13px; padding: 34px 21px; text-align: center; font-family: var(--tailor-font);
   background: var(--tailor-result-color); color: var(--tailor-result-text);
   --tailor-typewriter-cursor: var(--tailor-result-text);
@@ -273,7 +276,7 @@
   --tailor-result-y: 50%;
   animation: tailor-result-in 0.5s var(--tailor-ease-in-out) both;
 }
-.tailor-result--error { --tailor-result-color: #FF0040; --tailor-result-text: #fff; }
+.tailor-result--error { --tailor-result-color: var(--tailor-red-700); --tailor-result-text: var(--tailor-white); }
 .tailor-result--leaving { animation: tailor-result-out 0.618s var(--tailor-ease-in-out) both; }
 /* O ponto: um quadrado de 8px no centro do botão de origem (ou do painel). */
 @keyframes tailor-result-in {
@@ -310,7 +313,6 @@
   font: inherit; font-size: 13px; font-weight: 500; color: var(--tailor-brand-text-muted);
 }
 .tailor-explain__toggle:hover { color: var(--tailor-brand-text); }
-.tailor-explain__toggle:focus-visible, .tailor-explain__done:focus-visible { outline: 3px solid var(--tailor-brand-primary); outline-offset: 2px; }
 .tailor-explain__chevron { width: 6px; height: 6px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform 0.2s var(--tailor-ease-out); }
 .tailor-explain--open .tailor-explain__chevron { transform: rotate(45deg); }
 .tailor-explain__body { display: grid; gap: 8px; padding: 0 0 13px; font-size: 14px; line-height: 1.6; max-width: 68ch; }
@@ -326,9 +328,8 @@
   display: inline; padding: 0; border: 0; background: none; cursor: help; font: inherit; color: inherit;
   text-decoration: underline dotted; text-underline-offset: 3px; border-radius: var(--tailor-brand-radius);
 }
-.tailor-glossary__term:focus-visible { outline: 3px solid var(--tailor-brand-primary); outline-offset: 2px; }
 .tailor-glossary__tip {
-  position: absolute; left: 0; bottom: calc(100% + 6px); z-index: 30; width: max-content; max-width: min(260px, 80vw); padding: 8px 13px;
+  position: absolute; left: 0; bottom: calc(100% + 6px); z-index: var(--tailor-z-drawer); width: max-content; max-width: min(260px, 80vw); padding: 8px 13px;
   background: var(--tailor-black); color: var(--tailor-white); font: 400 13px/1.5 var(--tailor-brand-body-font); text-align: left;
   border-radius: var(--tailor-brand-radius); visibility: hidden; opacity: 0; transition: opacity 0.15s var(--tailor-ease-out), visibility 0.15s;
 }
@@ -336,12 +337,12 @@
 :where(.dark, [data-theme="dark"]) .tailor-glossary__tip { background: var(--tailor-white); color: var(--tailor-black); }
 
 /* TailorTour — véu, recorte do elemento e balão. */
-.tailor-tour { position: fixed; inset: 0; z-index: 100; }
+.tailor-tour { position: fixed; inset: 0; z-index: var(--tailor-z-modal); }
 .tailor-tour__veil { position: fixed; inset: 0; background: rgb(0 0 0 / 0.55); }
-.tailor-tour__spot { position: fixed; pointer-events: none; border: 2px solid var(--tailor-brand-primary); box-shadow: 0 0 0 9999px rgb(0 0 0 / 0.55); transition: all 0.2s var(--tailor-ease-out); }
+.tailor-tour__spot { position: fixed; pointer-events: none; border: 2px solid var(--tailor-brand-primary); box-shadow: 0 0 0 9999px var(--tailor-scrim); transition: all 0.2s var(--tailor-ease-out); }
 .tailor-tour__card {
   position: fixed; padding: 21px; background: var(--tailor-white); color: var(--tailor-brand-text); outline: none;
-  font-family: var(--tailor-brand-body-font); box-shadow: 0 8px 34px rgb(0 0 0 / 0.25); border-radius: var(--tailor-brand-radius);
+  font-family: var(--tailor-brand-body-font); border: 1px solid var(--tailor-brand-border); border-radius: var(--tailor-brand-radius);
 }
 :where(.dark, [data-theme="dark"]) .tailor-tour__card { background: var(--tailor-black); border: 1px solid var(--tailor-brand-border); }
 .tailor-tour__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 13px; margin-bottom: 8px; }
@@ -358,28 +359,27 @@
 }
 .tailor-tour__btn--primary { border-color: var(--tailor-brand-primary); background: var(--tailor-brand-primary); color: var(--tailor-brand-on-primary); font-weight: 500; }
 .tailor-tour__skip { margin-top: 13px; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; font-size: 13px; color: var(--tailor-brand-text-muted); text-decoration: underline; text-underline-offset: 3px; }
-.tailor-tour__x:focus-visible, .tailor-tour__btn:focus-visible, .tailor-tour__skip:focus-visible { outline: 3px solid var(--tailor-brand-primary); outline-offset: 2px; }
 
 /* TailorField — rótulo, controle e mensagem. Erro: borda e ponto vermelhos, um empurrão curto para chamar o olho. */
 .tailor-field { display: grid; gap: 8px; font-family: var(--tailor-font); color: var(--tailor-brand-text); }
 .tailor-field__label { display: flex; align-items: baseline; gap: 8px; font-size: 13px; font-weight: 500; }
 .tailor-field__required { font-size: 12px; font-weight: 400; color: var(--tailor-brand-text-muted); }
 .tailor-field__control {
-  min-height: 40px; width: 100%; padding: 0 13px; border: 1px solid var(--tailor-field-border, #999999); border-radius: var(--tailor-brand-radius, 0);
+  min-height: 40px; width: 100%; padding: 0 13px; border: 1px solid var(--tailor-field-border, var(--tailor-border-strong)); border-radius: var(--tailor-brand-radius, 0);
   background: transparent; color: inherit; font: inherit; font-size: 15px;
 }
 textarea.tailor-field__control { padding: 8px 13px; min-height: 89px; }
-.tailor-field__control:focus { outline: none; border-color: var(--tailor-brand-text); box-shadow: 0 0 0 3px color-mix(in srgb, var(--tailor-brand-primary) 60%, transparent); }
+.tailor-field__control:focus { outline: 2px solid transparent; border-color: var(--tailor-fg); box-shadow: 0 0 0 3px var(--tailor-focus-ring); }
 .tailor-field--error .tailor-field__control {
-  border-color: #FF0040; background: color-mix(in srgb, #FF0040 5%, transparent);
+  border-color: var(--tailor-red-700); background: color-mix(in srgb, var(--tailor-red-700) 5%, transparent);
   animation: tailor-field-nudge 0.382s var(--tailor-ease-out);
 }
-.tailor-field--error .tailor-field__control:focus { box-shadow: 0 0 0 3px color-mix(in srgb, #FF0040 35%, transparent); }
-.tailor-field__error { display: flex; align-items: baseline; gap: 8px; margin: 0; font-size: 13px; font-weight: 500; color: #E0003A; }
-.tailor-field__dot { flex-shrink: 0; width: 8px; height: 8px; background: #FF0040; transform: translateY(-1px); }
+.tailor-field--error .tailor-field__control:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--tailor-red-700) 35%, transparent); }
+.tailor-field__error { display: flex; align-items: baseline; gap: 8px; margin: 0; font-size: 13px; font-weight: 500; color: var(--tailor-danger-strong); }
+.tailor-field__dot { flex-shrink: 0; width: 8px; height: 8px; background: var(--tailor-red-700); transform: translateY(-1px); }
 .tailor-field__hint { margin: 0; font-size: 13px; color: var(--tailor-brand-text-muted); }
-:where(.dark, [data-theme="dark"]) .tailor-field__error { color: #FF7462; }
-:where(.dark, [data-theme="dark"]) .tailor-field { --tailor-field-border: #666666; }
+:where(.dark, [data-theme="dark"]) .tailor-field__error { color: var(--tailor-red-500); }
+:where(.dark, [data-theme="dark"]) .tailor-field { --tailor-field-border: var(--tailor-gray-700); }
 @keyframes tailor-field-nudge { 0%, 100% { transform: none; } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-2px); } }
 
 /* TailorUserMenu — o painel nasce do ponto no canto junto do avatar e recolhe nele. */
@@ -400,7 +400,6 @@ textarea.tailor-field__control { padding: 8px 13px; min-height: 89px; }
   font-family: var(--tailor-brand-body-font, var(--tailor-font)); font-size: 14px; font-weight: 500; line-height: 1; white-space: nowrap;
   cursor: pointer; transition: background-color 0.15s var(--tailor-ease-out), color 0.15s var(--tailor-ease-out), border-color 0.15s var(--tailor-ease-out);
 }
-.tailor-btn:focus-visible { outline: 2px solid var(--tailor-brand-text); outline-offset: 2px; }
 .tailor-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .tailor-btn--loading { cursor: wait; }
 .tailor-btn--sm { height: 32px; padding: 0 13px; font-size: 13px; }
@@ -410,16 +409,16 @@ textarea.tailor-field__control { padding: 8px 13px; min-height: 89px; }
 .tailor-btn--icon-only.tailor-btn--lg { width: 48px; }
 .tailor-btn--full { width: 100%; }
 .tailor-btn--primary { background: var(--tailor-brand-primary); color: var(--tailor-brand-on-primary); }
-.tailor-btn--primary:not(:disabled):hover { background: color-mix(in srgb, var(--tailor-brand-primary) 88%, #000); }
+.tailor-btn--primary:not(:disabled):hover { background: var(--tailor-brand-primary-hover, var(--tailor-green-hover)); }
 .tailor-btn--secondary { background: transparent; color: var(--tailor-brand-text); border-color: currentColor; }
 .tailor-btn--ghost { background: transparent; color: var(--tailor-brand-text); }
 .tailor-btn--secondary:not(:disabled):hover, .tailor-btn--ghost:not(:disabled):hover { background: color-mix(in srgb, var(--tailor-brand-text) 6%, transparent); }
-.tailor-btn--dark { background: #000; color: #fff; }
-.tailor-btn--dark:not(:disabled):hover { background: #333; }
-:where(.dark, [data-theme="dark"]) .tailor-btn--dark { background: #fff; color: #000; }
-:where(.dark, [data-theme="dark"]) .tailor-btn--dark:not(:disabled):hover { background: #E5E5E5; }
-.tailor-btn--danger { background: #FF0040; color: #fff; }
-.tailor-btn--danger:not(:disabled):hover { background: #D6003A; }
+.tailor-btn--dark { background: var(--tailor-black); color: var(--tailor-white); }
+.tailor-btn--dark:not(:disabled):hover { background: var(--tailor-black-hover); }
+:where(.dark, [data-theme="dark"]) .tailor-btn--dark { background: var(--tailor-white); color: var(--tailor-black); }
+:where(.dark, [data-theme="dark"]) .tailor-btn--dark:not(:disabled):hover { background: var(--tailor-gray-100); }
+.tailor-btn--danger { background: var(--tailor-red-700); color: var(--tailor-white); }
+.tailor-btn--danger:not(:disabled):hover { background: var(--tailor-danger-strong); }
 .tailor-btn__icon { display: inline-flex; width: 1.15em; height: 1.15em; }
 .tailor-btn__icon > svg { width: 100%; height: 100%; }
 .tailor-btn__dot { position: relative; display: inline-block; width: 1em; height: 1em; }
@@ -495,8 +494,8 @@ textarea.tailor-field__control { padding: 8px 13px; min-height: 89px; }
   display: flex; align-items: center; justify-content: center;
   background: var(--tailor-black); color: var(--tailor-white); font-size: 10px; line-height: 1;
 }
-.tailor-mascote--desligado { --tailor-mascote-tinta: #999999; }
-.tailor-mascote--desligado .tailor-mascote__verde { background: #999999; }
+.tailor-mascote--desligado { --tailor-mascote-tinta: var(--tailor-gray-500); }
+.tailor-mascote--desligado .tailor-mascote__verde { background: var(--tailor-gray-500); }
 .tailor-mascote__corpo { animation: tailor-mascote-bob 1.6s steps(2, end) infinite; }
 .tailor-mascote--analisando .tailor-mascote__corpo,
 .tailor-mascote--subiu .tailor-mascote__corpo { animation-duration: 0.6s; }
@@ -511,14 +510,14 @@ textarea.tailor-field__control { padding: 8px 13px; min-height: 89px; }
 /* Ponto do estado: quadrado, sempre ao lado do texto. */
 .tailor-estado__ponto { display: inline-block; width: 8px; height: 8px; }
 .tailor-estado__ponto--analisando { background: var(--tailor-green); }
-.tailor-estado__ponto--esperando  { background: #FF9033; }
-.tailor-estado__ponto--feito      { background: #008548; }
-.tailor-estado__ponto--subiu      { background: #0040FF; }
-.tailor-estado__ponto--desligado  { background: #999999; }
-.tailor-estado__ponto--parado     { background: #666666; }
+.tailor-estado__ponto--esperando  { background: var(--tailor-orange-700); }
+.tailor-estado__ponto--feito      { background: var(--tailor-success); }
+.tailor-estado__ponto--subiu      { background: var(--tailor-blue-700); }
+.tailor-estado__ponto--desligado  { background: var(--tailor-gray-500); }
+.tailor-estado__ponto--parado     { background: var(--tailor-gray-700); }
 .tailor-estado__ponto--cumprimentando { background: var(--tailor-green); }
-.tailor-estado__ponto--falando    { background: #008548; }
-.tailor-estado__ponto--erro       { background: #FF0040; }
+.tailor-estado__ponto--falando    { background: var(--tailor-success); }
+.tailor-estado__ponto--erro       { background: var(--tailor-red-700); }
 
 /* AgenteMascote estilo vetor: o movimento diz o estado; o olhar segue o cursor. */
 .tailor-mv { line-height: 0; }
@@ -542,7 +541,7 @@ textarea.tailor-field__control { padding: 8px 13px; min-height: 89px; }
 .tailor-mv__pontos > span:nth-child(2) { animation-delay: 0.2s; }
 .tailor-mv__pontos > span:nth-child(3) { animation-delay: 0.4s; }
 .tailor-mv__confete rect { animation: tailor-mv-cai 1.8s linear infinite; }
-.tailor-mv__zzz text { animation: tailor-mv-sobe 3s linear infinite; font: 600 18px sans-serif; }
+.tailor-mv__zzz text { animation: tailor-mv-sobe 3s linear infinite; font: var(--tailor-weight-semibold) 18px var(--tailor-font); }
 @keyframes tailor-mv-respira { 0%, 100% { transform: none; } 50% { transform: scale(1.015, 0.985); } }
 @keyframes tailor-mv-espera { 0%, 100% { transform: none; } 50% { transform: translateY(-4px); } }
 @keyframes tailor-mv-inclina { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(-2deg); } }
@@ -580,13 +579,12 @@ textarea.tailor-field__control { padding: 8px 13px; min-height: 89px; }
   font: inherit; font-size: 14px; color: var(--tailor-brand-text); border-radius: var(--tailor-brand-radius);
 }
 .tailor-nov__trigger:hover { background: var(--tailor-brand-border); }
-.tailor-nov__trigger:focus-visible, .tailor-nov__close:focus-visible, .tailor-nov__more:focus-visible { outline: 3px solid var(--tailor-brand-primary); outline-offset: 2px; }
 .tailor-nov__dot { width: 8px; height: 8px; background: var(--tailor-brand-text-muted); border-radius: var(--tailor-brand-radius); }
 .tailor-nov__count {
   min-width: 21px; padding: 0 6px; background: var(--tailor-brand-primary); color: var(--tailor-brand-on-primary);
   font-size: 12px; font-weight: 500; line-height: 21px; text-align: center; font-variant-numeric: lining-nums; border-radius: var(--tailor-brand-radius);
 }
-.tailor-nov__overlay { position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgb(0 0 0 / 0.5); }
+.tailor-nov__overlay { position: fixed; inset: 0; z-index: var(--tailor-z-modal); display: flex; align-items: center; justify-content: center; padding: 16px; background: var(--tailor-scrim); }
 .tailor-nov {
   display: flex; flex-direction: column; width: 100%; max-width: 560px; max-height: 80vh; background: var(--tailor-white);
   color: var(--tailor-brand-text); font-family: var(--tailor-brand-body-font); border-radius: var(--tailor-brand-radius);
@@ -606,8 +604,8 @@ textarea.tailor-field__control { padding: 8px 13px; min-height: 89px; }
 .tailor-nov__more { align-self: flex-start; padding: 8px 0; border: 0; background: none; cursor: pointer; font: inherit; font-size: 14px; color: var(--tailor-brand-text); text-decoration: underline; text-underline-offset: 3px; }
 
 /* TailorStat — número com contexto. Sem cartão: tipografia e um fio entre os indicadores. */
-:where(:root) { --tailor-stat-good: var(--tailor-brand-primary-text); --tailor-stat-bad: #B8002B; }
-:where(.dark, [data-theme="dark"]) { --tailor-stat-bad: #FF6B8A; }
+:where(:root) { --tailor-stat-good: var(--tailor-brand-primary-text); --tailor-stat-bad: var(--tailor-danger-strong); }
+:where(.dark, [data-theme="dark"]) { --tailor-stat-bad: var(--tailor-red-500); }
 .tailor-stat { display: flex; flex-direction: column; gap: 5px; min-width: 0; padding: 0; border: 0; background: none; text-align: left; font-family: var(--tailor-brand-body-font, var(--tailor-font)); color: var(--tailor-brand-text); text-decoration: none; }
 .tailor-stat__label { font-size: 13px; color: var(--tailor-brand-text-muted); }
 .tailor-stat__main { display: flex; align-items: baseline; flex-wrap: wrap; gap: 5px 13px; }
@@ -631,7 +629,6 @@ textarea.tailor-field__control { padding: 8px 13px; min-height: 89px; }
 .tailor-stat--inline .tailor-stat__value { font-size: inherit; font-weight: 600; }
 .tailor-stat--action { cursor: pointer; }
 .tailor-stat--action:hover .tailor-stat__value { text-decoration: underline; text-decoration-color: var(--tailor-brand-primary); text-decoration-thickness: 3px; text-underline-offset: 4px; }
-.tailor-stat--action:focus-visible { outline: 2px solid var(--tailor-brand-text); outline-offset: 4px; }
 .tailor-stat-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--tailor-stat-min, 200px)), 1fr)); gap: 34px 0; }
 .tailor-stat-group > * { padding: 0 34px; border-left: 1px solid var(--tailor-brand-border); }
 .tailor-stat-group > :first-child { padding-left: 0; border-left: 0; }
@@ -647,27 +644,6 @@ textarea.tailor-field__control { padding: 8px 13px; min-height: 89px; }
 .tailor-empty__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 a.tailor-btn { text-decoration: none; }
 
-/* TailorMonogram — 8 pares fundo/texto (AA nos dois temas, conferido no teste). */
-:root {
-  --tailor-mono-0-bg: #E3F5C2; --tailor-mono-0-fg: #2B4A00;
-  --tailor-mono-1-bg: #D6E8FF; --tailor-mono-1-fg: #12335E;
-  --tailor-mono-2-bg: #FFE0CC; --tailor-mono-2-fg: #6B2A00;
-  --tailor-mono-3-bg: #F3D9F5; --tailor-mono-3-fg: #5A1A63;
-  --tailor-mono-4-bg: #CFF1EC; --tailor-mono-4-fg: #0B4A42;
-  --tailor-mono-5-bg: #FFD9DF; --tailor-mono-5-fg: #7A0F26;
-  --tailor-mono-6-bg: #FFF0B8; --tailor-mono-6-fg: #5C4300;
-  --tailor-mono-7-bg: #E4E4E4; --tailor-mono-7-fg: #1F1F1F;
-}
-:where(.dark, [data-theme="dark"]) {
-  --tailor-mono-0-bg: #2B4A00; --tailor-mono-0-fg: #D9F5A5;
-  --tailor-mono-1-bg: #12335E; --tailor-mono-1-fg: #CFE2FF;
-  --tailor-mono-2-bg: #6B2A00; --tailor-mono-2-fg: #FFD9C2;
-  --tailor-mono-3-bg: #5A1A63; --tailor-mono-3-fg: #F0CFF3;
-  --tailor-mono-4-bg: #0B4A42; --tailor-mono-4-fg: #C2EFE8;
-  --tailor-mono-5-bg: #7A0F26; --tailor-mono-5-fg: #FFD0D8;
-  --tailor-mono-6-bg: #5C4300; --tailor-mono-6-fg: #FFE9A8;
-  --tailor-mono-7-bg: #333333; --tailor-mono-7-fg: #EEEEEE;
-}
 .tailor-monogram { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; width: 34px; height: 34px; border-radius: var(--tailor-brand-radius, 0); font-family: var(--tailor-brand-body-font, var(--tailor-font)); font-size: 13px; font-weight: 600; line-height: 1; letter-spacing: 0.02em; user-select: none; }
 .tailor-monogram--sm { width: 21px; height: 21px; font-size: 9px; }
 .tailor-monogram--lg { width: 55px; height: 55px; font-size: 21px; }
@@ -694,5 +670,4 @@ a.tailor-btn { text-decoration: none; }
 .tailor-insight__foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 21px; font-size: 12px; color: var(--tailor-brand-text-muted); }
 .tailor-insight__feedback { display: inline-flex; align-items: center; gap: 13px; }
 .tailor-insight__link { padding: 0; border: 0; background: none; font: inherit; color: var(--tailor-brand-primary-text); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
-.tailor-insight__link[aria-pressed="true"] { font-weight: 700; text-decoration-thickness: 2px; }
-.tailor-insight__link:focus-visible { outline: 2px solid var(--tailor-brand-text); outline-offset: 2px; }
+.tailor-insight__link[aria-pressed="true"] { font-weight: var(--tailor-weight-semibold); text-decoration-thickness: 2px; }

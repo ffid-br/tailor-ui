@@ -1,7 +1,7 @@
 {
   "name": "@ffid-br/tailor-ui",
   "private": false,
-  "version": "0.14.0",
+  "version": "0.15.0",
   "description": "Primitivos de marca Tailor.ia em React: loader, intro, transição de login, lockup e barra lateral.",
   "type": "module",
   "main": "dist/index.umd.js",
@@ -25,10 +25,12 @@
     "./dist/style.css": "./dist/style.css",
     "./dist/theme.css": "./dist/theme.css",
     "./tailor-logo.png": "./dist/tailor-logo.png",
-    "./tailor-logo-branco.png": "./dist/tailor-logo-branco.png"
+    "./tailor-logo-branco.png": "./dist/tailor-logo-branco.png",
+    "./tokens.css": "./dist/tokens.css",
+    "./dist/tokens.css": "./dist/tokens.css"
   },
   "scripts": {
-    "build": "vite build && cp src/styles/style.css src/styles/theme.css src/assets/*.png dist/",
+    "build": "vite build && cp src/styles/style.css src/styles/tokens.css src/styles/theme.css src/assets/*.png dist/",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

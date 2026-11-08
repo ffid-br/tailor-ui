@@ -16,12 +16,12 @@ No CSS de entrada do app, logo depois de `@import "tailwindcss";`:
 
 ```css
 @import "tailwindcss";
-@import "@ffid-br/tailor-ui/theme.css";   /* tokens: tailor-green, tailor-ink, font-tailor... */
+@import "@ffid-br/tailor-ui/theme.css";   /* tokens: tailor-green, tailor-green-ink, tailor-border, font-tailor... */
 @import "@ffid-br/tailor-ui/style.css";   /* animações: loader, ponto, entrada */
 @source "../node_modules/@ffid-br/tailor-ui/dist";
 ```
 
-- `theme.css` é um bloco `@theme` que cria as classes nomeadas (`bg-tailor-green`, `text-tailor-ink`, `fill-tailor-green`, `font-tailor`, `font-tailor-num`). Se o app já define esses tokens, pode pular esta linha.
+- `theme.css` é um bloco `@theme` que cria as classes nomeadas (`bg-tailor-green`, `text-tailor-green-ink`, `fill-tailor-green`, `font-tailor`, `font-tailor-num`). Se o app já define esses tokens, pode pular esta linha.
 - `style.css` traz só os tokens como variáveis CSS (`--tailor-green`...) e os keyframes dos componentes, todos respeitando `prefers-reduced-motion`.
 - `@source` faz o Tailwind do app ler as classes usadas nos componentes. O caminho é relativo ao arquivo CSS: ajuste se ele não estiver em `src/`.
 
@@ -68,7 +68,7 @@ O ponto verde piscando com a malha Fibonacci. Ocupa o contêiner posicionado mai
 
 ### `TailorBrandMark`
 
-Lockup: wordmark com 21px de arte e o nome do produto em 18px semibold (tailor-ink no claro, branco no escuro). As logos padrão já vêm embutidas no pacote, então nada precisa ser copiado para o `public/`.
+Lockup: wordmark com 21px de arte e o nome do produto em 18px semibold (tailor-green-ink no claro, branco no escuro). As logos padrão já vêm embutidas no pacote, então nada precisa ser copiado para o `public/`.
 
 ```tsx
 <TailorBrandMark produto="Conta" />
@@ -422,7 +422,7 @@ A `EntradaApp` aparece quando há entrada pendente (`sessionStorage['tailor_entr
 
 O `style.css` deste pacote não traz preflight nem utilitários do Tailwind, e isso é proposital. No `account-selector-component` o CSS publicado levava um build inteiro do Tailwind. Esse CSS carregava depois do CSS do app, então os utilitários do pacote venciam os responsivos do host (`.hidden` derrubava `lg:flex`), redefiniam tokens e o preflight resetava a página (ver [ffid-br/account-selector-component#2](https://github.com/ffid-br/account-selector-component/issues/2)). Aqui os componentes só usam classes, e quem gera o CSS delas é o Tailwind do próprio app, via `@source`. Assim existe uma única versão do Tailwind na página.
 
-Cores só por tokens nomeados (`tailor-green`, `tailor-ink`, `black`, `white`, `neutral-*`). Nada de `[#hex]`.
+Cores só por tokens nomeados (`tailor-green`, `tailor-green-ink`, `black`, `white`, `neutral-*`). Nada de `[#hex]`.
 
 ## Desenvolvimento
 
@@ -449,6 +449,23 @@ const NOVIDADES: TailorNovidade[] = [ // mais recente primeiro
 Gatilho com contador verde das não vistas (9+); abrir marca como visto (localStorage `tailor-novidades:<chave>:<usuario>`). Para botão próprio: `useNovidades` (`{ naoVistas, marcarVistas }`) + `TailorNovidadesDialog` (`aberto`, `onFechar`, `novidades`, `limite = 5`). Substitui os avisos "O que mudou" nas telas.
 
 ## Mudanças
+
+### 0.15.0
+
+Tokens da marca (fonte: skill `tailor-brand-manual`). Aditivo e compatível.
+
+- Novo `@ffid-br/tailor-ui/tokens.css` (também importado por `style.css`): cores (marca, cinzas, apoio, tints de estado, semânticos, foco, scrim), tipografia (escala, pesos 300 a 600), espaçamento 4/8/16/24/40/64/104/168, raio 0, curvas e durações, camadas `--tailor-z-*`. Tema escuro em `.dark`, `[data-theme="dark"]` e `.tailor-dark`.
+- `theme.css` (Tailwind v4) ganha os mesmos tokens: `bg-tailor-green-press`, `text-tailor-green-ink`, `border-tailor-border`, `text-tailor-h2`, `p-tailor-md`, `ease-tailor-out`, etc.
+- Novo `--tailor-green-ink` / `--color-tailor-green-ink` (#3C6600). **`tailor-ink` continua funcionando, mas está deprecado: significa verde escuro. Para preto use `tailor-black`.**
+- Borda padrão passa de `#E5E5E5` para `#D9D9D9` (`--tailor-border`).
+- Sem hex solto no CSS dos componentes; sem peso 700; sem sombra decorativa no `TailorTour` (ganha borda de 1 px).
+- Foco único em todos os componentes: linha de 1 px e anel de 3 px em `--tailor-focus-ring`.
+- Botão primário: hover em `--tailor-green-hover` (cor do cliente continua escurecendo a própria primária).
+- `TailorTable`: célula vazia mostra `-`, não travessão.
+- `TailorNovidadesDialog`: fundo em `--tailor-scrim` (55%).
+- `TailorToaster`: continua no topo (direita no desktop, largura total no celular), agora com camada `--tailor-z-toast` (130, acima de modal e menu) e largura máxima de 420 px.
+- Camadas dos componentes agora vêm da escala `--tailor-z-*`.
+- Teste de marca (`src/marca.test.ts`): falha com hex fora de `tokens.css`, `font-weight` 700 ou sombra decorativa.
 
 ### 0.14.0
 

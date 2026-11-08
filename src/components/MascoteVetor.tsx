@@ -11,7 +11,7 @@ const CORPO = 'var(--tailor-mv-corpo, var(--tailor-black))';
 const OLHO = 'var(--tailor-mv-olho, var(--tailor-white))';
 const VERDE = 'var(--tailor-green)';
 /** Só o gorro do Natal: vermelho da paleta de apoio, com aba e pompom brancos. */
-const VERMELHO = 'var(--tailor-mv-vermelho, #FF0040)';
+const VERMELHO = 'var(--tailor-mv-vermelho, var(--tailor-red-700))';
 const BRANCO = 'var(--tailor-white)';
 
 type Agente = {

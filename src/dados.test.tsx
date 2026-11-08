@@ -3,7 +3,7 @@ import {
   TailorEmpty, TailorInsight, TailorMonogram, TailorStat, TailorStatGroup,
   contrast, monogramInitials, monogramTone, statDelta, MONOGRAM_TONES,
 } from './index';
-import css from './styles/style.css?raw';
+import css from './styles/tokens.css?raw';
 
 describe('statDelta', () => {
   it('calcula a variação e a direção', () => {

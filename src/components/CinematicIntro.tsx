@@ -54,7 +54,7 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({
       initial={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: PHI.c, ease: EASE }}
-      className="fixed inset-0 z-[100] flex items-center justify-center overflow-hidden bg-black font-tailor text-white"
+      className="fixed inset-0 z-[var(--tailor-z-modal)] flex items-center justify-center overflow-hidden bg-black font-tailor text-white"
     >
       {/* A malha: quatro quadrantes espelhados a partir do ponto áureo da tela (38,2% do topo). */}
       <svg aria-hidden="true" className="absolute left-1/2 top-[38.2%] h-[200vmax] w-[200vmax] -translate-x-1/2 -translate-y-1/2 stroke-white/15" viewBox="-440 -440 880 880">

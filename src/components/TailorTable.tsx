@@ -56,9 +56,9 @@ function formatador<F extends { format: (v: never) => string }>(chave: string, c
   return f;
 }
 
-/** Formata pelo tipo da coluna; vazio vira traço. */
+/** Formata pelo tipo da coluna; vazio vira hífen simples (sem travessão, regra da marca). */
 export function formatValue(v: unknown, type: TailorColumnType = 'text', locale = 'pt-BR', currency = 'BRL'): React.ReactNode {
-  if (v === null || v === undefined || v === '') return '–';
+  if (v === null || v === undefined || v === '') return '-';
   if (typeof v === 'number' && Number.isFinite(v)) {
     if (type === 'currency') return formatador(`c${locale}${currency}`, () => new Intl.NumberFormat(locale, { style: 'currency', currency })).format(v);
     if (type === 'percent') return formatador(`p${locale}`, () => new Intl.NumberFormat(locale, { style: 'percent', maximumFractionDigits: 1 })).format(v);
