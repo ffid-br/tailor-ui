@@ -45,7 +45,9 @@
   --color-tailor-yellow-700: #FFD71D;
   --color-tailor-yellow-500: #FFE45A;
   --color-tailor-yellow-100: #FFF799;
-  --color-tailor-danger-strong: #D6003A;
+  --color-tailor-danger-hover: #D6003A;
+  --color-tailor-danger-on-dark: #FF5C82;
+  --color-tailor-fg-inverse-secondary: #CFCFCF;
 
   /* Semânticos e tints de estado */
   --color-tailor-success: #008548;
@@ -71,7 +73,7 @@
   --font-weight-tailor-regular: 400;
   --font-weight-tailor-medium: 500;
   --font-weight-tailor-semibold: 600;
-  --tracking-tailor-label: 0.14em;
+  --tracking-tailor-label: 0.14em;   /* = --tailor-tracking-label */
   --text-tailor-hero: clamp(40px, 5vw, 64px);
   --text-tailor-hero--line-height: 1.05;
   --text-tailor-h1: 40px;
@@ -92,6 +94,10 @@
   --text-tailor-label--line-height: 1.2;
   --text-tailor-overline: 11px;
   --text-tailor-overline--line-height: 1.2;
+  --text-tailor-kpi: 40px;
+  --text-tailor-kpi--line-height: 1;
+  --text-tailor-kpi-app: 34px;
+  --text-tailor-kpi-app--line-height: 1;
   --text-tailor-mono: 13px;
   --text-tailor-mono--line-height: 1.5;
 

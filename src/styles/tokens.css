@@ -40,7 +40,7 @@
   --tailor-yellow-500: #FFE45A;
   --tailor-yellow-100: #FFF799;
 
-  /* Tons neutros observados nas páginas do guia (capas de seção) */
+  /* Tons neutros observados nas páginas do guia (capas de seção). "ink" aqui e neutro, nunca verde; o verde escuro e so --tailor-green-ink */
   --tailor-ink-900: #333333;         /* fundo escuro de abertura de capítulo */
   --tailor-ink-700: #666666;
   --tailor-ink-500: #999999;
@@ -54,7 +54,11 @@
   --tailor-green-a10: rgba(144,242,8,.10);
   --tailor-green-a25: rgba(144,242,8,.25);
   --tailor-green-a40: rgba(144,242,8,.40);
-  --tailor-focus-ring: rgba(144,242,8,.45);
+  --tailor-focus-ring: rgba(144,242,8,.45);   /* anel de foco: o unico box-shadow permitido (0 0 0 3px, sem blur) */
+  --tailor-black-hover: #333333;     /* hover do botao dark */
+  --tailor-danger-hover: #D6003A;    /* hover do botao danger */
+  --tailor-fg-inverse-secondary: #CFCFCF; /* texto secundario sobre preto (toast, card escuro) */
+  --tailor-danger-on-dark: #FF5C82;  /* vermelho legivel sobre preto (TL;DR, card escuro) */
 
   /* Tints de estado (12% da cor forte sobre branco). Texto sobre tint é sempre preto; a cor vive no ponto quadrado */
   --tailor-success-tint: var(--tailor-support-green-100);
@@ -107,6 +111,8 @@
   --tailor-text-body-sm: 400 13px/1.5 var(--tailor-font-primary);
   --tailor-text-label: 500 13px/1.2 var(--tailor-font-primary);
   --tailor-text-overline: 500 11px/1.2 var(--tailor-font-primary);   /* caixa alta + tracking .14em */
+  --tailor-text-kpi: 500 40px/1 var(--tailor-font-primary);          /* numero-heroi em slide e landing */
+  --tailor-text-kpi-app: 500 34px/1 var(--tailor-font-primary);      /* numero-heroi em app logado */
   --tailor-text-mono: 400 13px/1.5 "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
   --tailor-font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
@@ -127,9 +133,9 @@
   --tailor-weight-semibold: 600;
 
   --tailor-letter-spacing: 0;        /* 0 pt de espaçamento entre letras, sempre */
-  --tailor-tracking-label: 0.18em;   /* exceção: rótulos de navegação em caixa alta (cabeçalhos de página do guia) */
+  --tailor-tracking-label: 0.14em;   /* exceção: overline e rótulos de navegação em caixa alta */
 
-  /* Entrelinha: até 15 pt -> tamanho + 5 pt; a partir de 15 pt -> tamanho + 10 pt */
+  /* Entrelinha de impresso e slides: até 15 pt -> tamanho + 5 pt; a partir de 15 pt -> tamanho + 10 pt. Interface usa as razões de --tailor-text-* */
   --tailor-leading-small: calc(1em + 5pt);
   --tailor-leading-large: calc(1em + 10pt);
 
@@ -145,7 +151,8 @@
   --tailor-fib-34: calc(var(--tailor-unit) * 34);
   --tailor-fib-55: calc(var(--tailor-unit) * 55);
 
-  /* Espaçamentos derivados (ponto = 8 px; meio ponto = 4 px só para micro-espaços) */
+  /* Espaçamentos de interface: multiplos Fibonacci do ponto de 8 px (8, 16, 24, 40, 64, 104, 168); meio ponto = 4 px so para micro-espacos.
+     Numeros puros da sequencia (3, 5, 13, 21 px) nao sao espacamento de interface. */
   --tailor-space-half: 4px;
   --tailor-space-xs: var(--tailor-fib-1);    /* 8 */
   --tailor-space-sm: var(--tailor-fib-2);    /* 16 */
@@ -194,9 +201,6 @@
    Extras do pacote (fora do tailor-tokens.css da skill)
    ========================================================================== */
 :root {
-  --tailor-black-hover: #333333;        /* hover do botão escuro */
-  --tailor-danger-strong: #D6003A;      /* hover do botão de perigo e texto de erro sobre claro */
-
   /* Nomes antigos do pacote, mantidos por compatibilidade */
   --tailor-font: var(--tailor-font-primary);
   --tailor-font-num: "Roboto", "Raleway", system-ui, sans-serif;
