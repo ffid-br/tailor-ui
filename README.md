@@ -450,7 +450,7 @@ Gatilho com contador verde das não vistas (9+); abrir marca como visto (localSt
 
 ## Mudanças
 
-### Não lançado
+### 0.14.0
 
 - `TailorStat` e `TailorStatGroup`: número com variação, meta e significado.
 - `TailorEmpty`, `TailorMonogram` (cor estável por id) e `TailorInsight` (leitura da IA).
