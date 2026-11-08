@@ -265,6 +265,45 @@ Tabela de relatório. `type` formata e alinha: `number`, `currency` e `percent` 
 - `renderExpanded(row)` abre um detalhe embaixo da linha, na largura da tabela (formulário, mensagem). O app controla o que está aberto: devolva `null` para a linha fechada.
 - Visual por `--tailor-brand-*` e `--tailor-table-*` (`font`, `padding`, `header-padding`, `header`, `sticky-top`, `top`, `background`).
 
+### `TailorStat`, `TailorStatGroup`
+
+```tsx
+<TailorStatGroup label="Resumo da semana">
+  <TailorStat label="Respostas" value={312} previous={260} meaning="de cada 10 que leram, 3 responderam" />
+  <TailorStat label="Custo por lead" value={18.4} format="currency" previous={15} goodWhen="down" />
+  <TailorStat label="Vendas" value={42} goal={60} href="/vendas" />
+</TailorStatGroup>
+```
+
+Props: `label`, `value`, `format` (`number` | `currency` | `percent` | `text`), `previous` ou `delta` (fração), `goal`, `meaning`, `goodWhen` (`up` padrão | `down`), `hint`, `loading`, `variant` (`default` | `compact` | `inline`), `onClick`/`href`. A variação sai de `previous` com seta, sinal e texto para leitor de tela; a cor segue `goodWhen`. `statDelta(valor, anterior)` expõe a conta. O grupo (`minWidth`, `bordered`) quebra de linha sozinho, sem cartões.
+
+### `TailorEmpty`
+
+```tsx
+<TailorEmpty title="Nenhuma campanha ainda" description="Crie a primeira."
+  action={{ label: 'Criar campanha', onClick: criar }} secondaryAction={{ label: 'Ver exemplo', href: '/exemplo' }} />
+```
+
+`action` e `secondaryAction` aceitam `onClick` ou `href`. `illustration` troca a marca discreta padrão.
+
+### `TailorMonogram`
+
+```tsx
+<TailorMonogram id={user.id} name="Maria da Silva" size="md" src={user.photo} />
+```
+
+Duas letras (primeira e última palavra, sem de/da/do). A cor vem de um hash estável do `id` sobre 8 pares `--tailor-mono-N-bg/fg` com contraste AA, nos dois temas: o mesmo `id` tem a mesma cor em todo app. `src` vence as iniciais e, se falhar, elas voltam.
+
+### `TailorInsight`
+
+```tsx
+<TailorInsight status="ready" takeaway="As respostas subiram 20%." why="A mensagem nova é mais curta."
+  nextAction={{ label: 'Repetir a mensagem', onClick: repetir }} sources={['Campanhas de outubro']}
+  confidence="alta" generatedAt={new Date()} onRefresh={atualizar} onFeedback={(v) => salvar(v)} />
+```
+
+Só a interface da leitura da IA; o texto vem do app. `status`: `loading` (máquina de escrever + esqueleto), `ready`, `error` (diz o que fazer; `onRefresh` vira "Tentar de novo") e `empty`. Sempre marcada "Gerado por IA", com fontes e confiança em texto.
+
 ## Idioma e moeda
 
 Os textos dos componentes ("Carregando", "Página 1 de 2", "Próxima") e a formatação de número, moeda e data seguem o `TailorLocaleProvider`. Sem ele: pt-BR e BRL.
@@ -391,6 +430,11 @@ const NOVIDADES: TailorNovidade[] = [ // mais recente primeiro
 Gatilho com contador verde das não vistas (9+); abrir marca como visto (localStorage `tailor-novidades:<chave>:<usuario>`). Para botão próprio: `useNovidades` (`{ naoVistas, marcarVistas }`) + `TailorNovidadesDialog` (`aberto`, `onFechar`, `novidades`, `limite = 5`). Substitui os avisos "O que mudou" nas telas.
 
 ## Mudanças
+
+### Não lançado
+
+- `TailorStat` e `TailorStatGroup`: número com variação, meta e significado.
+- `TailorEmpty`, `TailorMonogram` (cor estável por id) e `TailorInsight` (leitura da IA).
 
 ### 0.13.1
 
