@@ -310,6 +310,25 @@ toast.error('Não deu para salvar', { description: 'Sem conexão. Tente de novo.
 
 Num botão da cor da marca, troque a cor do ponto do loader: `className="[--tailor-loader-dot:#000]"`.
 
+## Explicar a tela: TailorExplain, TailorGlossary e TailorTour
+
+```tsx
+<TailorPageHeader title="Leads" description="Quem chegou esta semana." />
+<TailorExplain storageKey="leads" items={[{ label: 'Novo', text: 'Chegou nas últimas 24 horas.' }]}>
+  Aqui você acompanha cada lead até virar cliente.
+</TailorExplain>
+
+<p>O <TailorGlossary term="SLA">Prazo combinado para responder.</TailorGlossary> vence hoje.</p>
+
+<button data-tour="novo-lead">Novo lead</button>
+<TailorTour storageKey="leads" steps={[{ target: 'novo-lead', title: 'Novo lead', text: 'Comece por aqui.' }]} />
+```
+
+- `TailorExplain`: `title` (padrão "Como ler esta tela"), `children` ou `items` (`{ label, text }[]`), `storageKey` (lembra aberto/recolhido), `defaultOpen` (true). Fica abaixo do `TailorPageHeader`.
+- `TailorGlossary`: `term`, `children` (a definição). Abre por mouse, toque ou Enter/Espaço; Esc fecha; o balão não empurra o texto.
+- `TailorTour`: `steps` (`{ target, title, text }`; `target` é o valor de `data-tour` ou um seletor CSS), `open` (true), `storageKey` (conclusão ou pulo lembrados), `onClose`, `onSkip`. Passo sem elemento na tela é pulado; `resetTour(storageKey)` deixa refazer. Sem animação com `prefers-reduced-motion`.
+- `TailorResult celebrate`: no sucesso, painel Ink com check Lime e uma rajada curta de faíscas; parada com `prefers-reduced-motion`.
+
 ## Receita: transição login → app
 
 1. **No login**: marque a entrada ao enviar, desmarque se der erro e mostre o preto crescendo do botão.
@@ -391,6 +410,11 @@ const NOVIDADES: TailorNovidade[] = [ // mais recente primeiro
 Gatilho com contador verde das não vistas (9+); abrir marca como visto (localStorage `tailor-novidades:<chave>:<usuario>`). Para botão próprio: `useNovidades` (`{ naoVistas, marcarVistas }`) + `TailorNovidadesDialog` (`aberto`, `onFechar`, `novidades`, `limite = 5`). Substitui os avisos "O que mudou" nas telas.
 
 ## Mudanças
+
+### Não lançado
+- `TailorExplain`, `TailorGlossary`, `TailorTour` (e `resetTour`): explicar a tela, termos técnicos e tour guiado (QD-0528).
+- `TailorResult`: prop `celebrate` para momentos de "concluído".
+- Textos novos em pt-BR, en e es: `howToRead`, `gotIt`, `nextStep`, `step`, `skipTour`.
 
 ### 0.13.1
 

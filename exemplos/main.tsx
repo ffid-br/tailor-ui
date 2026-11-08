@@ -15,6 +15,10 @@ import {
   toast,
   TailorTypewriter,
   TailorResult,
+  TailorExplain,
+  TailorGlossary,
+  TailorTour,
+  resetTour,
   TailorField,
   TailorButton,
   TailorBrand,
@@ -271,6 +275,19 @@ function Exemplo({ titulo, codigo, children, escuro }: { titulo: string; codigo:
   );
 }
 
+function DemoExplica() {
+  const [tour, setTour] = useState(false);
+  const botao = 'rounded-md bg-black px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-800 dark:bg-white dark:text-black';
+  return (
+    <div className="space-y-4">
+      <TailorExplain items={[{ label: 'Novo', text: 'Chegou nas últimas 24 horas.' }]}>Aqui você acompanha cada lead até virar cliente.</TailorExplain>
+      <p className="text-sm">O <TailorGlossary term="SLA">Prazo combinado para responder.</TailorGlossary> vence hoje.</p>
+      <button type="button" data-tour="demo-novo" className={botao} onClick={() => { resetTour('demo'); setTour(false); setTimeout(() => setTour(true), 0); }}>Ver o tour</button>
+      <TailorTour open={tour} storageKey="demo" onClose={() => setTour(false)} steps={[{ target: 'demo-novo', title: 'Ver o tour', text: 'Este botão abre o passo a passo.' }]} />
+    </div>
+  );
+}
+
 function Secao({ id, titulo, descricao, children }: { id: string; titulo: string; descricao: string; children: React.ReactNode }) {
   return (
     <section id={id} className="scroll-mt-6 space-y-4">
@@ -288,6 +305,7 @@ const SECOES = [
   { id: 'tabela', rotulo: 'TailorTable', icone: Quadrado },
   { id: 'loader', rotulo: 'TailorLoader', icone: Circulo },
   { id: 'botao', rotulo: 'TailorButton', icone: Quadrado },
+  { id: 'explica', rotulo: 'Explicar a tela', icone: Quadrado },
   { id: 'feedback', rotulo: 'Avisos e esqueleto', icone: Circulo },
   { id: 'intro', rotulo: 'CinematicIntro', icone: Quadrado },
   { id: 'ponto', rotulo: 'PontoMalha', icone: Circulo },
@@ -480,6 +498,12 @@ const columns: TailorTableColumn<Corretor>[] = [
                 <TailorButton variant="secondary" loading loadingText="Atualizando">Atualizar</TailorButton>
                 <TailorButton disabled>Indisponível</TailorButton>
               </div>
+            </Exemplo>
+          </Secao>
+
+          <Secao id="explica" titulo="Explicar a tela" descricao="TailorExplain abaixo do cabeçalho, TailorGlossary dentro da frase e TailorTour para o primeiro uso.">
+            <Exemplo titulo="TailorExplain + TailorGlossary + TailorTour" codigo={`<TailorExplain storageKey="leads" items={[{ label: 'Novo', text: 'Chegou nas últimas 24 horas.' }]}>Aqui você acompanha cada lead.</TailorExplain>\n<p>O <TailorGlossary term="SLA">Prazo combinado para responder.</TailorGlossary> vence hoje.</p>\n<TailorTour storageKey="leads" steps={[{ target: 'novo-lead', title: 'Novo lead', text: 'Comece por aqui.' }]} />`}>
+              <DemoExplica />
             </Exemplo>
           </Secao>
 

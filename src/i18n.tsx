@@ -20,6 +20,11 @@ export type TailorMessages = {
   seePrevious: string;
   close: string;
   unseen: (count: string) => string;
+  howToRead: string;
+  gotIt: string;
+  nextStep: string;
+  step: (step: number, total: number) => string;
+  skipTour: string;
 };
 
 const PT_BR: TailorMessages = {
@@ -41,6 +46,11 @@ const PT_BR: TailorMessages = {
   seePrevious: 'Ver anteriores',
   close: 'Fechar',
   unseen: (n) => `${n} novas`,
+  howToRead: 'Como ler esta tela',
+  gotIt: 'Entendi',
+  nextStep: 'Próximo',
+  step: (s, t) => `Passo ${s} de ${t}`,
+  skipTour: 'Pular tutorial',
 };
 
 const EN: TailorMessages = {
@@ -62,6 +72,11 @@ const EN: TailorMessages = {
   seePrevious: 'See earlier',
   close: 'Close',
   unseen: (n) => `${n} new`,
+  howToRead: 'How to read this screen',
+  gotIt: 'Got it',
+  nextStep: 'Next',
+  step: (s, t) => `Step ${s} of ${t}`,
+  skipTour: 'Skip tour',
 };
 
 const ES: TailorMessages = {
@@ -83,6 +98,11 @@ const ES: TailorMessages = {
   seePrevious: 'Ver anteriores',
   close: 'Cerrar',
   unseen: (n) => `${n} nuevas`,
+  howToRead: 'Cómo leer esta pantalla',
+  gotIt: 'Entendido',
+  nextStep: 'Siguiente',
+  step: (s, t) => `Paso ${s} de ${t}`,
+  skipTour: 'Omitir tutorial',
 };
 
 export const TAILOR_MESSAGES: Record<string, TailorMessages> = { 'pt-BR': PT_BR, en: EN, es: ES };

@@ -291,6 +291,75 @@
 .tailor-result__description { font-size: 15px; line-height: 1.5; opacity: 0.8; }
 .tailor-result__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 8px; }
 
+/* TailorResult celebrate — painel Ink, check Lime e uma rajada curta de faíscas, uma vez. */
+.tailor-result--celebrate { --tailor-result-color: var(--tailor-black); --tailor-result-text: var(--tailor-brand-primary); }
+.tailor-result__burst { position: absolute; top: 50%; left: 50%; width: 0; height: 0; pointer-events: none; transform: translateY(-34px); }
+.tailor-result__spark {
+  position: absolute; top: -3px; left: -3px; width: 6px; height: 6px; background: var(--tailor-brand-primary); opacity: 0;
+  animation: tailor-result-spark 0.7s var(--tailor-ease-out) 0.55s 1 both;
+}
+@keyframes tailor-result-spark {
+  0%   { opacity: 1; transform: rotate(var(--tailor-spark-angle)) translateY(-30px); }
+  100% { opacity: 0; transform: rotate(var(--tailor-spark-angle)) translateY(-72px) scale(0.5); }
+}
+
+/* TailorExplain — "como ler esta tela": peso visual baixo, régua fina, sem card. */
+.tailor-explain { font-family: var(--tailor-brand-body-font); color: var(--tailor-brand-text); border-left: 3px solid var(--tailor-brand-primary); padding-left: 13px; }
+.tailor-explain__toggle {
+  display: inline-flex; align-items: center; gap: 8px; padding: 8px 0; min-height: 34px; border: 0; background: none; cursor: pointer;
+  font: inherit; font-size: 13px; font-weight: 500; color: var(--tailor-brand-text-muted);
+}
+.tailor-explain__toggle:hover { color: var(--tailor-brand-text); }
+.tailor-explain__toggle:focus-visible, .tailor-explain__done:focus-visible { outline: 3px solid var(--tailor-brand-primary); outline-offset: 2px; }
+.tailor-explain__chevron { width: 6px; height: 6px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform 0.2s var(--tailor-ease-out); }
+.tailor-explain--open .tailor-explain__chevron { transform: rotate(45deg); }
+.tailor-explain__body { display: grid; gap: 8px; padding: 0 0 13px; font-size: 14px; line-height: 1.6; max-width: 68ch; }
+.tailor-explain__body > p { margin: 0; }
+.tailor-explain__items { display: grid; gap: 8px; margin: 0; }
+.tailor-explain__items dt { font-weight: 500; }
+.tailor-explain__items dd { margin: 0; color: var(--tailor-brand-text-muted); }
+.tailor-explain__done { justify-self: start; padding: 4px 0; border: 0; background: none; cursor: pointer; font: inherit; font-size: 13px; color: var(--tailor-brand-text); text-decoration: underline; text-underline-offset: 3px; }
+
+/* TailorGlossary — termo sublinhado pontilhado; o balão fica fora do fluxo, sem empurrar o texto. */
+.tailor-glossary { position: relative; display: inline; }
+.tailor-glossary__term {
+  display: inline; padding: 0; border: 0; background: none; cursor: help; font: inherit; color: inherit;
+  text-decoration: underline dotted; text-underline-offset: 3px; border-radius: var(--tailor-brand-radius);
+}
+.tailor-glossary__term:focus-visible { outline: 3px solid var(--tailor-brand-primary); outline-offset: 2px; }
+.tailor-glossary__tip {
+  position: absolute; left: 0; bottom: calc(100% + 6px); z-index: 30; width: max-content; max-width: min(260px, 80vw); padding: 8px 13px;
+  background: var(--tailor-black); color: var(--tailor-white); font: 400 13px/1.5 var(--tailor-brand-body-font); text-align: left;
+  border-radius: var(--tailor-brand-radius); visibility: hidden; opacity: 0; transition: opacity 0.15s var(--tailor-ease-out), visibility 0.15s;
+}
+.tailor-glossary__tip[data-open="true"] { visibility: visible; opacity: 1; }
+:where(.dark, [data-theme="dark"]) .tailor-glossary__tip { background: var(--tailor-white); color: var(--tailor-black); }
+
+/* TailorTour — véu, recorte do elemento e balão. */
+.tailor-tour { position: fixed; inset: 0; z-index: 100; }
+.tailor-tour__veil { position: fixed; inset: 0; background: rgb(0 0 0 / 0.55); }
+.tailor-tour__spot { position: fixed; pointer-events: none; border: 2px solid var(--tailor-brand-primary); box-shadow: 0 0 0 9999px rgb(0 0 0 / 0.55); transition: all 0.2s var(--tailor-ease-out); }
+.tailor-tour__card {
+  position: fixed; padding: 21px; background: var(--tailor-white); color: var(--tailor-brand-text); outline: none;
+  font-family: var(--tailor-brand-body-font); box-shadow: 0 8px 34px rgb(0 0 0 / 0.25); border-radius: var(--tailor-brand-radius);
+}
+:where(.dark, [data-theme="dark"]) .tailor-tour__card { background: var(--tailor-black); border: 1px solid var(--tailor-brand-border); }
+.tailor-tour__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 13px; margin-bottom: 8px; }
+.tailor-tour__title { margin: 0; font-family: var(--tailor-brand-heading-font); font-size: 18px; font-weight: var(--tailor-brand-heading-weight); line-height: 1.2; }
+.tailor-tour__x { display: inline-flex; padding: 4px; border: 0; background: none; cursor: pointer; color: var(--tailor-brand-text-muted); }
+.tailor-tour__x:hover { color: var(--tailor-brand-text); }
+.tailor-tour__text { font-size: 15px; line-height: 1.6; }
+.tailor-tour__foot { display: flex; align-items: center; justify-content: space-between; gap: 13px; margin-top: 21px; }
+.tailor-tour__count { font-size: 13px; color: var(--tailor-brand-text-muted); }
+.tailor-tour__nav { display: flex; gap: 8px; }
+.tailor-tour__btn {
+  min-height: 34px; padding: 0 13px; border: 1px solid var(--tailor-brand-border); background: none; cursor: pointer; font: inherit; font-size: 14px;
+  color: var(--tailor-brand-text); border-radius: var(--tailor-brand-radius);
+}
+.tailor-tour__btn--primary { border-color: var(--tailor-brand-primary); background: var(--tailor-brand-primary); color: var(--tailor-brand-on-primary); font-weight: 500; }
+.tailor-tour__skip { margin-top: 13px; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; font-size: 13px; color: var(--tailor-brand-text-muted); text-decoration: underline; text-underline-offset: 3px; }
+.tailor-tour__x:focus-visible, .tailor-tour__btn:focus-visible, .tailor-tour__skip:focus-visible { outline: 3px solid var(--tailor-brand-primary); outline-offset: 2px; }
+
 /* TailorField — rótulo, controle e mensagem. Erro: borda e ponto vermelhos, um empurrão curto para chamar o olho. */
 .tailor-field { display: grid; gap: 8px; font-family: var(--tailor-font); color: var(--tailor-brand-text); }
 .tailor-field__label { display: flex; align-items: baseline; gap: 8px; font-size: 13px; font-weight: 500; }
@@ -497,6 +566,8 @@ textarea.tailor-field__control { padding: 8px 13px; min-height: 89px; }
   .tailor-user-menu__panel::before { display: none; }
   .tailor-toast { animation: none; }
   .tailor-result, .tailor-result > * { animation: none !important; }
+  .tailor-result__burst { display: none; }
+  .tailor-explain__chevron, .tailor-glossary__tip, .tailor-tour__spot { transition: none; }
   .tailor-loader__reticencias::after { animation: none; content: '...'; }
   .tailor-ponto-pisca { animation: none; }
   .tailor-mascote__corpo, .tailor-mascote__olho, .tailor-mascote__verde { animation: none; }
