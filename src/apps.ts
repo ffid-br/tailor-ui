@@ -1,7 +1,7 @@
 /*
  * Registro dos apps Tailor: nome, ícone e título de aba num lugar só. O launcher,
- * a barra lateral, o favicon e a transição de entrada leem daqui, então "Marketing"
- * é "Marketing" (e o mesmo ícone) em todo canto.
+ * a barra lateral, o favicon e a transição de entrada leem daqui, então "Pilot"
+ * é "Pilot" (e o mesmo ícone) em todo canto.
  *
  * Sem imports de propósito: o `scripts/gerar-icones-apps.ts` roda este arquivo
  * direto no Node para gerar os SVGs de `src/assets/apps/`.
@@ -11,7 +11,7 @@ export type TailorAppId = 'accounts' | 'crm' | 'pilot' | 'bi' | 'genius' | 'nr1'
 
 export type TailorApp = {
   id: TailorAppId;
-  /** Nome curto na interface e na aba: "Conta", "Marketing". */
+  /** Nome curto na interface e na aba: "Accounts", "Studio". */
   nome: string;
   /** Chaves de produto que o `/clients/uses` e os launchers usam para este app. */
   chaves: string[];
@@ -45,9 +45,9 @@ const L = {
 
 // Letra primeiro, cor depois: seis fundos e seis letras, nenhum par se confunde em 16px.
 export const TAILOR_APPS: Record<TailorAppId, TailorApp> = {
-  accounts: { id: 'accounts', nome: 'Conta', chaves: ['accounts'], favicon: 'accounts.svg', letra: 'C', glifo: L.C, tile: PRETO, tinta: BRANCO, ponto: VERDE },
-  crm: { id: 'crm', nome: 'CRM', chaves: ['crm', 'ffid.ai.studio'], favicon: 'crm.svg', letra: 'R', glifo: L.R, tile: VERDE, tinta: PRETO, ponto: PRETO },
-  pilot: { id: 'pilot', nome: 'Marketing', chaves: ['pilot'], favicon: 'pilot.svg', letra: 'M', glifo: L.M, tile: VERDE_INK, tinta: BRANCO, ponto: VERDE },
+  accounts: { id: 'accounts', nome: 'Accounts', chaves: ['accounts'], favicon: 'accounts.svg', letra: 'C', glifo: L.C, tile: PRETO, tinta: BRANCO, ponto: VERDE },
+  crm: { id: 'crm', nome: 'Studio', chaves: ['crm', 'ffid.ai.studio'], favicon: 'crm.svg', letra: 'R', glifo: L.R, tile: VERDE, tinta: PRETO, ponto: PRETO },
+  pilot: { id: 'pilot', nome: 'Pilot', chaves: ['pilot'], favicon: 'pilot.svg', letra: 'M', glifo: L.M, tile: VERDE_INK, tinta: BRANCO, ponto: VERDE },
   bi: { id: 'bi', nome: 'BI', chaves: ['bi'], favicon: 'bi.svg', letra: 'B', glifo: L.B, tile: CINZA_ESCURO, tinta: BRANCO, ponto: VERDE },
   genius: { id: 'genius', nome: 'Genius', chaves: ['gpt', 'genius'], favicon: 'genius.svg', letra: 'G', glifo: L.G, tile: PRETO, tinta: VERDE, ponto: BRANCO },
   nr1: { id: 'nr1', nome: 'NR1', chaves: ['nr1'], favicon: 'nr1.svg', letra: 'N', glifo: L.N, tile: CINZA, tinta: BRANCO, ponto: VERDE },

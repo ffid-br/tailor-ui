@@ -52,7 +52,7 @@ const SO_DESKTOP = { md: 'max-md:hidden!', lg: 'max-lg:hidden!' } as const;
 const SO_MOBILE = { md: 'md:hidden!', lg: 'lg:hidden!' } as const;
 
 /**
- * Tela de entrada entre apps: ícone, "Abrindo Marketing" e o loader da marca sobre o
+ * Tela de entrada entre apps: ícone, "Abrindo Pilot" e o loader da marca sobre o
  * esqueleto do app. Dá o primeiro quadro sem login e sem pulo, some em fade quando
  * `ativo` vira `false` e, se o token não serve (ou a espera passa do limite), oferece
  * "Entrar de novo". Quem pediu menos movimento não vê o fade.
@@ -147,12 +147,15 @@ export type TailorHandoffSaidaProps = {
   app: string;
   /** Mostre quando o clique no link para outro app acontece; esconda ao voltar o foco. */
   ativo: boolean;
+  /** Texto do aviso. Padrão: "Abrindo <nome do app>". */
+  rotulo?: string;
   className?: string;
 };
 
-/** Avisinho no app de origem, no canto: "Abrindo CRM". O clique foi ouvido enquanto a outra aba carrega. */
-export const TailorHandoffSaida: React.FC<TailorHandoffSaidaProps> = ({ app, ativo, className }) => {
+/** Avisinho no app de origem, no canto: "Abrindo Studio". O clique foi ouvido enquanto a outra aba carrega. */
+export const TailorHandoffSaida: React.FC<TailorHandoffSaidaProps> = ({ app, ativo, rotulo, className }) => {
   const nome = appPorChave(app)?.nome ?? app;
+  const texto = rotulo ?? `Abrindo ${nome}`;
   if (!ativo) return null;
   return (
     <div
@@ -161,8 +164,8 @@ export const TailorHandoffSaida: React.FC<TailorHandoffSaidaProps> = ({ app, ati
       className={cn('fixed bottom-[21px] right-[21px] z-[130] flex items-center gap-[13px] bg-black py-[8px] pl-[8px] pr-[16px] font-tailor text-sm text-white', className)}
     >
       <TailorAppIcon app={app} size={21} />
-      <span>Abrindo {nome}</span>
-      <TailorLoader variant="dot" label={`Abrindo ${nome}`} className="text-tailor-green" />
+      <span>{texto}</span>
+      <TailorLoader variant="dot" label={texto} className="text-tailor-green" />
     </div>
   );
 };
