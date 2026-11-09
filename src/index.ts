@@ -81,5 +81,7 @@ export { TAILOR_APPS, appPorChave, tailorTitle, appIconSvg } from './apps';
 export type { TailorApp, TailorAppId } from './apps';
 export { TailorAppIcon } from './components/TailorAppIcon';
 export type { TailorAppIconProps } from './components/TailorAppIcon';
+export { TailorAppLauncher } from './components/TailorAppLauncher';
+export type { TailorAppLauncherProps } from './components/TailorAppLauncher';
 export { TailorHandoff, TailorHandoffSaida, handoffPendente } from './components/TailorHandoff';
 export type { TailorHandoffProps, TailorHandoffSaidaProps } from './components/TailorHandoff';

@@ -39,6 +39,7 @@ import {
   TAILOR_APPS,
   TailorAppIcon,
   TailorHandoff,
+  TailorAppLauncher,
   TailorHandoffSaida,
   tailorTitle,
   type TailorSidebarGrupo,
@@ -809,6 +810,17 @@ document.title = tailorTitle('pilot', 'Campanhas'); // Campanhas | Pilot | Tailo
                 ))}
               </div>
               <p className="mt-4 text-sm text-neutral-600 dark:text-neutral-400">{tailorTitle('pilot', 'Campanhas')}</p>
+            </Exemplo>
+            <Exemplo
+              titulo="TailorAppLauncher"
+              codigo={`
+<TailorAppLauncher apps={apps} atual="pilot" montarUrl={(url) => buildSsoUrl(url)} />`}
+            >
+              <TailorAppLauncher
+                atual="pilot"
+                apps={[{ chave: 'accounts', url: '#' }, { chave: 'ffid.ai.studio', url: '#' }, { chave: 'pilot', url: '#' }, { chave: 'bi', url: '#' }, { chave: 'gpt', url: '#' }, { chave: 'hma', url: '#' }]}
+                montarUrl={(url) => new Promise((r) => setTimeout(() => r(url), 800))}
+              />
             </Exemplo>
             <Exemplo
               titulo="TailorHandoff"
