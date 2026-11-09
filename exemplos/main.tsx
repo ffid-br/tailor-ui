@@ -297,7 +297,7 @@ function HandoffDemo() {
   }, [estado]);
   return (
     <div className="flex flex-wrap gap-3">
-      <button type="button" className={botao} onClick={() => setEstado('validando')}>Abrir Marketing (2,6s)</button>
+      <button type="button" className={botao} onClick={() => setEstado('validando')}>Abrir Pilot (2,6s)</button>
       <button type="button" className={botao} onClick={() => setEstado('recusado')}>Token recusado</button>
       <button type="button" className={botao} onClick={() => { setSaida(true); setTimeout(() => setSaida(false), 2618); }}>Saída no app de origem</button>
       <TailorHandoff app="pilot" ativo={estado !== 'parado'} falhou={estado === 'recusado'} onTentarDeNovo={() => setEstado('validando')} />
@@ -798,7 +798,7 @@ const columns: TailorTableColumn<Corretor>[] = [
               titulo="TailorAppIcon e tailorTitle"
               codigo={`
 <TailorAppIcon app="pilot" size={34} />
-document.title = tailorTitle('pilot', 'Campanhas'); // Campanhas | Marketing | Tailor.ia`}
+document.title = tailorTitle('pilot', 'Campanhas'); // Campanhas | Pilot | Tailor.ia`}
             >
               <div className="flex flex-wrap items-end gap-6">
                 {Object.values(TAILOR_APPS).map((a) => (

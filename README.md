@@ -370,14 +370,14 @@ Num botão da cor da marca, troque a cor do ponto do loader: `className="[--tail
 
 ## Ícones dos apps e entrada entre apps
 
-Cada app tem um ícone (o favicon) e um nome, num registro só (`TAILOR_APPS`): `accounts` (Conta, C), `crm` (CRM, R), `pilot` (Marketing, M), `bi` (BI, B), `genius` (Genius, G) e `nr1` (NR1, N). A diferença é a letra primeiro e a cor depois, na grade 8x8 com o ponto verde logo depois da letra; em 16px nenhum par se confunde. O mesmo registro alimenta o launcher, a barra lateral e a transição.
+Cada app tem um ícone (o favicon) e um nome, num registro só (`TAILOR_APPS`): `accounts` (Accounts, C), `crm` (Studio, R), `pilot` (Pilot, M), `bi` (BI, B), `genius` (Genius, G) e `nr1` (NR1, N). A diferença é a letra primeiro e a cor depois, na grade 8x8 com o ponto verde logo depois da letra; em 16px nenhum par se confunde. O mesmo registro alimenta o launcher, a barra lateral e a transição.
 
 ```tsx
 import { TailorAppIcon, appPorChave, tailorTitle } from '@ffid-br/tailor-ui';
 
 <TailorAppIcon app="pilot" size={34} />          {/* também aceita a chave do /clients/uses: "gpt", "ffid.ai.studio" */}
 appPorChave('gpt')?.nome;                         // "Genius"
-document.title = tailorTitle('pilot', 'Campanhas'); // "Campanhas | Marketing | Tailor.ia"
+document.title = tailorTitle('pilot', 'Campanhas'); // "Campanhas | Pilot | Tailor.ia"
 ```
 
 **Título da aba:** `<Página> | <App> | Tailor.ia` (sem página: `<App> | Tailor.ia`). Com várias abas o navegador corta o título e sobra o começo: quem separa um app do outro é o ícone, não o texto.
@@ -407,7 +407,7 @@ const [recusou, setRecusou] = useState(false);
 - `falhou`: troca o loader por "Não foi possível entrar" e a ação "Entrar de novo".
 - `timeoutMs` (13000): sem resposta nesse tempo, avisa que está demorando e oferece a mesma ação.
 - `sidebar`: `expandida` (padrão), `recolhida` ou `nenhuma`; `breakpoint`: `lg` (padrão) ou `md`, o mesmo da `TailorSidebar`.
-- `TailorHandoffSaida app="crm" ativo`: avisinho "Abrindo CRM" no canto do app de origem, para o clique no launcher.
+- `TailorHandoffSaida app="crm" ativo`: avisinho "Abrindo Studio" no canto (`rotulo` troca o texto) do app de origem, para o clique no launcher.
 
 ## Receita: transição login → app
 
