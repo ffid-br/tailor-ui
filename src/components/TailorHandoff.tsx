@@ -44,8 +44,23 @@ export type TailorHandoffProps = {
   sidebar?: 'expandida' | 'recolhida' | 'nenhuma';
   /** Breakpoint em que a barra vira a barra de 55px do celular (o mesmo da `TailorSidebar`). */
   breakpoint?: 'md' | 'lg';
+  /**
+   * White label: arte do cliente no lugar da marca Tailor.ia e do ícone do app
+   * (ex.: logo da LEN). Sem ela, vale a marca Tailor.
+   */
+  logo?: string;
+  /** Arte do cliente para o tema escuro. Sem ela, vale `logo`. */
+  logoDark?: string;
   className?: string;
 };
+
+/** Arte do cliente, trocando no tema escuro quando há versão própria. */
+const LogoCliente: React.FC<{ logo: string; logoDark?: string; alt: string; className: string }> = ({ logo, logoDark, alt, className }) => (
+  <>
+    <img src={logo} alt={alt} className={cn(className, logoDark && 'dark:hidden')} />
+    {logoDark && <img src={logoDark} alt={alt} className={cn(className, 'hidden dark:block')} />}
+  </>
+);
 
 // Classes literais: o Tailwind do app só gera o que encontra escrito por inteiro.
 const SO_DESKTOP = { md: 'max-md:hidden!', lg: 'max-lg:hidden!' } as const;
@@ -66,6 +81,8 @@ export const TailorHandoff: React.FC<TailorHandoffProps> = ({
   rotulo,
   sidebar = 'expandida',
   breakpoint = 'lg',
+  logo,
+  logoDark,
   className,
 }) => {
   const reduzir = useReducedMotion();
@@ -110,7 +127,11 @@ export const TailorHandoff: React.FC<TailorHandoffProps> = ({
               )}
             >
               <div className={cn('flex h-[55px] shrink-0 items-center border-b border-neutral-200 dark:border-white/10', sidebar === 'recolhida' ? 'justify-center' : 'pl-[21px]')}>
-                <TailorBrandMark produto={nome} compact={sidebar === 'recolhida'} />
+                {logo ? (
+                  <LogoCliente logo={logo} logoDark={logoDark} alt="" className="h-[25px] w-auto max-w-[200px] object-contain" />
+                ) : (
+                  <TailorBrandMark produto={nome} compact={sidebar === 'recolhida'} />
+                )}
               </div>
             </aside>
           )}
@@ -120,10 +141,18 @@ export const TailorHandoff: React.FC<TailorHandoffProps> = ({
               data-tailor-handoff-header=""
               className={cn('h-[55px] shrink-0 items-center border-b border-neutral-200 pl-[21px] dark:border-white/10', 'flex', SO_MOBILE[breakpoint])}
             >
-              <TailorBrandMark produto={nome} />
+              {logo ? (
+                <LogoCliente logo={logo} logoDark={logoDark} alt="" className="h-[25px] w-auto max-w-[60vw] object-contain" />
+              ) : (
+                <TailorBrandMark produto={nome} />
+              )}
             </header>
             <div className="flex flex-1 flex-col items-center justify-center gap-[21px] px-[21px] text-center">
-              <TailorAppIcon app={app} size={55} />
+              {logo ? (
+                <LogoCliente logo={logo} logoDark={logoDark} alt={nome} className="h-[55px] w-auto max-w-[233px] object-contain" />
+              ) : (
+                <TailorAppIcon app={app} size={55} />
+              )}
               <div className="flex flex-col items-center gap-[8px]">
                 <h2 className="font-tailor text-xl font-medium text-black dark:text-white">{titulo}</h2>
                 {apoio && <p className="max-w-[34ch] font-tailor text-sm text-neutral-600 dark:text-neutral-400">{apoio}</p>}
