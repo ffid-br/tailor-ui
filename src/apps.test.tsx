@@ -30,7 +30,7 @@ describe('registro de apps', () => {
 describe('TailorAppIcon', () => {
   it('mostra o ícone pelo nome do app e ignora chave desconhecida', () => {
     const { container } = render(<><TailorAppIcon app="gpt" /><TailorAppIcon app="hma" /></>);
-    expect(screen.getByAltText('Genius')).toBeInTheDocument();
+    expect(screen.getByAltText('Gestão')).toBeInTheDocument();
     expect(container.querySelectorAll('img')).toHaveLength(1);
   });
 });

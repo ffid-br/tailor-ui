@@ -49,7 +49,7 @@ export const TAILOR_APPS: Record<TailorAppId, TailorApp> = {
   crm: { id: 'crm', nome: 'Studio', chaves: ['crm', 'ffid.ai.studio'], favicon: 'crm.svg', letra: 'R', glifo: L.R, tile: VERDE, tinta: PRETO, ponto: PRETO },
   pilot: { id: 'pilot', nome: 'Pilot', chaves: ['pilot'], favicon: 'pilot.svg', letra: 'M', glifo: L.M, tile: VERDE_INK, tinta: BRANCO, ponto: VERDE },
   bi: { id: 'bi', nome: 'BI', chaves: ['bi'], favicon: 'bi.svg', letra: 'B', glifo: L.B, tile: CINZA_ESCURO, tinta: BRANCO, ponto: VERDE },
-  genius: { id: 'genius', nome: 'Genius', chaves: ['gpt', 'genius'], favicon: 'genius.svg', letra: 'G', glifo: L.G, tile: PRETO, tinta: VERDE, ponto: BRANCO },
+  genius: { id: 'genius', nome: 'Gestão', chaves: ['gpt', 'genius'], favicon: 'genius.svg', letra: 'G', glifo: L.G, tile: PRETO, tinta: VERDE, ponto: BRANCO },
   nr1: { id: 'nr1', nome: 'NR1', chaves: ['nr1'], favicon: 'nr1.svg', letra: 'N', glifo: L.N, tile: CINZA, tinta: BRANCO, ponto: VERDE },
 };
 

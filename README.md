@@ -370,13 +370,13 @@ Num botão da cor da marca, troque a cor do ponto do loader: `className="[--tail
 
 ## Ícones dos apps e entrada entre apps
 
-Cada app tem um ícone (o favicon) e um nome, num registro só (`TAILOR_APPS`): `accounts` (Accounts, C), `crm` (Studio, R), `pilot` (Pilot, M), `bi` (BI, B), `genius` (Genius, G) e `nr1` (NR1, N). A diferença é a letra primeiro e a cor depois, na grade 8x8 com o ponto verde logo depois da letra; em 16px nenhum par se confunde. O mesmo registro alimenta o launcher, a barra lateral e a transição.
+Cada app tem um ícone (o favicon) e um nome, num registro só (`TAILOR_APPS`): `accounts` (Accounts, C), `crm` (Studio, R), `pilot` (Pilot, M), `bi` (BI, B), `genius` (Gestão, G) e `nr1` (NR1, N). A diferença é a letra primeiro e a cor depois, na grade 8x8 com o ponto verde logo depois da letra; em 16px nenhum par se confunde. O mesmo registro alimenta o launcher, a barra lateral e a transição.
 
 ```tsx
 import { TailorAppIcon, appPorChave, tailorTitle } from '@ffid-br/tailor-ui';
 
 <TailorAppIcon app="pilot" size={34} />          {/* também aceita a chave do /clients/uses: "gpt", "ffid.ai.studio" */}
-appPorChave('gpt')?.nome;                         // "Genius"
+appPorChave('gpt')?.nome;                         // "Gestão"
 document.title = tailorTitle('pilot', 'Campanhas'); // "Campanhas | Pilot | Tailor.ia"
 ```
 
@@ -408,6 +408,27 @@ const [recusou, setRecusou] = useState(false);
 - `timeoutMs` (13000): sem resposta nesse tempo, avisa que está demorando e oferece a mesma ação.
 - `sidebar`: `expandida` (padrão), `recolhida` ou `nenhuma`; `breakpoint`: `lg` (padrão) ou `md`, o mesmo da `TailorSidebar`.
 - `TailorHandoffSaida app="crm" ativo`: avisinho "Abrindo Studio" no canto (`rotulo` troca o texto) do app de origem, para o clique no launcher.
+
+### `TailorAppLauncher`: o seletor de apps
+
+Um botão de grade e o painel com os apps da conta, cada um com o ícone e o nome do `TAILOR_APPS` (chave sem registro cai na inicial). O app atual vem marcado ("Você está aqui") e não é link. Fecha com Esc (o foco volta ao botão), clique fora ou Tab para fora; no celular o painel respeita a margem de 16px. Sem dependência: estado, `focusin` e posição fixa calculada do botão.
+
+```tsx
+import { TailorAppLauncher } from '@ffid-br/tailor-ui';
+
+<TailorAppLauncher
+  apps={products.map((p) => ({ chave: p.key, url: p.url }))}   // do /clients/uses
+  atual="pilot"
+  carregando={loading}
+  montarUrl={(url) => buildSsoUrl(url)}                        // opcional, pode ser async
+  posicao="direita"                                            // botão na barra lateral
+/>
+```
+
+- `montarUrl`: chamada no clique. A aba abre na hora (`window.open('about:blank')`, `opener = null`) e a location troca quando a URL chega, para o navegador não bloquear como popup; se a aba não abrir, usa `location.assign`. Enquanto isso aparece o `TailorHandoffSaida`. Se `montarUrl` falhar, abre a URL sem token. Sem `montarUrl`, é um link `target="_blank"` comum.
+- `posicao`: `baixo-fim` (padrão), `baixo-inicio` ou `direita` (barra lateral).
+- `carregando`: esqueleto no painel. Sem apps e sem `carregando`, não renderiza nada.
+- Duas chaves do mesmo app (`crm` e `ffid.ai.studio`) viram um item só.
 
 ## Receita: transição login → app
 
@@ -490,6 +511,11 @@ const NOVIDADES: TailorNovidade[] = [ // mais recente primeiro
 Gatilho com contador verde das não vistas (9+); abrir marca como visto (localStorage `tailor-novidades:<chave>:<usuario>`). Para botão próprio: `useNovidades` (`{ naoVistas, marcarVistas }`) + `TailorNovidadesDialog` (`aberto`, `onFechar`, `novidades`, `limite = 5`). Substitui os avisos "O que mudou" nas telas.
 
 ## Mudanças
+
+### 0.18.0
+
+- `TailorAppLauncher`: o seletor de apps padrão (ver "Ícones dos apps e entrada entre apps").
+- O Genius passa a se chamar **Gestão** no registro (`TAILOR_APPS.genius.nome`): launcher, `tailorTitle` ("... | Gestão | Tailor.ia") e o ícone (SVG regerado). A chave `genius` e as chaves de produto `gpt`/`genius` não mudam.
 
 ### 0.16.0
 
