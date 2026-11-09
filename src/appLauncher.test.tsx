@@ -32,6 +32,19 @@ describe('TailorAppLauncher', () => {
     expect(screen.getByText('H')).toBeInTheDocument();
   });
 
+  it('app sem registro usa o nome informado; app registrado ignora', () => {
+    render(
+      <TailorAppLauncher
+        apps={[{ chave: 'sac', url: 'https://sac.test', nome: 'Tailor Sac' }, { chave: 'pilot', url: 'https://pilot.test', nome: 'Marketing' }]}
+        atual="bi"
+      />,
+    );
+    abrir();
+    expect(screen.getByText('Tailor Sac').closest('a')).toHaveAttribute('href', 'https://sac.test');
+    expect(screen.getByText('Pilot')).toBeInTheDocument();
+    expect(screen.queryByText('Marketing')).toBeNull();
+  });
+
   it('chama montarUrl no clique, abre a aba na hora e troca a location', async () => {
     const aba = { opener: 'x', location: { href: '' } };
     const open = vi.spyOn(window, 'open').mockReturnValue(aba as unknown as Window);

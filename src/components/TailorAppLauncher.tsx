@@ -7,7 +7,8 @@ import { TailorSkeleton } from './TailorSkeleton';
 
 export type TailorAppLauncherProps = {
   /** Os apps da conta (`/clients/uses`): a chave do produto (`gpt`, `ffid.ai.studio`...) e a URL. Duas chaves do mesmo app viram um item só. */
-  apps: { chave: string; url: string }[];
+  /** `nome` vale só para app fora do registro do tailor-ui (ex.: "Tailor Sac"); app registrado usa o nome do registro. */
+  apps: { chave: string; url: string; nome?: string }[];
   /** O app em que o usuário está (id ou chave de produto). Aparece marcado e não é link. */
   atual: string;
   /** A lista ainda chega: o painel mostra o esqueleto no lugar dos apps. */
@@ -52,7 +53,7 @@ export const TailorAppLauncher: React.FC<TailorAppLauncherProps> = ({ apps, atua
     const id = meta?.id ?? a.chave.toLowerCase();
     if (itens.some((i) => (i.id ?? i.chave.toLowerCase()) === id)) continue;
     // App sem registro: a chave capitalizada e a inicial no lugar do ícone.
-    itens.push({ chave: a.chave, url: a.url, id: meta?.id, nome: meta?.nome ?? a.chave.charAt(0).toUpperCase() + a.chave.slice(1), atual: id === idAtual });
+    itens.push({ chave: a.chave, url: a.url, id: meta?.id, nome: meta?.nome ?? a.nome ?? a.chave.charAt(0).toUpperCase() + a.chave.slice(1), atual: id === idAtual });
   }
 
   const fechar = useCallback((devolverFoco = false) => {
