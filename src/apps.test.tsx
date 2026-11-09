@@ -64,6 +64,17 @@ describe('TailorHandoff', () => {
     expect(container.querySelector('[data-tailor-handoff-sidebar]')).toBeNull();
   });
 
+  it('white label: logo do cliente no lugar da marca e do ícone Tailor', () => {
+    const { container } = render(
+      <TailorHandoff app="genius" ativo logo="/len.png" logoDark="/len-dark.png" rotulo="Abrindo LEN" />,
+    );
+    expect(screen.getByText('Abrindo LEN')).toBeInTheDocument();
+    const srcs = Array.from(container.querySelectorAll('img')).map((i) => i.getAttribute('src'));
+    expect(srcs).toContain('/len.png');
+    expect(srcs).toContain('/len-dark.png');
+    expect(container.querySelector('[data-tailor-handoff] svg[aria-label="Gestão"]')).toBeNull();
+  });
+
   it('passado o limite, avisa e oferece "Entrar de novo"', () => {
     vi.useFakeTimers();
     const retry = vi.fn();
