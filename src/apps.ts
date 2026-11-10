@@ -7,7 +7,7 @@
  * direto no Node para gerar os SVGs de `src/assets/apps/`.
  */
 
-export type TailorAppId = 'accounts' | 'crm' | 'pilot' | 'bi' | 'genius' | 'nr1';
+export type TailorAppId = 'accounts' | 'crm' | 'pilot' | 'bi' | 'genius' | 'nr1' | 'omnichannel';
 
 export type TailorApp = {
   id: TailorAppId;
@@ -41,9 +41,10 @@ const L = {
   B: ['####.', '#...#', '####.', '#...#', '####.'],
   G: ['.####', '#....', '#.###', '#...#', '.####'],
   N: ['#...#', '##..#', '#.#.#', '#..##', '#...#'],
+  O: ['.###.', '#...#', '#...#', '#...#', '.###.'],
 };
 
-// Letra primeiro, cor depois: seis fundos e seis letras, nenhum par se confunde em 16px.
+// Letra primeiro, cor depois: sete combinações e sete letras, nenhum par se confunde em 16px.
 export const TAILOR_APPS: Record<TailorAppId, TailorApp> = {
   accounts: { id: 'accounts', nome: 'Accounts', chaves: ['accounts'], favicon: 'accounts.svg', letra: 'C', glifo: L.C, tile: PRETO, tinta: BRANCO, ponto: VERDE },
   crm: { id: 'crm', nome: 'Studio', chaves: ['crm', 'ffid.ai.studio'], favicon: 'crm.svg', letra: 'R', glifo: L.R, tile: VERDE, tinta: PRETO, ponto: PRETO },
@@ -51,6 +52,8 @@ export const TAILOR_APPS: Record<TailorAppId, TailorApp> = {
   bi: { id: 'bi', nome: 'BI', chaves: ['bi'], favicon: 'bi.svg', letra: 'B', glifo: L.B, tile: CINZA_ESCURO, tinta: BRANCO, ponto: VERDE },
   genius: { id: 'genius', nome: 'Gestão', chaves: ['gpt', 'genius'], favicon: 'genius.svg', letra: 'G', glifo: L.G, tile: PRETO, tinta: VERDE, ponto: BRANCO },
   nr1: { id: 'nr1', nome: 'NR1', chaves: ['nr1'], favicon: 'nr1.svg', letra: 'N', glifo: L.N, tile: CINZA, tinta: BRANCO, ponto: VERDE },
+  // new.ffid.com.br: o /clients/uses chama de `hma` (e `hub`/`campanhas` viram `hma` no logio).
+  omnichannel: { id: 'omnichannel', nome: 'Omnichannel', chaves: ['hma', 'hub', 'campanhas'], favicon: 'omnichannel.svg', letra: 'O', glifo: L.O, tile: CINZA_ESCURO, tinta: VERDE, ponto: BRANCO },
 };
 
 /** O app de uma chave de produto (`gpt`, `pilot`, `ffid.ai.studio`...) ou do próprio id. `undefined` se não for um app Tailor. */

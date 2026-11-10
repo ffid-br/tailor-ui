@@ -8,7 +8,7 @@ const APPS = [
   { chave: 'gpt', url: 'https://genius.test' },
   { chave: 'ffid.ai.studio', url: 'https://crm.test' },
   { chave: 'crm', url: 'https://crm.test' },
-  { chave: 'hma', url: 'https://hma.test' },
+  { chave: 'vitoria', url: 'https://vitoria.test' },
 ];
 const abrir = () => fireEvent.click(screen.getByRole('button', { name: 'Apps Tailor' }));
 
@@ -24,12 +24,18 @@ describe('TailorAppLauncher', () => {
     expect(screen.getByText('Accounts').closest('a')).toHaveAttribute('href', 'https://accounts.test');
   });
 
+  it('hma aparece como Omnichannel', () => {
+    render(<TailorAppLauncher apps={[{ chave: 'hma', url: 'https://new.test' }]} atual="pilot" />);
+    abrir();
+    expect(screen.getByText('Omnichannel').closest('a')).toHaveAttribute('href', 'https://new.test');
+  });
+
   it('app sem registro usa a inicial', () => {
     render(<TailorAppLauncher apps={APPS} atual="bi" />);
     abrir();
-    const item = screen.getByText('Hma');
-    expect(item.closest('a')).toHaveAttribute('href', 'https://hma.test');
-    expect(screen.getByText('H')).toBeInTheDocument();
+    const item = screen.getByText('Vitoria');
+    expect(item.closest('a')).toHaveAttribute('href', 'https://vitoria.test');
+    expect(screen.getByText('V')).toBeInTheDocument();
   });
 
   it('app sem registro usa o nome informado; app registrado ignora', () => {

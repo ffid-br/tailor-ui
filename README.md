@@ -370,7 +370,7 @@ Num botão da cor da marca, troque a cor do ponto do loader: `className="[--tail
 
 ## Ícones dos apps e entrada entre apps
 
-Cada app tem um ícone (o favicon) e um nome, num registro só (`TAILOR_APPS`): `accounts` (Accounts, C), `crm` (Studio, R), `pilot` (Pilot, M), `bi` (BI, B), `genius` (Gestão, G) e `nr1` (NR1, N). A diferença é a letra primeiro e a cor depois, na grade 8x8 com o ponto verde logo depois da letra; em 16px nenhum par se confunde. O mesmo registro alimenta o launcher, a barra lateral e a transição.
+Cada app tem um ícone (o favicon) e um nome, num registro só (`TAILOR_APPS`): `accounts` (Accounts, C), `crm` (Studio, R), `pilot` (Pilot, M), `bi` (BI, B), `genius` (Gestão, G), `nr1` (NR1, N) e `omnichannel` (Omnichannel, O, chaves `hma`, `hub` e `campanhas`). A diferença é a letra primeiro e a cor depois, na grade 8x8 com o ponto verde logo depois da letra; em 16px nenhum par se confunde. O mesmo registro alimenta o launcher, a barra lateral e a transição.
 
 ```tsx
 import { TailorAppIcon, appPorChave, tailorTitle } from '@ffid-br/tailor-ui';
