@@ -21,7 +21,8 @@ describe('registro de apps', () => {
   it('resolve chave de produto e monta o título', () => {
     expect(appPorChave('gpt')?.id).toBe('genius');
     expect(appPorChave('pilot')?.nome).toBe('Pilot');
-    expect(appPorChave('hma')).toBeUndefined();
+    expect(appPorChave('hma')?.nome).toBe('Omnichannel');
+    expect(appPorChave('sac')).toBeUndefined();
     expect(tailorTitle('pilot', 'Campanhas')).toBe('Campanhas | Pilot | Tailor.ia');
     expect(tailorTitle('accounts')).toBe('Accounts | Tailor.ia');
   });
@@ -29,7 +30,7 @@ describe('registro de apps', () => {
 
 describe('TailorAppIcon', () => {
   it('mostra o ícone pelo nome do app e ignora chave desconhecida', () => {
-    const { container } = render(<><TailorAppIcon app="gpt" /><TailorAppIcon app="hma" /></>);
+    const { container } = render(<><TailorAppIcon app="gpt" /><TailorAppIcon app="sac" /></>);
     expect(screen.getByAltText('Gestão')).toBeInTheDocument();
     expect(container.querySelectorAll('img')).toHaveLength(1);
   });
