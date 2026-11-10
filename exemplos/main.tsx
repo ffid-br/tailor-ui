@@ -10,6 +10,11 @@ import {
   TailorBrandMark,
   TailorLoader,
   TailorSkeleton,
+  TailorSpinner,
+  TailorDots,
+  TailorProgress,
+  TailorBlinds,
+  TailorRefreshOverlay,
   TailorToaster,
   TailorNovidades,
   toast,
@@ -564,6 +569,24 @@ const columns: TailorTableColumn<Corretor>[] = [
             <Exemplo titulo="overlay" codigo={`<TailorLoader variant="overlay" label="Entrando" />`}>
               <button type="button" className={botao} onClick={() => setOverlay(true)}>Mostrar por 2s</button>
               {overlay && <TailorLoader variant="overlay" label="Entrando" />}
+            </Exemplo>
+          </Secao>
+
+          <Secao id="loadings" titulo="Outros loadings" descricao="Os efeitos do brand guide (12.5). Um por região: botão, tabela e seção podem carregar juntos, cada um com o seu.">
+            <Exemplo titulo="TailorSpinner" codigo={`<TailorSpinner size="sm" />  // 16, md 24, lg 36, xl 56`}>
+              <div className="flex items-center gap-4"><TailorSpinner size="sm" /><TailorSpinner /><TailorSpinner size="lg" /><TailorSpinner size="xl" /></div>
+            </Exemplo>
+            <Exemplo titulo="TailorDots" codigo={`<TailorDots label="Digitando" />`}>
+              <TailorDots label="Digitando" />
+            </Exemplo>
+            <Exemplo titulo="TailorProgress" codigo={`<TailorProgress value={61.8} />\n<TailorProgress size="sm" />  // sem value: indeterminada`}>
+              <div className="grid gap-4"><TailorProgress value={61.8} label="Importando contatos" /><TailorProgress size="sm" /><TailorProgress size="lg" value={34} /></div>
+            </Exemplo>
+            <Exemplo titulo="TailorBlinds" codigo={`<TailorBlinds loop className="h-40">\n  <TailorBrandMark />\n</TailorBlinds>`}>
+              <TailorBlinds loop className="h-40"><span className="text-xl font-semibold">Tailor.ia</span></TailorBlinds>
+            </Exemplo>
+            <Exemplo titulo="TailorRefreshOverlay" codigo={`<TailorRefreshOverlay active={refreshing} label="Atualizando">\n  <TailorTable ... />\n</TailorRefreshOverlay>`}>
+              <TailorRefreshOverlay active label="Atualizando"><TailorSkeleton shape="table" lines={3} columns={3} /></TailorRefreshOverlay>
             </Exemplo>
           </Secao>
 

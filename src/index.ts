@@ -85,3 +85,5 @@ export { TailorAppLauncher } from './components/TailorAppLauncher';
 export type { TailorAppLauncherProps } from './components/TailorAppLauncher';
 export { TailorHandoff, TailorHandoffSaida, handoffPendente } from './components/TailorHandoff';
 export type { TailorHandoffProps, TailorHandoffSaidaProps } from './components/TailorHandoff';
+export { TailorSpinner, TailorDots, TailorProgress, TailorBlinds, TailorRefreshOverlay } from './components/TailorLoadings';
+export type { TailorSpinnerProps, TailorDotsProps, TailorProgressProps, TailorBlindsProps, TailorRefreshOverlayProps } from './components/TailorLoadings';

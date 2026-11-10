@@ -327,6 +327,11 @@ Um jeito só em todo app:
 |---|---|
 | Tela ou bloco chegando | `<TailorSkeleton />` com `shape` `text`, `table`, `cards` ou `block` |
 | Carregamento sem forma conhecida | `<TailorLoader />` |
+| Ação pontual, refresh | `<TailorSpinner size="sm" />` (16, `md` 24, `lg` 36, `xl` 56) |
+| Agente digitando, espera de conversa | `<TailorDots label="Digitando" />` |
+| Importação com percentual (ou sem) | `<TailorProgress value={p} />`; sem `value` fica indeterminada |
+| Dado já na tela sendo atualizado | `<TailorRefreshOverlay active={refreshing}>...</TailorRefreshOverlay>` |
+| Momento de marca, carga inicial de página de marketing | `<TailorBlinds loop>{logo}</TailorBlinds>` |
 | Campo obrigatório vazio ou inválido | `<TailorField label="Nome" required error="Preencha o nome."><input /></TailorField>`: borda e ponto vermelhos, mensagem ligada ao campo |
 | Botão | `<TailorButton loading={saving} loadingText="Salvando" done={saved}>Salvar</TailorButton>` |
 | Ícone girando num botão | `{saving ? <TailorLoader variant="dot" label="Salvando" /> : <SaveIcon />}` |
@@ -511,6 +516,14 @@ const NOVIDADES: TailorNovidade[] = [ // mais recente primeiro
 Gatilho com contador verde das não vistas (9+); abrir marca como visto (localStorage `tailor-novidades:<chave>:<usuario>`). Para botão próprio: `useNovidades` (`{ naoVistas, marcarVistas }`) + `TailorNovidadesDialog` (`aberto`, `onFechar`, `novidades`, `limite = 5`). Substitui os avisos "O que mudou" nas telas.
 
 ## Mudanças
+
+### 0.20.0
+
+- Os outros loadings do brand guide (12.5): `TailorSpinner`, `TailorDots`, `TailorProgress` (determinada e indeterminada), `TailorBlinds` e `TailorRefreshOverlay`. Um efeito por região; o de tela inteira continua sendo o `TailorLoader`.
+
+### 0.19.0
+
+- `omnichannel` no registro de apps (chaves `hma`, `hub`, `campanhas`): o launcher mostra "Omnichannel", não "Hma".
 
 ### 0.18.0
 
