@@ -12,7 +12,7 @@ export type TailorExplainProps = {
   items?: Array<{ label: string; text: React.ReactNode }>;
   /** Lembra no navegador se a pessoa recolheu (`tailor-explain:<storageKey>`). Sem ele, não lembra. */
   storageKey?: string;
-  /** Aberto na primeira visita. Padrão: true. */
+  /** Aberto na primeira visita. Padrão: false (a tela começa no conteúdo; quem precisa abre). */
   defaultOpen?: boolean;
   className?: string;
 };
@@ -21,7 +21,7 @@ export type TailorExplainProps = {
  * "O que é esta tela": explicação curta, em linguagem simples, que a pessoa recolhe
  * e não volta sozinha. Pensado para ficar logo abaixo do `TailorPageHeader`.
  */
-export function TailorExplain({ title, children, items, storageKey, defaultOpen = true, className }: TailorExplainProps) {
+export function TailorExplain({ title, children, items, storageKey, defaultOpen = false, className }: TailorExplainProps) {
   const { messages } = useTailorLocale();
   const id = useId();
   const chave = storageKey ? `tailor-explain:${storageKey}` : null;

@@ -664,6 +664,9 @@ a.tailor-btn { text-decoration: none; }
 .tailor-insight--empty { border-left-color: var(--tailor-brand-border); }
 .tailor-insight__meta { display: flex; flex-wrap: wrap; gap: var(--tailor-space-half) var(--tailor-space-sm); font-size: 12px; color: var(--tailor-brand-text-muted); }
 .tailor-insight__ai { font-weight: 600; color: var(--tailor-brand-text); }
+.tailor-ai-mark { display: inline-flex; align-items: center; gap: 6px; font-family: var(--tailor-brand-body-font); font-size: 12px; font-weight: 500; line-height: 1; color: var(--tailor-brand-text); white-space: nowrap; }
+.tailor-ai-mark__dot { width: 8px; height: 8px; flex-shrink: 0; background: var(--tailor-brand-primary); border-radius: var(--tailor-brand-radius); }
+.tailor-ai-mark--compact { gap: 4px; font-size: 11px; }
 .tailor-insight__takeaway { margin: 0; font-size: 18px; font-weight: 500; line-height: 1.4; }
 .tailor-insight__why { margin: 0; font-size: 14px; line-height: 1.5; color: var(--tailor-brand-text-muted); }
 .tailor-insight__actions { margin-top: var(--tailor-space-half); }

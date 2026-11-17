@@ -1,3 +1,4 @@
+import { TailorAiMark } from './TailorAiMark';
 import React, { useState } from 'react';
 import { cn } from '../cn';
 import { useTailorLocale } from '../i18n';
@@ -39,7 +40,7 @@ export function TailorInsight({ status, takeaway, why, nextAction, sources, conf
 
   const cabecalho = (
     <div className="tailor-insight__meta">
-      <span className="tailor-insight__ai">Gerado por IA</span>
+      <TailorAiMark className="tailor-insight__ai" />
       {status === 'ready' && confidence && <span>{CONFIANCA[confidence]}</span>}
       {status === 'ready' && quandoOk && <time dateTime={quando.toISOString()}>{new Intl.DateTimeFormat(locale, { dateStyle: 'short', timeStyle: 'short' }).format(quando)}</time>}
     </div>
