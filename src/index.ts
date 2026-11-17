@@ -69,6 +69,8 @@ export type { TailorEmptyProps } from './components/TailorEmpty';
 export type { TailorActionSpec } from './components/TailorAction';
 export { TailorMonogram, monogramInitials, monogramTone, MONOGRAM_TONES } from './components/TailorMonogram';
 export type { TailorMonogramProps } from './components/TailorMonogram';
+export { TailorAiMark } from './components/TailorAiMark';
+export type { TailorAiMarkProps } from './components/TailorAiMark';
 export { TailorInsight } from './components/TailorInsight';
 export type { TailorInsightProps } from './components/TailorInsight';
 export { TailorExplain } from './components/TailorExplain';

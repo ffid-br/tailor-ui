@@ -4,8 +4,11 @@ import { TailorExplain, TailorGlossary, TailorTour, TailorResult, resetTour } fr
 beforeEach(() => { localStorage.clear(); });
 
 describe('TailorExplain', () => {
-  it('abre por padrão, recolhe e lembra', () => {
-    const { unmount } = render(<TailorExplain storageKey="leads" items={[{ label: 'Novo', text: 'Chegou hoje' }]}>Aqui você vê os leads.</TailorExplain>);
+  it('começa fechado; com defaultOpen abre, recolhe e lembra', () => {
+    const primeiro = render(<TailorExplain storageKey="novo">Texto</TailorExplain>);
+    expect(screen.getByRole('button', { name: 'Como ler esta tela' })).toHaveAttribute('aria-expanded', 'false');
+    primeiro.unmount();
+    const { unmount } = render(<TailorExplain storageKey="leads" defaultOpen items={[{ label: 'Novo', text: 'Chegou hoje' }]}>Aqui você vê os leads.</TailorExplain>);
     const botao = screen.getByRole('button', { name: 'Como ler esta tela' });
     expect(botao).toHaveAttribute('aria-expanded', 'true');
     expect(screen.getByText('Aqui você vê os leads.')).toBeInTheDocument();
@@ -148,5 +151,15 @@ describe('TailorResult celebrate', () => {
     expect(container.querySelector('.tailor-result--celebrate')).not.toBeNull();
     expect(container.querySelector('.tailor-result__burst')).toBeNull();
     window.__reduzir = false;
+  });
+});
+
+describe('TailorAiMark', () => {
+  it('mostra o rótulo; compacto mostra "IA" e guarda o texto completo para leitor de tela', async () => {
+    const { TailorAiMark } = await import('./index');
+    const { rerender } = render(<TailorAiMark />);
+    expect(screen.getByText('Gerado por IA')).toBeInTheDocument();
+    rerender(<TailorAiMark compact label="Resumo gerado por IA" />);
+    expect(screen.getByLabelText('Resumo gerado por IA')).toHaveTextContent('IA');
   });
 });

@@ -65,7 +65,7 @@
 @media (min-width: 640px) {
   .tailor-ph__row { flex-direction: row; align-items: flex-end; justify-content: space-between; }
 }
-.tailor-ph__main { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: var(--tailor-space-xs); }
+.tailor-ph__main { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: var(--tailor-space-xs); }
 .tailor-ph__back {
   display: inline-flex; align-items: center; gap: 6px; padding: 0; border: 0; background: none; cursor: pointer;
   font: inherit; font-size: 13px; color: var(--tailor-brand-text-muted); text-decoration: none; border-radius: var(--tailor-brand-radius);
@@ -89,7 +89,8 @@
   font-size: var(--tailor-header-title-size, clamp(26px, 4vw, 42px));
 }
 .tailor-ph__description { margin: 0; max-width: 610px; font-size: 16px; line-height: 1.618; color: var(--tailor-brand-text-muted); }
-.tailor-ph__aside { display: flex; flex-shrink: 0; flex-wrap: wrap; align-items: center; gap: var(--tailor-space-sm); }
+/* Muitas ações não espremem o título: o bloco encolhe e os botões quebram linha, alinhados à direita. */
+.tailor-ph__aside { display: flex; flex: 0 1 auto; min-width: 0; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: var(--tailor-space-sm); }
 /* Faixa de números: cada um com o fio à esquerda (a cor do tom), rótulo em cima e o número grande embaixo. */
 .tailor-ph__stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(144px, 1fr)); gap: var(--tailor-space-md) var(--tailor-space-lg); margin: 0; }
 .tailor-ph__stat { --tailor-stat-color: var(--tailor-brand-border); min-width: 0; padding: 2px 0 2px var(--tailor-space-sm); border-left: 3px solid var(--tailor-stat-color); }
@@ -663,6 +664,9 @@ a.tailor-btn { text-decoration: none; }
 .tailor-insight--empty { border-left-color: var(--tailor-brand-border); }
 .tailor-insight__meta { display: flex; flex-wrap: wrap; gap: var(--tailor-space-half) var(--tailor-space-sm); font-size: 12px; color: var(--tailor-brand-text-muted); }
 .tailor-insight__ai { font-weight: 600; color: var(--tailor-brand-text); }
+.tailor-ai-mark { display: inline-flex; align-items: center; gap: 6px; font-family: var(--tailor-brand-body-font); font-size: 12px; font-weight: 500; line-height: 1; color: var(--tailor-brand-text); white-space: nowrap; }
+.tailor-ai-mark__dot { width: 8px; height: 8px; flex-shrink: 0; background: var(--tailor-brand-primary); border-radius: var(--tailor-brand-radius); }
+.tailor-ai-mark--compact { gap: 4px; font-size: 11px; }
 .tailor-insight__takeaway { margin: 0; font-size: 18px; font-weight: 500; line-height: 1.4; }
 .tailor-insight__why { margin: 0; font-size: 14px; line-height: 1.5; color: var(--tailor-brand-text-muted); }
 .tailor-insight__actions { margin-top: var(--tailor-space-half); }
