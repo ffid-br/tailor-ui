@@ -125,6 +125,22 @@ const AGENTES = {
       <path d="M102 157 L108 162 L119 151" fill="none" stroke={CORPO} strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
     </>,
   },
+  vigia: {
+    topo: 64, apoio: [162, 130], olhos: { l: 90, r: 130, y: 108 },
+    corpo: <rect x="58" y="64" width="104" height="116" rx="48" fill={CORPO} />,
+    // avisa quem está esperando e a janela de 24h do WhatsApp: ampulheta
+    verde: <path d="M100 144 H120 L112 157 L120 170 H100 L108 157 Z" fill={VERDE} />,
+  },
+  agenda: {
+    topo: 68, apoio: [164, 130], olhos: { l: 90, r: 130, y: 108 },
+    corpo: <rect x="56" y="68" width="108" height="112" rx="30" fill={CORPO} />,
+    // aponta o negócio sem próxima atividade: calendário
+    verde: <>
+      <rect x="94" y="146" width="32" height="26" rx="4" fill={VERDE} />
+      <path d="M94 154 H126" stroke={CORPO} strokeWidth="2" />
+      <path d="M102 142 V150 M118 142 V150" stroke={VERDE} strokeWidth="3" strokeLinecap="round" />
+    </>,
+  },
 } satisfies Record<string, Agente>;
 
 export type ChaveDoAgenteVetor = keyof typeof AGENTES;
