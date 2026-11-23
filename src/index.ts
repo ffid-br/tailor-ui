@@ -46,6 +46,8 @@ export { TailorBrand, themeToVars, themeFromWhitelabel, contrast } from './compo
 export type { TailorBrandProps, TailorTheme, TailorWhitelabel } from './components/TailorBrand';
 export { TailorTable, formatValue, sumBy } from './components/TailorTable';
 export type { TailorTableProps, TailorTableColumn, TailorTableSort, TailorColumnType } from './components/TailorTable';
+export { TailorCreditStatement } from './components/TailorCreditStatement';
+export type { TailorCreditStatementProps, CreditStatementData, CreditBalance, CreditItem } from './components/TailorCreditStatement';
 export { TailorSkeleton } from './components/TailorSkeleton';
 export type { TailorSkeletonProps } from './components/TailorSkeleton';
 export { TailorToaster, toast } from './components/TailorToaster';

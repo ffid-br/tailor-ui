@@ -10,6 +10,7 @@ import {
   TailorBrandMark,
   TailorLoader,
   TailorSkeleton,
+  TailorCreditStatement,
   TailorSpinner,
   TailorDots,
   TailorProgress,
@@ -640,6 +641,18 @@ const columns: TailorTableColumn<Corretor>[] = [
             </Exemplo>
             <Exemplo titulo="formulário (TailorField)" codigo={`<TailorField label="Nome" required error={errors.name}>\n  <input value={name} onChange={...} />\n</TailorField>\n<TailorField label="E-mail" required error={errors.email} hint="Para onde vão as propostas.">\n  <input type="email" ... />\n</TailorField>\n\n<button disabled={salvando}>\n  {salvando ? <TailorLoader variant="compact" label="Salvando" /> : 'Salvar'}\n</button>\n\n// deu certo: o formulário vira o sucesso, e o aviso confirma\n{salvo && <TailorLoader success label="Contato salvo" detail="Maria Souza" />}`}>
               <FormularioDemo />
+            </Exemplo>
+            <Exemplo titulo="TailorCreditStatement" codigo={`<TailorCreditStatement data={extrato} loading={carregando} error={erro} onRetry={recarregar}\n  month={mes} onMonthChange={setMes} personLabel={nomeDaPessoa} />`}>
+              <TailorCreditStatement
+                data={{
+                  balance: { month: '2026-11', quota: 10000, used: 6760, remaining: 3240, overage_credits: 0, overage_brl: 0, overage_price: 0.1, percent_used: 67.6, source: 'padrao', legacy: [], resets_on: '2026-12-01' },
+                  by_service: [{ service: 'Assistente', credits: 5200 }, { service: 'Resumo de conversa', credits: 1560 }],
+                  by_day: [{ day: '2026-11-20', credits: 900 }, { day: '2026-11-21', credits: 400 }],
+                  by_account: [{ client_id: 'conta-1', credits: 6760 }],
+                  by_person: [],
+                  items: [{ created_at: '2026-11-21T14:30:00', type: 'usage', service: 'Assistente', credits: 12, client_id: 'conta-1' }],
+                }}
+              />
             </Exemplo>
             <Exemplo titulo="TailorSkeleton" codigo={`<TailorSkeleton />                          {/* texto */}\n<TailorSkeleton shape="cards" lines={3} />\n<TailorSkeleton shape="table" columns={4} />\n<TailorSkeleton shape="block" height="144px" />\n<TailorTable loading ... />            {/* já usa o esqueleto */}`}>
               <div className="grid gap-8">
