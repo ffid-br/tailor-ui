@@ -43,6 +43,7 @@ const SERVICO: Record<string, string> = {
   web_meeting: 'Reunião online',
   voice_generator: 'Gerador de Voz',
   assistant: 'Tailor.ia Assistente',
+  conversation_analysis: 'Análise da conversa',
 };
 const servico = (s: string | null) => (s ? SERVICO[s] ?? s : 'Outro');
 

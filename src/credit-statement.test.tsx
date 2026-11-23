@@ -46,9 +46,10 @@ describe('TailorCreditStatement', () => {
 
 describe('contrato da API em inglês (QD-0591)', () => {
   it('serviço vira texto, pessoa unknown vira Sem pessoa', () => {
-    const d: CreditStatementData = { ...base, by_service: [{ service: 'outbound_call', credits: 115 }, { service: null, credits: 1 }], by_person: [{ user_id: 'unknown', credits: 3 }] };
+    const d: CreditStatementData = { ...base, by_service: [{ service: 'outbound_call', credits: 115 }, { service: 'conversation_analysis', credits: 5 }, { service: null, credits: 1 }], by_person: [{ user_id: 'unknown', credits: 3 }] };
     render(<TailorCreditStatement data={d} />);
     expect(screen.getByText('Ligação de saída')).toBeInTheDocument();
+    expect(screen.getByText('Análise da conversa')).toBeInTheDocument();
     expect(screen.getByText('Outro')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('tab', { name: 'Por pessoa' }));
     expect(screen.getByText('Sem pessoa')).toBeInTheDocument();
