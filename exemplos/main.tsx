@@ -645,12 +645,12 @@ const columns: TailorTableColumn<Corretor>[] = [
             <Exemplo titulo="TailorCreditStatement" codigo={`<TailorCreditStatement data={extrato} loading={carregando} error={erro} onRetry={recarregar}\n  month={mes} onMonthChange={setMes} personLabel={nomeDaPessoa} />`}>
               <TailorCreditStatement
                 data={{
-                  balance: { month: '2026-11', quota: 10000, used: 6760, remaining: 3240, overage_credits: 0, overage_brl: 0, overage_price: 0.1, percent_used: 67.6, source: 'padrao', legacy: [], resets_on: '2026-12-01' },
-                  by_service: [{ service: 'Assistente', credits: 5200 }, { service: 'Resumo de conversa', credits: 1560 }],
+                  balance: { month: '2026-11', quota: 10000, used: 6760, remaining: 3240, overage_credits: 0, overage_brl: 0, overage_price: 0.1, percent_used: 67.6, source: 'default', legacy: [], resets_on: '2026-12-01' },
+                  by_service: [{ service: 'assistant', credits: 5200 }, { service: 'call_summary', credits: 1560 }],
                   by_day: [{ day: '2026-11-20', credits: 900 }, { day: '2026-11-21', credits: 400 }],
                   by_account: [{ client_id: 'conta-1', credits: 6760 }],
                   by_person: [],
-                  items: [{ created_at: '2026-11-21T14:30:00', type: 'usage', service: 'Assistente', credits: 12, client_id: 'conta-1' }],
+                  items: [{ created_at: '2026-11-21T14:30:00', type: 'usage', service: 'assistant', credits: 12, client_id: 'conta-1' }],
                 }}
               />
             </Exemplo>

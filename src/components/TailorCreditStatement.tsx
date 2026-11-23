@@ -7,12 +7,12 @@ import { TailorTable } from './TailorTable';
 export type CreditBalance = {
   month: string; quota: number; used: number; remaining: number;
   overage_credits: number; overage_brl: number; overage_price: number; percent_used: number;
-  source: 'padrao' | 'contrato'; legacy: string[]; resets_on: string;
+  source: 'default' | 'contract'; legacy: string[]; resets_on: string;
 };
-export type CreditItem = { created_at: string; type: string; service: string; credits: number; client_id: string; chat_id?: string | null };
+export type CreditItem = { created_at: string; type: string; service: string | null; credits: number; client_id: string; chat_id?: string | null };
 export type CreditStatementData = {
   balance: CreditBalance;
-  by_service: { service: string; credits: number }[];
+  by_service: { service: string | null; credits: number }[];
   by_day: { day: string; credits: number }[];
   by_account: { client_id: string; credits: number }[];
   by_person: { user_id: string; credits: number }[];
@@ -33,6 +33,21 @@ export interface TailorCreditStatementProps {
   adminExtras?: React.ReactNode;
   className?: string;
 }
+
+/** Slug do serviço (API em inglês) para o texto da tela. Slug novo sem rótulo aparece como veio. */
+const SERVICO: Record<string, string> = {
+  outbound_call: 'Ligação de saída',
+  inbound_call: 'Ligação de entrada',
+  call_summary: 'Resumo da ligação',
+  agent_review: 'Revisão do agente',
+  web_meeting: 'Reunião online',
+  voice_generator: 'Gerador de Voz',
+  assistant: 'Tailor.ia Assistente',
+};
+const servico = (s: string | null) => (s ? SERVICO[s] ?? s : 'Outro');
+
+/** Contrato antigo para o texto da tela: o cliente não lê slug. */
+const LEGADO: Record<string, string> = { 'tailor-voice': 'Tailor.ia Voz', voice_ia: 'Gerador de Voz', 'tailor-assistente': 'Tailor.ia Assistente' };
 
 type Aba = 'service' | 'day' | 'account' | 'person' | 'detail';
 const ABAS: [Aba, string][] = [['service', 'Por serviço'], ['day', 'Por dia'], ['account', 'Por conta'], ['person', 'Por pessoa'], ['detail', 'Detalhe']];
@@ -75,7 +90,7 @@ export function TailorCreditStatement({
   data, loading = false, error, onRetry, month, onMonthChange, personLabel, accountLabel, adminExtras, className,
 }: TailorCreditStatementProps) {
   const [aba, setAba] = useState<Aba>('service');
-  const idPessoa = personLabel ?? ((id: string) => id);
+  const idPessoa = (id: string) => (id === 'unknown' ? 'Sem pessoa' : personLabel ? personLabel(id) : id);
   const idConta = accountLabel ?? ((id: string) => id);
   const seletor = onMonthChange ? (
     <label className="tailor-credit__month">
@@ -103,7 +118,7 @@ export function TailorCreditStatement({
       <>
         <section className="tailor-credit__balance" aria-label="Saldo do mês">
           <p className="tailor-credit__big">{`${num(b.remaining)} de ${num(b.quota)} créditos`}</p>
-          {b.source === 'contrato' && <span className="tailor-credit__tag">saldo combinado</span>}
+          {b.source === 'contract' && <span className="tailor-credit__tag">saldo combinado</span>}
           <div className="tailor-credit__meter" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.min(100, Math.round(b.percent_used))} aria-label="Uso do mês">
             <span style={{ width: `${Math.min(100, b.percent_used)}%` }} />
             <i className="tailor-credit__mark" aria-hidden="true" />
@@ -113,7 +128,7 @@ export function TailorCreditStatement({
             <p className="tailor-credit__warn" role="status">{`Saldo do mês acabou: ${num(b.overage_credits)} créditos a mais, ${brl(b.overage_brl)} na fatura`}</p>
           )}
           {b.legacy.length > 0 && (
-            <p className="tailor-credit__warn" role="status">{`Esta conta ainda tem contrato antigo (${b.legacy.join(', ')}): o uso não é cobrado em créditos`}</p>
+            <p className="tailor-credit__warn" role="status">{`Contrato antigo cobre ${b.legacy.map((l) => LEGADO[l] ?? l).join(', ')}: esse uso segue no contrato, o resto consome créditos`}</p>
           )}
         </section>
         {adminExtras}
@@ -123,7 +138,7 @@ export function TailorCreditStatement({
           ))}
         </div>
         <div role="tabpanel" id="tcs-panel" aria-labelledby={`tcs-tab-${aba}`}>
-          {aba === 'service' && <Barras empty={vazio} rows={data.by_service.map((r) => ({ key: r.service, label: r.service, credits: r.credits }))} />}
+          {aba === 'service' && <Barras empty={vazio} rows={data.by_service.map((r) => ({ key: r.service ?? 'other', label: servico(r.service), credits: r.credits }))} />}
           {aba === 'day' && <Barras empty={vazio} rows={data.by_day.map((r) => ({ key: r.day, label: diaMes(r.day), credits: r.credits }))} />}
           {aba === 'account' && <Barras empty={vazio} rows={data.by_account.map((r) => ({ key: r.client_id, label: idConta(r.client_id), credits: r.credits }))} />}
           {aba === 'person' && <Barras empty="Só o Tailor.ia Assistente mostra quem usou." rows={data.by_person.map((r) => ({ key: r.user_id, label: idPessoa(r.user_id), credits: r.credits }))} />}
@@ -136,7 +151,7 @@ export function TailorCreditStatement({
               pageSize={20}
               columns={[
                 { key: 'created_at', header: 'Quando', cell: (r) => quando(r.created_at) },
-                { key: 'service', header: 'Serviço' },
+                { key: 'service', header: 'Serviço', cell: (r) => servico(r.service) },
                 { key: 'client_id', header: 'Conta', cell: (r) => idConta(r.client_id) },
                 { key: 'credits', header: 'Créditos', type: 'number', align: 'right' },
               ]}
