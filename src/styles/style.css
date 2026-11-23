@@ -702,3 +702,27 @@ a.tailor-btn { text-decoration: none; }
   .tailor-spinner, .tailor-dots > i, .tailor-progress--indeterminate > span, .tailor-refresh-overlay { animation: none; }
   .tailor-blinds__curtains { display: none; }
 }
+
+/* TailorCreditStatement: extrato de créditos. Reto, sem sombra; verde só na barra. */
+.tailor-credit { display: grid; gap: var(--tailor-space-md); font-family: var(--tailor-brand-body-font); color: var(--tailor-brand-text); }
+.tailor-credit__month { display: inline-flex; align-items: center; gap: var(--tailor-space-xs); justify-self: end; font-size: 13px; color: var(--tailor-brand-text-muted); }
+.tailor-credit__month select { min-height: 34px; padding: 0 var(--tailor-space-xs); border: 1px solid var(--tailor-brand-border); border-radius: var(--tailor-brand-radius); background: transparent; color: inherit; font: inherit; }
+.tailor-credit__balance { display: grid; gap: var(--tailor-space-xs); }
+.tailor-credit__big { margin: 0; font-size: 26px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.tailor-credit__tag { justify-self: start; font-size: 10px; letter-spacing: var(--tailor-tracking-label); text-transform: uppercase; color: var(--tailor-brand-text-muted); }
+.tailor-credit__meter { position: relative; height: 13px; background: var(--tailor-gray-100); }
+.tailor-credit__meter > span { display: block; height: 100%; background: var(--tailor-brand-primary); }
+.tailor-credit__mark { position: absolute; top: -4px; bottom: -4px; left: 80%; width: 1px; background: var(--tailor-brand-text); }
+.tailor-credit__sub { margin: 0; font-size: 13px; color: var(--tailor-brand-text-muted); font-variant-numeric: tabular-nums; }
+.tailor-credit__warn { margin: 0; padding: var(--tailor-space-xs) var(--tailor-space-sm); border-left: 3px solid var(--tailor-brand-text); background: var(--tailor-green-tint); font-size: 14px; }
+.tailor-credit__tabs { display: flex; flex-wrap: wrap; gap: var(--tailor-space-xs); border-bottom: 1px solid var(--tailor-brand-border); }
+.tailor-credit__tab { padding: var(--tailor-space-xs) var(--tailor-space-sm); border: 0; border-bottom: 2px solid transparent; background: none; font: inherit; font-size: 14px; color: var(--tailor-brand-text-muted); cursor: pointer; }
+.tailor-credit__tab[aria-selected="true"] { color: var(--tailor-brand-text); border-bottom-color: var(--tailor-brand-primary); }
+.tailor-credit__bars { display: grid; gap: var(--tailor-space-xs); margin: 0; padding: 0; list-style: none; }
+.tailor-credit__bar-row { display: grid; grid-template-columns: minmax(80px, 200px) 1fr auto; align-items: center; gap: var(--tailor-space-sm); font-size: 14px; }
+.tailor-credit__bar-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tailor-credit__bar-track { height: 13px; background: var(--tailor-gray-100); }
+.tailor-credit__bar-track > span { display: block; height: 100%; background: var(--tailor-brand-text); }
+.tailor-credit__bar-value { font-variant-numeric: tabular-nums; text-align: right; min-width: 56px; }
+.tailor-credit__empty, .tailor-credit__error { margin: 0; padding: var(--tailor-space-lg) 0; text-align: center; color: var(--tailor-brand-text-muted); }
+.tailor-credit__error { display: grid; justify-items: center; gap: var(--tailor-space-sm); }
