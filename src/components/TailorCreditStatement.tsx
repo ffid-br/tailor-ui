@@ -54,11 +54,28 @@ const SERVICO: Record<string, string> = {
   delivery_date: 'Data de entrega',
   work_status: 'Status de obra',
   table_update: 'Atualização de tabela',
+  desk_triage: 'Triagem de chamado (Desk)',
+  director_proposal: 'Proposta do Diretor',
+  eng_director_proposal: 'Proposta do Diretor de Engenharia',
+  watcher_alert: 'Aviso do Vigia',
+  scheduler_reminder: 'Lembrete da Agenda',
+  pm_alert: 'Aviso do PM',
+  audio_transcription: 'Transcrição de áudio',
+  wiki_question: 'Pergunta à Wiki (Gestão)',
 };
 const servico = (s: string | null) => (s ? SERVICO[s] ?? s : 'Outro');
 
 /** Contrato antigo para o texto da tela: o cliente não lê slug. */
-const LEGADO: Record<string, string> = { 'tailor-voice': 'Tailor.ia Voz', voice_ia: 'Gerador de Voz', 'tailor-assistente': 'Tailor.ia Assistente' };
+const LEGADO: Record<string, string> = {
+  'tailor-voice': 'Tailor.ia Voz', voice_ia: 'Gerador de Voz', 'tailor-assistente': 'Tailor.ia Assistente',
+  google_api_locale: 'Locale Maps', nicknames: 'Normalização de nomes', caption_generator: 'Legenda de imagem',
+  notificacao_whatsapp: 'Notificação por WhatsApp', notificacao_sms: 'Notificação por SMS',
+  notificacao_email: 'Notificação por e-mail', notificacao_webpush: 'Notificação no navegador',
+  process_delivery_date: 'Data de entrega', update_work_status: 'Status de obra', update_table: 'Atualização de tabela',
+  voice_transcription: 'Transcrição de áudio', gpt: 'Tailor.ia Gestão', 'tailor-desk': 'Tailor.ia Desk',
+  'tailor-pm': 'Tailor.ia PM', 'tailor-eng-director': 'Tailor.ia Diretor de Engenharia',
+  'tailor-watcher': 'Tailor.ia Vigia', 'tailor-scheduler': 'Tailor.ia Agenda', 'tailor-director': 'Tailor.ia Diretor',
+};
 
 type Aba = 'service' | 'day' | 'account' | 'person' | 'detail';
 const ABAS: [Aba, string][] = [['service', 'Por serviço'], ['day', 'Por dia'], ['account', 'Por conta'], ['person', 'Por pessoa'], ['detail', 'Detalhe']];
