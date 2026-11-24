@@ -20,10 +20,10 @@ describe('registro de apps', () => {
 
   it('resolve chave de produto e monta o título', () => {
     expect(appPorChave('gpt')?.id).toBe('genius');
-    expect(appPorChave('pilot')?.nome).toBe('Pilot');
+    expect(appPorChave('pilot')?.nome).toBe('Marketing');
     expect(appPorChave('hma')?.nome).toBe('Omnichannel');
     expect(appPorChave('sac')).toBeUndefined();
-    expect(tailorTitle('pilot', 'Campanhas')).toBe('Campanhas | Pilot | Tailor.ia');
+    expect(tailorTitle('pilot', 'Campanhas')).toBe('Campanhas | Marketing | Tailor.ia');
     expect(tailorTitle('accounts')).toBe('Accounts | Tailor.ia');
   });
 });
@@ -50,7 +50,7 @@ describe('TailorHandoff', () => {
 
   it('mostra "Abrindo <app>" com o esqueleto do app e some quando inativo', async () => {
     const { container, rerender } = render(<TailorHandoff app="pilot" ativo />);
-    expect(screen.getByText('Abrindo Pilot')).toBeInTheDocument();
+    expect(screen.getByText('Abrindo Marketing')).toBeInTheDocument();
     expect(container.querySelector('[data-tailor-handoff-sidebar]')).toHaveClass('w-72');
     expect(container.querySelector('[data-tailor-handoff-header]')).toBeInTheDocument();
     expect(screen.queryByText('Entrar de novo')).toBeNull();
@@ -94,19 +94,19 @@ describe('TailorHandoff', () => {
     expect(screen.queryByText('Validando acesso')).toBeNull();
   });
 
-  it('a saída mostra "Abrindo Studio" só quando ativa', () => {
+  it('a saída mostra "Abrindo Relacionamento" só quando ativa', () => {
     const { rerender } = render(<TailorHandoffSaida app="crm" ativo />);
-    expect(screen.getAllByText('Abrindo Studio').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('Abrindo Relacionamento').length).toBeGreaterThan(0);
     rerender(<TailorHandoffSaida app="crm" ativo={false} />);
-    expect(screen.queryByText('Abrindo Studio')).toBeNull();
+    expect(screen.queryByText('Abrindo Relacionamento')).toBeNull();
   });
 
   it('a saída aceita rótulo e nomeia accounts/pilot pelo registro', () => {
     const { rerender } = render(<TailorHandoffSaida app="accounts" ativo rotulo="Indo para o Accounts" />);
     expect(screen.getAllByText('Indo para o Accounts').length).toBeGreaterThan(0);
     rerender(<TailorHandoffSaida app="pilot" ativo />);
-    expect(screen.getAllByText('Abrindo Pilot').length).toBeGreaterThan(0);
-    expect(TAILOR_APPS.crm.nome).toBe('Studio');
+    expect(screen.getAllByText('Abrindo Marketing').length).toBeGreaterThan(0);
+    expect(TAILOR_APPS.crm.nome).toBe('Relacionamento');
     expect(TAILOR_APPS.crm.letra).toBe('R');
   });
 });

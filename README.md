@@ -382,7 +382,7 @@ import { TailorAppIcon, appPorChave, tailorTitle } from '@ffid-br/tailor-ui';
 
 <TailorAppIcon app="pilot" size={34} />          {/* também aceita a chave do /clients/uses: "gpt", "ffid.ai.studio" */}
 appPorChave('gpt')?.nome;                         // "Gestão"
-document.title = tailorTitle('pilot', 'Campanhas'); // "Campanhas | Pilot | Tailor.ia"
+document.title = tailorTitle('pilot', 'Campanhas'); // "Campanhas | Marketing | Tailor.ia"
 ```
 
 **Título da aba:** `<Página> | <App> | Tailor.ia` (sem página: `<App> | Tailor.ia`). Com várias abas o navegador corta o título e sobra o começo: quem separa um app do outro é o ícone, não o texto.
