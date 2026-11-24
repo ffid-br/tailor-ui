@@ -15,7 +15,7 @@ export type CreditStatementData = {
   by_service: { service: string | null; credits: number }[];
   by_day: { day: string; credits: number }[];
   by_account: { client_id: string; credits: number }[];
-  by_person: { user_id: string; credits: number }[];
+  by_person: { user_id: string; name?: string | null; credits: number }[];
   items: CreditItem[];
 };
 
@@ -43,6 +43,7 @@ const SERVICO: Record<string, string> = {
   web_meeting: 'Reunião online',
   voice_generator: 'Gerador de Voz',
   assistant: 'Tailor.ia Assistente',
+  conversation_analysis: 'Análise da conversa',
 };
 const servico = (s: string | null) => (s ? SERVICO[s] ?? s : 'Outro');
 
@@ -90,7 +91,8 @@ export function TailorCreditStatement({
   data, loading = false, error, onRetry, month, onMonthChange, personLabel, accountLabel, adminExtras, className,
 }: TailorCreditStatementProps) {
   const [aba, setAba] = useState<Aba>('service');
-  const idPessoa = (id: string) => (id === 'unknown' ? 'Sem pessoa' : personLabel ? personLabel(id) : id);
+  // Nome do cadastro (API) vence a lista local; uso sem pessoa é a análise automática, que roda sozinha.
+  const idPessoa = (id: string, nome?: string | null) => (id === 'unknown' ? 'Automático (análise da conversa)' : nome || (personLabel ? personLabel(id) : id));
   const idConta = accountLabel ?? ((id: string) => id);
   const seletor = onMonthChange ? (
     <label className="tailor-credit__month">
@@ -117,13 +119,13 @@ export function TailorCreditStatement({
     corpo = (
       <>
         <section className="tailor-credit__balance" aria-label="Saldo do mês">
-          <p className="tailor-credit__big">{`${num(b.remaining)} de ${num(b.quota)} créditos`}</p>
+          <p className="tailor-credit__big">{`${num(b.used)} de ${num(b.quota)} créditos usados`}</p>
           {b.source === 'contract' && <span className="tailor-credit__tag">saldo combinado</span>}
           <div className="tailor-credit__meter" role="progressbar" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.min(100, Math.round(b.percent_used))} aria-label="Uso do mês">
             <span style={{ width: `${Math.min(100, b.percent_used)}%` }} />
-            <i className="tailor-credit__mark" aria-hidden="true" />
+            <i className="tailor-credit__mark" aria-hidden="true" title="Aviso por e-mail ao chegar em 80%" />
           </div>
-          <p className="tailor-credit__sub">{`${num(b.used)} usados · volta ao cheio em ${diaMes(b.resets_on)}`}</p>
+          <p className="tailor-credit__sub">{`Restam ${num(b.remaining)}. Volta ao cheio em ${diaMes(b.resets_on)}. A marca na barra é o aviso de 80%.`}</p>
           {b.overage_credits > 0 && (
             <p className="tailor-credit__warn" role="status">{`Saldo do mês acabou: ${num(b.overage_credits)} créditos a mais, ${brl(b.overage_brl)} na fatura`}</p>
           )}
@@ -141,7 +143,7 @@ export function TailorCreditStatement({
           {aba === 'service' && <Barras empty={vazio} rows={data.by_service.map((r) => ({ key: r.service ?? 'other', label: servico(r.service), credits: r.credits }))} />}
           {aba === 'day' && <Barras empty={vazio} rows={data.by_day.map((r) => ({ key: r.day, label: diaMes(r.day), credits: r.credits }))} />}
           {aba === 'account' && <Barras empty={vazio} rows={data.by_account.map((r) => ({ key: r.client_id, label: idConta(r.client_id), credits: r.credits }))} />}
-          {aba === 'person' && <Barras empty="Só o Tailor.ia Assistente mostra quem usou." rows={data.by_person.map((r) => ({ key: r.user_id, label: idPessoa(r.user_id), credits: r.credits }))} />}
+          {aba === 'person' && <Barras empty="Só o Tailor.ia Assistente mostra quem usou." rows={data.by_person.map((r) => ({ key: r.user_id, label: idPessoa(r.user_id, r.name), credits: r.credits }))} />}
           {aba === 'detail' && (
             <TailorTable<CreditItem>
               caption="Detalhe do uso de créditos"
