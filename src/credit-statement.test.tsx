@@ -46,10 +46,11 @@ describe('TailorCreditStatement', () => {
 
 describe('contrato da API em inglês (QD-0591)', () => {
   it('serviço vira texto, pessoa unknown vira Sem pessoa', () => {
-    const d: CreditStatementData = { ...base, by_service: [{ service: 'outbound_call', credits: 115 }, { service: 'conversation_analysis', credits: 5 }, { service: null, credits: 1 }], by_person: [{ user_id: 'unknown', credits: 3 }, { user_id: 'x9', name: 'Ana Souza', credits: 20 }] };
+    const d: CreditStatementData = { ...base, by_service: [{ service: 'outbound_call', credits: 115 }, { service: 'conversation_analysis', credits: 5 }, { service: 'email_writer', credits: 50 }, { service: null, credits: 1 }], by_person: [{ user_id: 'unknown', credits: 3 }, { user_id: 'x9', name: 'Ana Souza', credits: 20 }] };
     render(<TailorCreditStatement data={d} />);
     expect(screen.getByText('Ligação de saída')).toBeInTheDocument();
     expect(screen.getByText('Análise da conversa')).toBeInTheDocument();
+    expect(screen.getByText('Jaiminho Carteiro (e-mail com IA)')).toBeInTheDocument();
     expect(screen.getByText('Outro')).toBeInTheDocument();
     fireEvent.click(screen.getByRole('tab', { name: 'Por pessoa' }));
     expect(screen.getByText('Automático (análise da conversa)')).toBeInTheDocument();
