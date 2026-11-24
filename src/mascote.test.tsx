@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { AgenteMascote, EquipeDock } from './index';
+import { AgenteMascote, EquipeCarregando, EquipeDock } from './index';
 
 describe('AgenteMascote', () => {
   it('desenha 64 quadradinhos e diz nome, estado e pendências no rótulo', () => {
@@ -72,5 +72,30 @@ describe('EquipeDock', () => {
     fireEvent.click(screen.getAllByRole('tab')[1]);
     expect(screen.getByText('Em breve.')).toBeInTheDocument();
     expect(screen.getAllByRole('tab')[1]).toHaveAttribute('aria-selected', 'true');
+  });
+});
+
+describe('recorte do vetor', () => {
+  it('sem tema, o quadro é justo e o corpo ocupa a largura', () => {
+    const { container } = render(<AgenteMascote agente="diretor" nome="Diretor" estilo="vetor" tamanho={24} />);
+    const svg = container.querySelector('svg')!;
+    expect(svg).toHaveAttribute('viewBox', '36 44 148 144');
+    expect(Number(svg.getAttribute('height'))).toBeCloseTo((24 * 144) / 148);
+  });
+
+  it('com tema, volta ao quadro cheio para caber acessório e objeto', () => {
+    const { container } = render(<AgenteMascote agente="desk" nome="Desk" estilo="vetor" tema="natal" />);
+    expect(container.querySelector('svg')).toHaveAttribute('viewBox', '0 -40 220 240');
+  });
+});
+
+describe('EquipeCarregando', () => {
+  it('um mascote por agente, em onda, com rótulo de status', () => {
+    const { container } = render(<EquipeCarregando agentes={['vigia', 'agenda', 'diretor', 'pm']} rotulo="Preparando" />);
+    expect(screen.getByRole('status')).toHaveAttribute('aria-label', 'Preparando');
+    const agentes = container.querySelectorAll<HTMLElement>('.tailor-equipe-carregando__agente');
+    expect(agentes).toHaveLength(4);
+    expect(Array.from(agentes, (a) => a.style.animationDelay)).toEqual(['0s', '0.12s', '0.24s', '0.36s']);
+    expect(container.querySelectorAll('.tailor-mv__pupila')).toHaveLength(8);
   });
 });

@@ -51,7 +51,7 @@ export function EquipeDock({ agentes, abertoInicial = false, titulo = 'Equipe', 
                 aria-selected={i === aba} aria-controls={`${id}-conteudo`}
                 onClick={() => setAba(i)}
                 className={cn('flex flex-1 flex-col items-center gap-1 px-2 py-2 text-xs font-medium', i === aba ? 'bg-black text-white' : 'hover:bg-black/5')}>
-                <AgenteMascote agente={a.chave} nome={a.nome} estado={a.estado} selo={a.selo} celula={3}
+                <AgenteMascote agente={a.chave} nome={a.nome} estado={a.estado} selo={a.selo} celula={3} tamanho={32}
                   estilo={estilo} superficie={i === aba ? 'escura' : 'clara'} />
                 <span className="max-w-full truncate">{a.nome}</span>
               </button>
