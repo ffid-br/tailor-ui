@@ -16,11 +16,11 @@ describe('TailorAppLauncher', () => {
   it('lista os apps pelo registro, junta chaves do mesmo app e marca o atual sem link', () => {
     render(<TailorAppLauncher apps={APPS} atual="pilot" />);
     abrir();
-    expect(screen.getAllByText('Studio')).toHaveLength(1);
+    expect(screen.getAllByText('Relacionamento')).toHaveLength(1);
     expect(screen.getByText('Gestão')).toBeInTheDocument();
     expect(screen.getByText('Você está aqui')).toBeInTheDocument();
-    expect(screen.getByText('Pilot').closest('a')).toBeNull();
-    expect(screen.getByText('Pilot').closest('[aria-current="page"]')).not.toBeNull();
+    expect(screen.getByText('Marketing').closest('a')).toBeNull();
+    expect(screen.getByText('Marketing').closest('[aria-current="page"]')).not.toBeNull();
     expect(screen.getByText('Accounts').closest('a')).toHaveAttribute('href', 'https://accounts.test');
   });
 
@@ -41,14 +41,14 @@ describe('TailorAppLauncher', () => {
   it('app sem registro usa o nome informado; app registrado ignora', () => {
     render(
       <TailorAppLauncher
-        apps={[{ chave: 'sac', url: 'https://sac.test', nome: 'Tailor Sac' }, { chave: 'pilot', url: 'https://pilot.test', nome: 'Marketing' }]}
+        apps={[{ chave: 'sac', url: 'https://sac.test', nome: 'Tailor Sac' }, { chave: 'pilot', url: 'https://pilot.test', nome: 'Nome antigo' }]}
         atual="bi"
       />,
     );
     abrir();
     expect(screen.getByText('Tailor Sac').closest('a')).toHaveAttribute('href', 'https://sac.test');
-    expect(screen.getByText('Pilot')).toBeInTheDocument();
-    expect(screen.queryByText('Marketing')).toBeNull();
+    expect(screen.getByText('Marketing')).toBeInTheDocument();
+    expect(screen.queryByText('Nome antigo')).toBeNull();
   });
 
   it('chama montarUrl no clique, abre a aba na hora e troca a location', async () => {
@@ -57,11 +57,11 @@ describe('TailorAppLauncher', () => {
     const montarUrl = vi.fn().mockResolvedValue('https://pilot.test/?ffid_jwt=t');
     render(<TailorAppLauncher apps={APPS} atual="accounts" montarUrl={montarUrl} />);
     abrir();
-    fireEvent.click(screen.getByText('Pilot'));
+    fireEvent.click(screen.getByText('Marketing'));
     expect(open).toHaveBeenCalledWith('about:blank', '_blank');
     expect(aba.opener).toBeNull();
     expect(montarUrl).toHaveBeenCalledWith('https://pilot.test');
-    expect(screen.getByText('Abrindo Pilot')).toBeInTheDocument();
+    expect(screen.getByText('Abrindo Marketing')).toBeInTheDocument();
     await waitFor(() => expect(aba.location.href).toBe('https://pilot.test/?ffid_jwt=t'));
     open.mockRestore();
   });
@@ -73,7 +73,7 @@ describe('TailorAppLauncher', () => {
     Object.defineProperty(window, 'location', { value: { ...original, assign }, configurable: true });
     render(<TailorAppLauncher apps={APPS} atual="accounts" montarUrl={(u) => `${u}?t=1`} />);
     abrir();
-    fireEvent.click(screen.getByText('Pilot'));
+    fireEvent.click(screen.getByText('Marketing'));
     await waitFor(() => expect(assign).toHaveBeenCalledWith('https://pilot.test?t=1'));
     Object.defineProperty(window, 'location', { value: original, configurable: true });
   });
