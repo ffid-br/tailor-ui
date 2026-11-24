@@ -62,6 +62,7 @@ const SERVICO: Record<string, string> = {
   pm_alert: 'Aviso do PM',
   audio_transcription: 'Transcrição de áudio',
   wiki_question: 'Pergunta à Wiki (Gestão)',
+  email_writer: 'Jaiminho Carteiro (e-mail com IA)',
 };
 const servico = (s: string | null) => (s ? SERVICO[s] ?? s : 'Outro');
 
