@@ -40,6 +40,8 @@ export type {
 } from './components/MascoteVetor';
 export { EquipeDock } from './components/EquipeDock';
 export type { EquipeDockProps, AgenteDaEquipe } from './components/EquipeDock';
+export { EquipeCarregando } from './components/EquipeCarregando';
+export type { EquipeCarregandoProps } from './components/EquipeCarregando';
 export { TailorPageHeader } from './components/TailorPageHeader';
 export type { TailorPageHeaderProps, TailorPageHeaderLink } from './components/TailorPageHeader';
 export { TailorBrand, themeToVars, themeFromWhitelabel, contrast } from './components/TailorBrand';

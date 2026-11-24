@@ -145,6 +145,11 @@ const AGENTES = {
 
 export type ChaveDoAgenteVetor = keyof typeof AGENTES;
 
+/** Quadro com folga para acessório (em cima) e objeto (à direita). */
+const QUADRO_CHEIO = [0, -40, 220, 240];
+/** Sem acessório nem objeto, o corpo ocupa o quadro: no dock, em 24px, o cheio deixava o corpo com metade da altura. */
+const QUADRO_JUSTO = [36, 44, 148, 144];
+
 type ModoDoOlho = 'aberto' | 'grande' | 'feliz' | 'fechado' | 'x' | 'bravo' | 'triste' | 'meio';
 
 /** Expressão só nos olhos: formato, pálpebra e pupila, por lado. */
@@ -302,6 +307,7 @@ export function MascoteVetor({ agente, pose, expressao, tema, acessorio, objeto,
   const aces = acessorio ?? (tema && TEMAS[tema][0]);
   const obj = objeto ?? (tema && TEMAS[tema][1]);
   const ref = useRef<SVGSVGElement>(null);
+  const caixa = aces || obj ? QUADRO_CHEIO : QUADRO_JUSTO;
 
   // O olhar segue o cursor: só variáveis CSS, sem re-render.
   useEffect(() => {
@@ -329,7 +335,7 @@ export function MascoteVetor({ agente, pose, expressao, tema, acessorio, objeto,
       ) : fala && pose !== 'dormindo' ? (
         <span className="tailor-mv__balao" aria-hidden="true">{fala}</span>
       ) : null}
-      <svg ref={ref} viewBox="0 -40 220 240" width={tamanho} height={(tamanho * 240) / 220} className="block overflow-visible" aria-hidden="true">
+      <svg ref={ref} viewBox={caixa.join(' ')} width={tamanho} height={(tamanho * caixa[3]) / caixa[2]} className="block overflow-visible" aria-hidden="true">
         <g className="tailor-mv__corpo">
           {a.corpo}
           <g className="tailor-mv__verde">{a.verde}</g>

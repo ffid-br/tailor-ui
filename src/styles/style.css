@@ -553,6 +553,9 @@ textarea.tailor-field__control { padding: var(--tailor-space-xs) var(--tailor-sp
 @keyframes tailor-mv-ponto { 0%, 80%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
 @keyframes tailor-mv-cai { 0% { transform: translateY(-20px); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(70px); opacity: 0; } }
 @keyframes tailor-mv-sobe { 0% { transform: none; opacity: 0; } 20% { opacity: 1; } 100% { transform: translate(14px, -40px); opacity: 0; } }
+/* EquipeCarregando: a equipe salta em onda (atraso por agente vem do componente). */
+.tailor-equipe-carregando__agente { display: inline-flex; transform-origin: 50% 100%; animation: tailor-equipe-salta 1.3s cubic-bezier(.33,0,.3,1) infinite; }
+@keyframes tailor-equipe-salta { 0%, 62%, 100% { transform: none; } 22% { transform: translateY(-42%) scale(0.95, 1.06); } 42% { transform: scale(1.08, 0.9); } 52% { transform: none; } }
 
 /* Menos movimento: a informação continua, o movimento sai. */
 @media (prefers-reduced-motion: reduce) {
@@ -572,6 +575,7 @@ textarea.tailor-field__control { padding: var(--tailor-space-xs) var(--tailor-sp
   .tailor-ponto-pisca { animation: none; }
   .tailor-mascote__corpo, .tailor-mascote__olho, .tailor-mascote__verde { animation: none; }
   .tailor-mv *, .tailor-mv *::after { animation: none !important; transition: none !important; }
+  .tailor-equipe-carregando__agente { animation: none; }
 }
 
 /* TailorNovidades — changelog do app. Cores da marca, cantos retos. */
