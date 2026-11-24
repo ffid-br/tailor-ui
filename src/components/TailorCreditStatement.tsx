@@ -44,6 +44,16 @@ const SERVICO: Record<string, string> = {
   voice_generator: 'Gerador de Voz',
   assistant: 'Tailor.ia Assistente',
   conversation_analysis: 'Análise da conversa',
+  maps: 'Locale Maps',
+  name_normalization: 'Normalização de nomes',
+  whatsapp_notification: 'Notificação por WhatsApp',
+  sms_notification: 'Notificação por SMS',
+  email_notification: 'Notificação por e-mail',
+  push_notification: 'Notificação no navegador',
+  image_caption: 'Legenda de imagem',
+  delivery_date: 'Data de entrega',
+  work_status: 'Status de obra',
+  table_update: 'Atualização de tabela',
 };
 const servico = (s: string | null) => (s ? SERVICO[s] ?? s : 'Outro');
 
