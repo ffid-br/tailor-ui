@@ -252,6 +252,8 @@
 }
 .tailor-toast__close:hover { color: var(--tailor-white); }
 .tailor-toast__close:focus-visible { outline-color: var(--tailor-white); }
+/* mouse em cima ou foco dentro: a barra do tempo para junto com o temporizador */
+.tailor-toast:hover .tailor-toast__timer, .tailor-toast:focus-within .tailor-toast__timer { animation-play-state: paused; }
 .tailor-toast__timer {
   position: absolute !important; left: 0; right: 0; bottom: 0; height: 3px; background: var(--tailor-toast-color);
   transform-origin: left; animation: tailor-toast-timer var(--tailor-toast-duration, 4s) linear both;
@@ -704,8 +706,8 @@ a.tailor-btn { text-decoration: none; }
 .tailor-blinds__curtains > i { background: var(--tailor-brand-primary); transform-origin: top; animation: tailor-blinds 1.6s var(--tailor-ease-out) forwards; }
 .tailor-blinds--loop .tailor-blinds__curtains > i { animation-duration: 3.2s; animation-iteration-count: infinite; }
 @keyframes tailor-blinds { 0%, 60% { transform: scaleY(1); } 100% { transform: scaleY(0); } }
-.tailor-refresh-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: rgba(255,255,255,.75); backdrop-filter: blur(4px); animation: tailor-fadein .233s var(--tailor-ease-out); }
-:where(.dark, [data-theme="dark"]) .tailor-refresh-overlay { background: rgba(0,0,0,.75); }
+.tailor-refresh-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: color-mix(in srgb, var(--tailor-white) 75%, transparent); backdrop-filter: blur(4px); animation: tailor-fadein .233s var(--tailor-ease-out); }
+:where(.dark, [data-theme="dark"]) .tailor-refresh-overlay { background: color-mix(in srgb, var(--tailor-black) 75%, transparent); }
 @keyframes tailor-fadein { from { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) {
   .tailor-spinner, .tailor-dots > i, .tailor-progress--indeterminate > span, .tailor-refresh-overlay { animation: none; }

@@ -18,6 +18,7 @@ export function TailorGlossary({ term, children, className }: TailorGlossaryProp
   const id = useId();
   const [aberto, setAberto] = useState(false);
   const ref = useRef<HTMLSpanElement>(null);
+  const tocou = useRef(false);
 
   useEffect(() => {
     if (!aberto) return;
@@ -30,15 +31,18 @@ export function TailorGlossary({ term, children, className }: TailorGlossaryProp
     <span
       ref={ref}
       className={cn('tailor-glossary', className)}
-      onMouseEnter={() => setAberto(true)}
-      onMouseLeave={() => setAberto(false)}
+      // No toque o navegador emula a entrada do mouse antes do clique: ela abria e o clique (que alterna)
+      // fechava em seguida. Depois de um toque, quem manda é só o clique.
+      onTouchStart={() => { tocou.current = true; }}
+      onMouseEnter={() => { if (!tocou.current) setAberto(true); }}
+      onMouseLeave={() => { if (!tocou.current) setAberto(false); }}
     >
       <button
         type="button"
         className="tailor-glossary__term"
         aria-describedby={id}
         aria-expanded={aberto}
-        onClick={() => setAberto((a) => !a)}
+        onClick={() => { setAberto((a) => !a); tocou.current = false; }}
         onBlur={() => setAberto(false)}
         onKeyDown={(e) => { if (e.key === 'Escape' && aberto) { e.stopPropagation(); setAberto(false); } }}
       >

@@ -46,7 +46,9 @@ export const TailorButton = forwardRef<HTMLButtonElement, TailorButtonProps>(fun
       disabled={disabled}
       aria-busy={loading || undefined}
       aria-disabled={loading || undefined}
-      onClick={loading ? undefined : onClick}
+      // Em loading o botão segue focável (não vira disabled), então o clique precisa ser barrado aqui:
+      // sem o preventDefault, um type="submit" enviava o formulário de novo.
+      onClick={loading ? (e) => e.preventDefault() : onClick}
       className={cn(
         'tailor-btn', `tailor-btn--${variant}`, `tailor-btn--${size}`,
         soIcone && 'tailor-btn--icon-only', fullWidth && 'tailor-btn--full', loading && 'tailor-btn--loading', className,

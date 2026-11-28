@@ -1,5 +1,5 @@
 import { TailorAiMark } from './TailorAiMark';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { cn } from '../cn';
 import { useTailorLocale } from '../i18n';
 import { TailorAction, type TailorActionSpec } from './TailorAction';
@@ -35,6 +35,8 @@ const CONFIANCA = { alta: 'Confiança alta', media: 'Confiança média', baixa: 
 export function TailorInsight({ status, takeaway, why, nextAction, sources, confidence, generatedAt, onRefresh, onFeedback, className }: TailorInsightProps) {
   const { locale } = useTailorLocale();
   const [voto, setVoto] = useState<'up' | 'down' | null>(null);
+  // Leitura regerada é outra leitura: o "Sim/Não" da anterior não vale para ela.
+  useEffect(() => setVoto(null), [takeaway, generatedAt]);
   const quando = generatedAt === undefined ? null : new Date(generatedAt);
   const quandoOk = quando && !Number.isNaN(quando.getTime());
 

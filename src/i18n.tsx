@@ -129,8 +129,12 @@ export type TailorLocaleProviderProps = {
 /** Idioma, moeda e textos dos componentes. Sem provider: pt-BR e BRL. */
 export function TailorLocaleProvider({ locale = 'pt-BR', currency = 'BRL', messages, children }: TailorLocaleProviderProps) {
   const valor = useMemo<TailorLocale>(() => {
-    const base = TAILOR_MESSAGES[locale] ?? TAILOR_MESSAGES[locale.split('-')[0]] ?? EN;
-    return { locale, currency, messages: { ...base, ...messages } };
+    // "pt" e "pt-PT" caem no português que existe (pt-BR), não no inglês.
+    const lingua = locale.split('-')[0];
+    const base = TAILOR_MESSAGES[locale] ?? TAILOR_MESSAGES[lingua] ?? (lingua === 'pt' ? PT_BR : EN);
+    // Chave passada como undefined não apaga o texto padrão.
+    const proprias = Object.fromEntries(Object.entries(messages ?? {}).filter(([, v]) => v !== undefined));
+    return { locale, currency, messages: { ...base, ...proprias } };
   }, [locale, currency, messages]);
   return <Contexto.Provider value={valor}>{children}</Contexto.Provider>;
 }
