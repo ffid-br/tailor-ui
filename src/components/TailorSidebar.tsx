@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useId, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { cn } from '../cn';
 import { TailorBrandMark } from './TailorBrandMark';
@@ -233,7 +233,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({ item, nivel = 0 }) => 
     item.onSelect?.();
     aoNavegar?.();
   };
-  const idFilhos = `tailor-sidebar-${item.id}-filhos`;
+  const idFilhos = `${useId()}-${item.id}-filhos`;
 
   let elemento: ReactNode;
   if (item.desabilitado) {
@@ -248,7 +248,7 @@ export const SidebarItem: React.FC<SidebarItemProps> = ({ item, nivel = 0 }) => 
         type="button"
         className={classe}
         aria-expanded={recolhido ? undefined : aberto}
-        aria-controls={recolhido ? undefined : idFilhos}
+        aria-controls={recolhido || !aberto ? undefined : idFilhos}
         onClick={() => {
           // No trilho não há onde abrir a lista: expande a barra e abre o grupo.
           if (recolhido) {
@@ -390,7 +390,14 @@ export const TailorSidebar: React.FC<TailorSidebarProps> = ({
     painelRef.current?.focus();
     const overflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    // Passou do breakpoint: o diálogo some por CSS, então fecha para soltar a rolagem.
+    const mq = typeof window.matchMedia === 'function' ? window.matchMedia(`(min-width: ${breakpoint === 'md' ? 768 : 1024}px)`) : null;
+    const aoMudar = (e: { matches: boolean }) => {
+      if (e.matches) onFechar?.();
+    };
+    mq?.addEventListener('change', aoMudar);
     return () => {
+      mq?.removeEventListener('change', aoMudar);
       document.body.style.overflow = overflow;
       anterior?.focus?.();
     };
@@ -407,9 +414,13 @@ export const TailorSidebar: React.FC<TailorSidebarProps> = ({
     if (!focaveis.length) return;
     const primeiro = focaveis[0];
     const ultimo = focaveis[focaveis.length - 1];
-    if (e.shiftKey && document.activeElement === primeiro) {
+    const noPainel = document.activeElement === painelRef.current;
+    if (e.shiftKey && (noPainel || document.activeElement === primeiro)) {
       e.preventDefault();
       ultimo.focus();
+    } else if (!e.shiftKey && noPainel) {
+      e.preventDefault();
+      primeiro.focus();
     } else if (!e.shiftKey && document.activeElement === ultimo) {
       e.preventDefault();
       primeiro.focus();
@@ -557,7 +568,7 @@ const semMovimento = () =>
   typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
 export const TailorUserMenu: React.FC<TailorUserMenuProps> = ({ nome, detalhe, papel, avatarUrl, acoes = [], children }) => {
-  const { tom, recolhido } = useContext(SidebarContexto);
+  const { tom, recolhido, renderLink, aoNavegar } = useContext(SidebarContexto);
   const [aberto, setAberto] = useState(false);
   // Fechando: o painel recolhe no ponto antes de sair do DOM.
   const [fechando, setFechando] = useState(false);
@@ -597,12 +608,15 @@ export const TailorUserMenu: React.FC<TailorUserMenuProps> = ({ nome, detalhe, p
       return;
     }
     if ((e.key === 'ArrowDown' || e.key === 'ArrowUp') && expandido && painel.current) {
+      // Setas pertencem aos controles do `children` (slider, radio, campo de texto...).
+      if ((e.target as HTMLElement).closest?.('input,select,textarea,[role="radio"],[role="slider"],[role="combobox"]')) return;
       e.preventDefault();
       const itens = Array.from(painel.current.querySelectorAll<HTMLElement>(FOCAVEIS));
       if (!itens.length) return;
       const atual = itens.indexOf(document.activeElement as HTMLElement);
       const passo = e.key === 'ArrowDown' ? 1 : -1;
-      itens[(atual + passo + itens.length) % itens.length].focus();
+      // Do botão (atual -1): ↑ vai ao último, ↓ ao primeiro.
+      itens[atual < 0 ? (passo > 0 ? 0 : itens.length - 1) : (atual + passo + itens.length) % itens.length].focus();
     }
   };
 
@@ -675,11 +689,15 @@ export const TailorUserMenu: React.FC<TailorUserMenuProps> = ({ nome, detalhe, p
                 const escolher = () => {
                   fechar();
                   acao.onSelect?.();
+                  aoNavegar?.();
                 };
                 return acao.href ? (
-                  <a key={acao.rotulo} href={acao.href} onClick={escolher} className={classeAcao(acao.tom === 'perigo')}>
-                    {miolo}
-                  </a>
+                  <React.Fragment key={acao.rotulo}>
+                    {renderLink(
+                      { id: acao.rotulo, rotulo: acao.rotulo, icone: acao.icone ?? (() => null), href: acao.href },
+                      { href: acao.href, className: classeAcao(acao.tom === 'perigo'), children: miolo, onClick: escolher },
+                    )}
+                  </React.Fragment>
                 ) : (
                   <button key={acao.rotulo} type="button" onClick={escolher} className={classeAcao(acao.tom === 'perigo')}>
                     {miolo}

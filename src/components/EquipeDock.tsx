@@ -86,7 +86,7 @@ export function EquipeDock({ agentes, abertoInicial = false, titulo = 'Equipe', 
         </section>
       )}
       <button ref={botao} type="button" onClick={() => setAberto((v) => !v)}
-        aria-expanded={aberto} aria-controls={`${id}-painel`}
+        aria-expanded={aberto} aria-controls={aberto ? `${id}-painel` : undefined}
         aria-label={`${aberto ? 'Fechar' : 'Abrir'} ${titulo.toLowerCase()}${total > 0 ? `, ${total} pendentes` : ''}${ativos.length ? `, ${ativos.length + 1} trabalhando` : ''}`}
         className="flex h-14 min-w-14 items-center justify-center gap-1 border border-black bg-white px-3 hover:bg-black/5">
         <AgenteMascote agente={principal.chave} nome={principal.nome} estado={principal.estado} selo={total} celula={4}

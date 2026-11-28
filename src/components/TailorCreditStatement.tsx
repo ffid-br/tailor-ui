@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import { cn } from '../cn';
 import { TailorButton } from './TailorButton';
 import { TailorSkeleton } from './TailorSkeleton';
@@ -119,6 +119,8 @@ export function TailorCreditStatement({
   data, loading = false, error, onRetry, month, onMonthChange, personLabel, accountLabel, adminExtras, className,
 }: TailorCreditStatementProps) {
   const [aba, setAba] = useState<Aba>('service');
+  // ids por instância: com dois extratos na página, os fixos repetiam e as abas apontavam para o painel errado
+  const id = useId();
   // Nome do cadastro (API) vence a lista local; uso sem pessoa é a análise automática, que roda sozinha.
   const idPessoa = (id: string, nome?: string | null) => (id === 'unknown' ? 'Automático (análise da conversa)' : nome || (personLabel ? personLabel(id) : id));
   const idConta = accountLabel ?? ((id: string) => id);
@@ -126,6 +128,8 @@ export function TailorCreditStatement({
     <label className="tailor-credit__month">
       <span>Mês</span>
       <select value={month ?? ultimosMeses()[0].value} onChange={(e) => onMonthChange(e.target.value)}>
+        {/* mês fora da lista (mais antigo): entra como opção, senão o seletor mostrava outro mês sem avisar */}
+        {month && !ultimosMeses().some((m) => m.value === month) && <option value={month}>{month}</option>}
         {ultimosMeses().map((m) => <option key={m.value} value={m.value}>{m.label}</option>)}
       </select>
     </label>
@@ -162,12 +166,21 @@ export function TailorCreditStatement({
           )}
         </section>
         {adminExtras}
-        <div className="tailor-credit__tabs" role="tablist" aria-label="Detalhar o uso">
+        <div className="tailor-credit__tabs" role="tablist" aria-label="Detalhar o uso"
+          onKeyDown={(e) => {
+            // setas, Home e End trocam a aba e levam o foco (padrão de abas)
+            const i = ABAS.findIndex(([k]) => k === aba);
+            const para = e.key === 'ArrowRight' ? (i + 1) % ABAS.length : e.key === 'ArrowLeft' ? (i - 1 + ABAS.length) % ABAS.length : e.key === 'Home' ? 0 : e.key === 'End' ? ABAS.length - 1 : -1;
+            if (para < 0) return;
+            e.preventDefault();
+            setAba(ABAS[para][0]);
+            document.getElementById(`${id}-tab-${ABAS[para][0]}`)?.focus();
+          }}>
           {ABAS.map(([k, t]) => (
-            <button key={k} type="button" role="tab" id={`tcs-tab-${k}`} aria-selected={aba === k} aria-controls="tcs-panel" className="tailor-credit__tab" onClick={() => setAba(k)}>{t}</button>
+            <button key={k} type="button" role="tab" id={`${id}-tab-${k}`} aria-selected={aba === k} aria-controls={`${id}-panel`} tabIndex={aba === k ? 0 : -1} className="tailor-credit__tab" onClick={() => setAba(k)}>{t}</button>
           ))}
         </div>
-        <div role="tabpanel" id="tcs-panel" aria-labelledby={`tcs-tab-${aba}`}>
+        <div role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-tab-${aba}`}>
           {aba === 'service' && <Barras empty={vazio} rows={data.by_service.map((r) => ({ key: r.service ?? 'other', label: servico(r.service), credits: r.credits }))} />}
           {aba === 'day' && <Barras empty={vazio} rows={data.by_day.map((r) => ({ key: r.day, label: diaMes(r.day), credits: r.credits }))} />}
           {aba === 'account' && <Barras empty={vazio} rows={data.by_account.map((r) => ({ key: r.client_id, label: idConta(r.client_id), credits: r.credits }))} />}

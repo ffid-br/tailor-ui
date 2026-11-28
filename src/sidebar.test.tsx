@@ -163,3 +163,100 @@ describe('TailorUserMenu', () => {
     expect(botao).not.toHaveAttribute('title');
   });
 });
+
+describe('correções da sidebar', () => {
+  const menu = (extra = {}) => (
+    <TailorSidebar
+      produto="Conta"
+      grupos={[]}
+      rodape={
+        <TailorUserMenu nome="Ana" acoes={[{ rotulo: 'A', onSelect: () => {} }, { rotulo: 'B', onSelect: () => {} }, { rotulo: 'C', onSelect: () => {} }]} {...extra}>
+          <input aria-label="campo" />
+        </TailorUserMenu>
+      }
+    />
+  );
+
+  it('menu do usuário: setas não são roubadas de um input do children', () => {
+    render(menu());
+    fireEvent.click(barra().getByRole('button', { name: /Ana/ }));
+    const ev = new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true, cancelable: true });
+    barra().getByLabelText('campo').dispatchEvent(ev);
+    expect(ev.defaultPrevented).toBe(false);
+  });
+
+  it('menu do usuário: ArrowUp no botão vai ao último, ArrowDown ao primeiro', () => {
+    render(menu());
+    const botao = barra().getByRole('button', { name: /Ana/ });
+    fireEvent.click(botao);
+    botao.focus();
+    fireEvent.keyDown(botao, { key: 'ArrowUp' });
+    expect(barra().getByRole('button', { name: 'C' })).toHaveFocus();
+    botao.focus();
+    fireEvent.keyDown(botao, { key: 'ArrowDown' });
+    expect(barra().getByLabelText('campo')).toHaveFocus();
+  });
+
+  it('gaveta: Shift+Tab no painel vai ao último focável e Tab ao primeiro', () => {
+    render(<TailorSidebar produto="Conta" grupos={grupos} aberto onFechar={() => {}} />);
+    const gaveta = screen.getByRole('dialog');
+    const focaveis = Array.from(gaveta.querySelectorAll<HTMLElement>('a[href],button:not([disabled])'));
+    expect(gaveta).toHaveFocus();
+    fireEvent.keyDown(gaveta, { key: 'Tab', shiftKey: true });
+    expect(focaveis[focaveis.length - 1]).toHaveFocus();
+    gaveta.focus();
+    fireEvent.keyDown(gaveta, { key: 'Tab' });
+    expect(focaveis[0]).toHaveFocus();
+  });
+
+  it('gaveta: passar do breakpoint fecha e solta a rolagem', () => {
+    let ouvinte: ((e: { matches: boolean }) => void) | undefined;
+    const original = window.matchMedia;
+    const consultas: string[] = [];
+    window.matchMedia = ((q: string) => {
+      consultas.push(q);
+      return { matches: false, addEventListener: (_: string, f: typeof ouvinte) => (ouvinte = f), removeEventListener: () => (ouvinte = undefined) };
+    }) as unknown as typeof window.matchMedia;
+    const fechar = vi.fn();
+    const { unmount } = render(<TailorSidebar produto="Conta" grupos={grupos} aberto onFechar={fechar} breakpoint="md" />);
+    expect(consultas).toContain('(min-width: 768px)');
+    expect(document.body.style.overflow).toBe('hidden');
+    ouvinte!({ matches: true });
+    expect(fechar).toHaveBeenCalled();
+    unmount();
+    expect(ouvinte).toBeUndefined();
+    expect(document.body.style.overflow).not.toBe('hidden');
+    window.matchMedia = original;
+  });
+
+  it('menu do usuário: ação com href usa o renderLink e fecha a gaveta', () => {
+    const fechar = vi.fn();
+    render(
+      <TailorSidebar
+        produto="Conta"
+        grupos={[]}
+        aberto
+        onFechar={fechar}
+        renderLink={(item, props) => <a data-roteador={item.id} {...props} />}
+        rodape={<TailorUserMenu nome="Ana" acoes={[{ rotulo: 'Perfil', href: '/perfil' }]} />}
+      />,
+    );
+    const gaveta = within(screen.getByRole('dialog'));
+    fireEvent.click(gaveta.getByRole('button', { name: /Ana/ }));
+    const link = gaveta.getByRole('link', { name: 'Perfil' });
+    expect(link).toHaveAttribute('data-roteador', 'Perfil');
+    fireEvent.click(link);
+    expect(fechar).toHaveBeenCalled();
+  });
+
+  it('grupo: id dos filhos é único entre barra e gaveta e aria-controls só com grupo aberto', () => {
+    render(<TailorSidebar produto="Conta" grupos={grupos} aberto onFechar={() => {}} />);
+    const pais = screen.getAllByRole('button', { name: 'Painel' });
+    expect(pais).toHaveLength(2);
+    pais.forEach((p) => expect(p).not.toHaveAttribute('aria-controls'));
+    pais.forEach((p) => fireEvent.click(p));
+    const ids = pais.map((p) => p.getAttribute('aria-controls')!);
+    expect(ids[0]).not.toBe(ids[1]);
+    ids.forEach((id) => expect(document.querySelectorAll(`[id="${id}"]`)).toHaveLength(1));
+  });
+});

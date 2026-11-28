@@ -29,7 +29,10 @@ export const resetTour = (storageKey: string) => gravarStorage(`tailor-tour:${st
 
 const PAD = 6;
 const CARD_W = 340;
-const find = (t: string) => document.querySelector(/^[#.[]/.test(t) ? t : `[data-tour="${t}"]`);
+// Seletor inválido ("#1a") lançaria SyntaxError dentro do efeito: conta como alvo ausente e o passo é pulado.
+const find = (t: string) => {
+  try { return document.querySelector(/^[#.[]/.test(t) ? t : `[data-tour="${t}"]`); } catch { return null; }
+};
 
 /**
  * Tour guiado: escurece a tela, recorta o elemento da vez e explica numa frase. Passo cujo

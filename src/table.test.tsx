@@ -72,3 +72,34 @@ describe('TailorTable', () => {
     expect(screen.queryAllByText(/Detalhe/)).toHaveLength(1);
   });
 });
+
+describe('TailorTable: correções da validação geral', () => {
+  it('data "AAAA-MM-DD" mostra o próprio dia, em qualquer fuso', () => {
+    // sem hora, o JS lê como UTC; em fuso negativo (Brasil) virava o dia anterior
+    expect(formatValue('2026-10-28', 'date')).toBe('28/10/2026');
+    expect(formatValue('2026-01-01', 'date')).toBe('01/01/2026');
+  });
+
+  it('número que chega como texto é formatado e ordenado como número', () => {
+    expect(formatValue('12.5', 'currency')).toMatch(/R\$\s?12,50/);
+    expect(formatValue('12 un', 'number')).toBe('12 un');
+    type L = { id: string; valor: string };
+    const linhas: L[] = [{ id: 'a', valor: '1.5' }, { id: 'b', valor: '1.25' }, { id: 'c', valor: '10' }];
+    render(<TailorTable<L> caption="Valores" columns={[{ key: 'id', header: 'Id' }, { key: 'valor', header: 'Valor', type: 'number', sortable: true }]} rows={linhas} rowKey={(r) => r.id} defaultSort={{ key: 'valor', direction: 'asc' }} />);
+    const ids = screen.getAllByRole('row').slice(1).map((r) => within(r).getAllByRole('cell')[0].textContent);
+    expect(ids).toEqual(['b', 'a', 'c']);
+  });
+
+  it('clique e Enter em botão dentro da célula não disparam o clique da linha', () => {
+    const naLinha = vi.fn();
+    const noBotao = vi.fn();
+    type L = { id: string };
+    render(<TailorTable<L> caption="Ações" columns={[{ key: 'id', header: 'Id' }, { key: 'acao', header: 'Ação', cell: () => <button type="button" onClick={noBotao}>Editar</button> }]} rows={[{ id: 'a' }]} rowKey={(r) => r.id} onRowClick={naLinha} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Editar' }));
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Editar' }), { key: 'Enter' });
+    expect(noBotao).toHaveBeenCalledTimes(1);
+    expect(naLinha).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByText('a'));
+    expect(naLinha).toHaveBeenCalledTimes(1);
+  });
+});

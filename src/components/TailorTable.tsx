@@ -49,6 +49,10 @@ export type TailorTableProps<T> = {
   className?: string;
 };
 
+const NUMERICO: TailorColumnType[] = ['number', 'currency', 'percent'];
+/** Texto que é número inteiro ("12.5", "-3"); o resto (vazio, "12 un", "1e3x") não converte. */
+const numero = (v: string) => (/^\s*-?\d+(\.\d+)?\s*$/.test(v) ? Number(v) : undefined);
+
 const formatadores = new Map<string, { format: (v: never) => string }>();
 function formatador<F extends { format: (v: never) => string }>(chave: string, criar: () => F): F {
   let f = formatadores.get(chave) as F | undefined;
@@ -59,28 +63,39 @@ function formatador<F extends { format: (v: never) => string }>(chave: string, c
 /** Formata pelo tipo da coluna; vazio vira hífen simples (sem travessão, regra da marca). */
 export function formatValue(v: unknown, type: TailorColumnType = 'text', locale = 'pt-BR', currency = 'BRL'): React.ReactNode {
   if (v === null || v === undefined || v === '') return '-';
+  // Decimal que a API manda como texto ("12.5") é número para as colunas numéricas.
+  if (typeof v === 'string' && NUMERICO.includes(type)) v = numero(v) ?? v;
   if (typeof v === 'number' && Number.isFinite(v)) {
     if (type === 'currency') return formatador(`c${locale}${currency}`, () => new Intl.NumberFormat(locale, { style: 'currency', currency })).format(v);
     if (type === 'percent') return formatador(`p${locale}`, () => new Intl.NumberFormat(locale, { style: 'percent', maximumFractionDigits: 1 })).format(v);
     if (type === 'number') return formatador(`n${locale}`, () => new Intl.NumberFormat(locale)).format(v);
   }
   if (type === 'date') {
-    const d = v instanceof Date ? v : new Date(String(v));
+    // "AAAA-MM-DD" sem hora é lido como UTC pelo JS e, no Brasil, virava o dia anterior: monta no fuso local.
+    const dia = typeof v === 'string' ? /^(\d{4})-(\d{2})-(\d{2})$/.exec(v) : null;
+    const d = v instanceof Date ? v : dia ? new Date(+dia[1], +dia[2] - 1, +dia[3]) : new Date(String(v));
     return Number.isNaN(d.getTime()) ? String(v) : formatador(`d${locale}`, () => new Intl.DateTimeFormat(locale)).format(d);
   }
   return React.isValidElement(v) ? v : String(v);
 }
 
-const NUMERICO: TailorColumnType[] = ['number', 'currency', 'percent'];
 const ler = <T,>(c: TailorTableColumn<T>, r: T) => (c.value ? c.value(r) : (r as Record<string, unknown>)[c.key]);
 
-function comparar(a: unknown, b: unknown, locale: string) {
+function comparar(a: unknown, b: unknown, locale: string, numerica = false) {
   if (a == null) return b == null ? 0 : 1;
   if (b == null) return -1;
+  if (numerica) {
+    if (typeof a === 'string') a = numero(a) ?? a;
+    if (typeof b === 'string') b = numero(b) ?? b;
+  }
   if (typeof a === 'number' && typeof b === 'number') return a - b;
   if (a instanceof Date && b instanceof Date) return a.getTime() - b.getTime();
   return String(a).localeCompare(String(b), locale, { numeric: true, sensitivity: 'base' });
 }
+
+/** O evento veio de um link, botão ou campo dentro da célula? Então é dele, não da linha. */
+const deControle = (e: React.SyntheticEvent) =>
+  e.target !== e.currentTarget && !!(e.target as Element).closest?.('a, button, input, select, textarea, label, [role="button"]');
 
 /**
  * Tabela de relatório: cabeçalho em overline, números tabulares à direita, IDs
@@ -101,7 +116,8 @@ export function TailorTable<T>({
     const col = columns.find((c) => c.key === ordemAtual.key);
     if (!col) return rows;
     const sinal = ordemAtual.direction === 'asc' ? 1 : -1;
-    return [...rows].sort((a, b) => sinal * comparar(ler(col, a), ler(col, b), locale));
+    const numerica = NUMERICO.includes(col.type ?? 'text');
+    return [...rows].sort((a, b) => sinal * comparar(ler(col, a), ler(col, b), locale, numerica));
   }, [rows, columns, ordemAtual, onSortChange, locale]);
 
   const totalPaginasLocal = pageSize ? Math.max(1, Math.ceil(ordenadas.length / pageSize)) : 1;
@@ -159,8 +175,8 @@ export function TailorTable<T>({
                 <Fragment key={rowKey(r, i)}>
                   <tr
                     className={cn(onRowClick && 'tailor-table__clickable', aberto != null && 'tailor-table__row--open')}
-                    onClick={onRowClick ? () => onRowClick(r) : undefined}
-                    onKeyDown={onRowClick ? (e) => { if (e.key === 'Enter') onRowClick(r); } : undefined}
+                    onClick={onRowClick ? (e) => { if (!deControle(e)) onRowClick(r); } : undefined}
+                    onKeyDown={onRowClick ? (e) => { if (e.key === 'Enter' && !deControle(e)) onRowClick(r); } : undefined}
                     tabIndex={onRowClick ? 0 : undefined}>
                     {columns.map((c) => (
                       <td key={c.key} className={cn(`tailor-table--${alinhamento(c)}`, c.type === 'id' && 'tailor-table__id')}>

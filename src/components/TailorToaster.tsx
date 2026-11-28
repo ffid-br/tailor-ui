@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useSyncExternalStore } from 'react';
+import React, { useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import { useTailorLocale } from '../i18n';
 import { TailorTypewriter } from './TailorTypewriter';
 
@@ -44,12 +44,20 @@ function ItemToast({ item }: { item: Toast }) {
   const { messages } = useTailorLocale();
   const digita = typeof item.title === 'string' && item.type !== 'error';
   const [escrito, setEscrito] = useState(!digita);
+  // Com o mouse em cima ou o foco dentro, o tempo para (a barra também, pelo CSS): quem está lendo
+  // ou indo clicar no botão não vê o aviso sumir. Ao sair, conta só o que faltava.
+  const [pausado, setPausado] = useState(false);
+  const falta = useRef(item.duration);
   useEffect(() => {
-    const t = setTimeout(() => toast.dismiss(item.id), item.duration);
-    return () => clearTimeout(t);
-  }, [item]);
+    if (pausado) return;
+    const inicio = Date.now();
+    const t = setTimeout(() => toast.dismiss(item.id), falta.current);
+    return () => { clearTimeout(t); falta.current = Math.max(0, falta.current - (Date.now() - inicio)); };
+  }, [item, pausado]);
   return (
     <div role={item.type === 'error' ? 'alert' : 'status'} className={`tailor-toast tailor-toast--${item.type}`}
+      onMouseEnter={() => setPausado(true)} onMouseLeave={() => setPausado(false)}
+      onFocus={() => setPausado(true)} onBlur={() => setPausado(false)}
       style={{ '--tailor-toast-duration': `${item.duration}ms` } as React.CSSProperties}>
       <Icone type={item.type} escrito={escrito} />
       <div className="tailor-toast__text">

@@ -38,7 +38,7 @@ export function TailorExplain({ title, children, items, storageKey, defaultOpen 
 
   return (
     <section className={cn('tailor-explain', aberto && 'tailor-explain--open', className)}>
-      <button type="button" className="tailor-explain__toggle" aria-expanded={aberto} aria-controls={id} onClick={alternar}>
+      <button type="button" className="tailor-explain__toggle" aria-expanded={aberto} aria-controls={aberto ? id : undefined} onClick={alternar}>
         <span className="tailor-explain__chevron" aria-hidden="true" />
         {title ?? messages.howToRead}
       </button>

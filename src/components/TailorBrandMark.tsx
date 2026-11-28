@@ -58,7 +58,7 @@ export const TailorBrandMark: React.FC<TailorBrandMarkProps> = ({
   if (compact) return <span className={cn('inline-flex items-center', className)}>{palavra}</span>;
   const img = 'h-[21px] w-auto max-w-[144px] object-contain';
   return (
-    <span className={cn('inline-flex items-center gap-2', className)} aria-label={personalizada ? produto : `Tailor.ia ${produto}`}>
+    <span className={cn('inline-flex items-center gap-2', className)} role="img" aria-label={personalizada ? produto : `Tailor.ia ${produto}`}>
       {modo === 'escura' ? (
         <img src={escuro} alt="" className={img} />
       ) : modo === 'clara' ? (

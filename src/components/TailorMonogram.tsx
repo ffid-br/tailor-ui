@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { cn } from '../cn';
 
 export type TailorMonogramProps = {
@@ -37,6 +37,8 @@ export function monogramTone(id: string): number {
 /** Iniciais num quadrado de cor estável por `id`; com foto, mostra a foto. */
 export function TailorMonogram({ id, name, size = 'md', src, className }: TailorMonogramProps) {
   const [falhou, setFalhou] = useState(false);
+  // Foto nova merece nova tentativa: sem isso, um 404 antigo escondia a foto válida para sempre.
+  useEffect(() => setFalhou(false), [src]);
   const foto = src && !falhou;
   return (
     <span
