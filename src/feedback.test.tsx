@@ -1,5 +1,6 @@
 import { act, render, screen, fireEvent } from '@testing-library/react';
-import { TailorButton, TailorConfirmation, TailorField, TailorToaster, TailorResult, TailorTypewriter, TailorSkeleton, toast } from './index';
+import { useState } from 'react';
+import { CinematicIntro, TailorButton, TailorConfirmation, TailorField, TailorLocaleProvider, TailorMonogram, TailorToaster, TailorResult, TailorTypewriter, TailorSkeleton, toast, useTailorLocale } from './index';
 
 describe('TailorToaster', () => {
   it('mostra sucesso como status e erro como alert; fecha no botão', () => {
@@ -85,6 +86,90 @@ describe('TailorConfirmation', () => {
     expect((container.querySelector('dialog') as HTMLElement).style.getPropertyValue('--tailor-confirmation-t')).toBe('2.1s');
     fireEvent.click(container.querySelector('.tailor-confirmation__close')!);
     expect(fechar).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('correções da validação geral', () => {
+  it('TailorButton em loading não envia o formulário', () => {
+    const enviar = vi.fn((e: React.FormEvent) => e.preventDefault());
+    const { rerender } = render(<form onSubmit={enviar}><TailorButton type="submit">Salvar</TailorButton></form>);
+    fireEvent.click(screen.getByRole('button', { name: 'Salvar' }));
+    expect(enviar).toHaveBeenCalledTimes(1);
+    rerender(<form onSubmit={enviar}><TailorButton type="submit" loading>Salvar</TailorButton></form>);
+    fireEvent.click(screen.getByRole('button', { name: 'Salvar' }));
+    expect(enviar).toHaveBeenCalledTimes(1);
+  });
+
+  it('TailorConfirmation chama onClose uma vez no botão e uma no Esc, sem repetir', () => {
+    const fechou = vi.fn();
+    function Caso() {
+      const [aberto, setAberto] = useState(true);
+      return <TailorConfirmation open={aberto} title="Pronto." onClose={() => { fechou(); setAberto(false); }} />;
+    }
+    const { container } = render(<Caso />);
+    fireEvent.click(container.querySelector('.tailor-confirmation__close')!);
+    expect(fechou).toHaveBeenCalledTimes(1);
+    // o evento `close` que o dialog solta depois não pode chamar de novo
+    fireEvent(container.querySelector('dialog')!, new Event('close'));
+    expect(fechou).toHaveBeenCalledTimes(1);
+    const esc = render(<TailorConfirmation open title="Pronto." onClose={fechou} />);
+    fireEvent(esc.container.querySelector('dialog')!, new Event('cancel', { cancelable: true }));
+    expect(fechou).toHaveBeenCalledTimes(2);
+  });
+
+  it('TailorConfirmation: duas instâncias não repetem o id do título', () => {
+    const { container } = render(<><TailorConfirmation open title="Um." onClose={() => {}} /><TailorConfirmation open title="Dois." onClose={() => {}} /></>);
+    const ids = Array.from(container.querySelectorAll('h2'), (h) => h.id);
+    expect(new Set(ids).size).toBe(2);
+    container.querySelectorAll('dialog').forEach((d, i) => expect(d).toHaveAttribute('aria-labelledby', ids[i]));
+  });
+
+  it('CinematicIntro chama onComplete uma vez só, mesmo com "Pular" e o fim da barra', () => {
+    vi.useFakeTimers();
+    const fim = vi.fn();
+    const { unmount } = render(<CinematicIntro onComplete={fim} skipLabel="Pular" duration={0.01} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Pular' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Pular' }));
+    act(() => { vi.advanceTimersByTime(5000); });
+    expect(fim).toHaveBeenCalledTimes(1);
+    unmount();
+    vi.useRealTimers();
+  });
+
+  it('aviso não some com o mouse em cima e some depois que o mouse sai', () => {
+    vi.useFakeTimers();
+    render(<TailorToaster />);
+    // a fila é global: acha o aviso pelo texto, não pelo papel (pode haver outros de testes anteriores)
+    act(() => { toast.error('Falhou ao salvar o contato', { duration: 1000 }); });
+    const aviso = screen.getByText('Falhou ao salvar o contato').closest('.tailor-toast') as HTMLElement;
+    act(() => { vi.advanceTimersByTime(600); });
+    fireEvent.mouseEnter(aviso);
+    act(() => { vi.advanceTimersByTime(5000); });
+    expect(screen.queryByText('Falhou ao salvar o contato')).not.toBeNull();
+    fireEvent.mouseLeave(aviso);
+    act(() => { vi.advanceTimersByTime(399); });
+    expect(screen.queryByText('Falhou ao salvar o contato')).not.toBeNull();
+    act(() => { vi.advanceTimersByTime(2); });
+    expect(screen.queryByText('Falhou ao salvar o contato')).toBeNull();
+    vi.useRealTimers();
+  });
+
+  it('TailorMonogram tenta a foto nova depois de uma que falhou', () => {
+    const { container, rerender } = render(<TailorMonogram id="1" name="Maria Souza" src="/quebrada.jpg" />);
+    fireEvent.error(container.querySelector('img')!);
+    expect(container.querySelector('img')).toBeNull();
+    rerender(<TailorMonogram id="1" name="Maria Souza" src="/boa.jpg" />);
+    expect(container.querySelector('img')).toHaveAttribute('src', '/boa.jpg');
+  });
+
+  it('idioma "pt" e "pt-PT" ficam em português; texto undefined não apaga o padrão', () => {
+    const Fechar = () => <span>{useTailorLocale().messages.close}</span>;
+    const { rerender } = render(<TailorLocaleProvider locale="pt-PT"><Fechar /></TailorLocaleProvider>);
+    expect(screen.getByText('Fechar')).toBeInTheDocument();
+    rerender(<TailorLocaleProvider locale="pt" messages={{ close: undefined }}><Fechar /></TailorLocaleProvider>);
+    expect(screen.getByText('Fechar')).toBeInTheDocument();
+    rerender(<TailorLocaleProvider locale="fr"><Fechar /></TailorLocaleProvider>);
+    expect(screen.getByText('Close')).toBeInTheDocument();
   });
 });
 

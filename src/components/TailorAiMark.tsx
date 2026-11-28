@@ -13,7 +13,7 @@ export interface TailorAiMarkProps {
 export function TailorAiMark({ label = 'Gerado por IA', compact = false, className }: TailorAiMarkProps) {
   const classe = ['tailor-ai-mark', compact && 'tailor-ai-mark--compact', className].filter(Boolean).join(' ');
   return (
-    <span className={classe} title={compact ? label : undefined} aria-label={compact ? label : undefined}>
+    <span className={classe} title={compact ? label : undefined} role={compact ? 'img' : undefined} aria-label={compact ? label : undefined}>
       <span className="tailor-ai-mark__dot" aria-hidden="true" />
       {compact ? <span aria-hidden="true">IA</span> : label}
     </span>

@@ -23,6 +23,17 @@ export type TailorAppLauncherProps = {
 const LARGURA = 288; // 18 pontos de 16: cabe em 320 px com a margem lateral de 16
 const MARGEM = 16;
 const GAP = 8;
+const PRAZO_MONTAR_URL_MS = 8000; // rede pendurada não pode deixar a aba em branco para sempre
+
+// Só http(s): javascript:, data: e afins não podem virar destino de navegação.
+const urlSegura = (url: string): string | null => {
+  try {
+    const { protocol } = new URL(url, window.location.href);
+    return protocol === 'http:' || protocol === 'https:' ? url : null;
+  } catch {
+    return null;
+  }
+};
 
 const Grade = () => (
   <svg viewBox="0 0 8 8" width="20" height="20" aria-hidden="true" fill="currentColor" shapeRendering="crispEdges">
@@ -96,13 +107,22 @@ export const TailorAppLauncher: React.FC<TailorAppLauncherProps> = ({ apps, atua
     const aba = window.open('about:blank', '_blank');
     if (aba) aba.opener = null;
     setSaindo(item.chave);
-    let destino = item.url;
+    let destino: string | null = null;
+    let timer: ReturnType<typeof setTimeout> | undefined;
     try {
-      destino = await montarUrl(item.url);
+      const prazo = new Promise<never>((_, rejeitar) => {
+        timer = setTimeout(() => rejeitar(new Error('prazo')), PRAZO_MONTAR_URL_MS);
+      });
+      // Resultado tardio de montarUrl é ignorado: a corrida já decidiu.
+      destino = urlSegura(await Promise.race([Promise.resolve(montarUrl(item.url)), prazo]));
     } catch {
       // Sem o token o destino pede login, mas o usuário chega lá.
+    } finally {
+      clearTimeout(timer);
     }
-    if (aba) aba.location.href = destino;
+    destino ??= urlSegura(item.url);
+    if (!destino) aba?.close();
+    else if (aba) aba.location.href = destino;
     else window.location.assign(destino);
     setSaindo(null);
   };
@@ -179,7 +199,7 @@ export const TailorAppLauncher: React.FC<TailorAppLauncherProps> = ({ apps, atua
                       </div>
                     ) : (
                       <a
-                        href={item.url}
+                        href={urlSegura(item.url) ?? undefined}
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => void abrir(e, item)}

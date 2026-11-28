@@ -22,7 +22,7 @@ const TEMAS: TemaDoMascote[] = ['natal', 'pascoa', 'aniversario', 'halloween', '
 const ACESSORIOS: AcessorioDoMascote[] = ['gorro', 'orelhas', 'festa', 'bruxa', 'bone', 'capacete', 'coroa'];
 const OBJETOS: ObjetoDoMascote[] = ['presente', 'ovo', 'bolo', 'abobora', 'bola', 'sabre', 'trofeu'];
 
-type Escolha = {
+export type Escolha = {
   agente: ChaveDoAgente; nome: string; estilo: 'pixel' | 'vetor'; estado: EstadoDoMascote;
   expressao: ExpressaoDoMascote | ''; tema: TemaDoMascote | ''; acessorio: AcessorioDoMascote | '';
   objeto: ObjetoDoMascote | ''; fala: string; tamanho: number; selo: number; mostrarEstado: boolean;
@@ -59,18 +59,28 @@ function Opcoes<T extends string | number>({ rotulo, valor, opcoes, aoEscolher, 
   );
 }
 
-function codigo(e: Escolha) {
-  const p: string[] = [`agente="${e.agente}"`, `nome="${e.nome}"`];
-  if (e.estilo === 'vetor' && SO_PIXEL.includes(e.agente)) p.push('estilo="vetor"');
+/** Lado do quadradinho para o pixel ter a largura pedida (8 quadradinhos por lado). */
+const celulaDe = (tamanho: number) => Math.max(1, Math.round(tamanho / 8));
+/** O agente sai em vetor quando foi pedido ou quando não tem desenho em pixel. */
+const emVetor = (e: Escolha) => e.estilo === 'vetor' || !SO_PIXEL.includes(e.agente);
+/** Texto como atributo JSX: com aspas, chaves ou barra vira expressão, senão o código copiado não compila. */
+const atributo = (nome: string, valor: string) => (/["{}\\<>]/.test(valor) ? `${nome}={${JSON.stringify(valor)}}` : `${nome}="${valor}"`);
+
+export function codigo(e: Escolha) {
+  const vetor = emVetor(e);
+  const p: string[] = [`agente="${e.agente}"`, atributo('nome', e.nome)];
+  if (vetor && SO_PIXEL.includes(e.agente)) p.push('estilo="vetor"');
   p.push(`estado="${e.estado}"`);
-  if (e.estilo === 'vetor') {
+  if (vetor) {
     if (e.expressao) p.push(`expressao="${e.expressao}"`);
     if (e.tema) p.push(`tema="${e.tema}"`);
     if (e.acessorio) p.push(`acessorio="${e.acessorio}"`);
     if (e.objeto) p.push(`objeto="${e.objeto}"`);
-    if (e.fala) p.push(`fala="${e.fala}"`);
+    if (e.fala) p.push(atributo('fala', e.fala));
     p.push(`tamanho={${e.tamanho}}`);
     if (e.superficie !== 'auto') p.push(`superficie="${e.superficie}"`);
+  } else if (celulaDe(e.tamanho) !== 4) {
+    p.push(`celula={${celulaDe(e.tamanho)}}`);
   }
   if (e.selo) p.push(`selo={${e.selo}}`);
   if (e.mostrarEstado) p.push('mostrarEstado');
@@ -82,10 +92,10 @@ export function Simulador() {
   const [e, setE] = useState<Escolha>(INICIAL);
   const [copiado, setCopiado] = useState(false);
   const muda = (parcial: Partial<Escolha>) => setE((v) => ({ ...v, ...parcial }));
-  const vetor = e.estilo === 'vetor' || !SO_PIXEL.includes(e.agente);
+  const vetor = emVetor(e);
   const props: AgenteMascoteProps = {
     agente: e.agente, nome: e.nome, estado: e.estado, estilo: e.estilo, selo: e.selo, mostrarEstado: e.mostrarEstado,
-    tamanho: e.tamanho, superficie: e.superficie, celula: Math.max(3, Math.round(e.tamanho / 16)),
+    tamanho: e.tamanho, superficie: e.superficie, celula: celulaDe(e.tamanho),
     expressao: e.expressao || undefined, tema: e.tema || undefined, acessorio: e.acessorio || undefined,
     objeto: e.objeto || undefined, fala: e.fala || undefined,
   };

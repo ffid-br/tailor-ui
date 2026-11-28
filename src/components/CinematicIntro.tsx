@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import logoBranco from '../assets/tailor-logo-branco.png';
 
@@ -42,10 +42,24 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({
 }) => {
   const reduzir = useReducedMotion();
 
+  // onComplete uma vez só: "Pular" perto do fim, o fim da barra e um re-render do pai com callback
+  // novo chamavam de novo. O timer do fim também não pode disparar depois de desmontar.
+  const aoTerminar = useRef(onComplete);
+  aoTerminar.current = onComplete;
+  const chamou = useRef(false);
+  const timer = useRef<ReturnType<typeof setTimeout>>();
+  const terminar = useCallback(() => {
+    if (chamou.current) return;
+    chamou.current = true;
+    clearTimeout(timer.current);
+    aoTerminar.current();
+  }, []);
+  useEffect(() => () => clearTimeout(timer.current), []);
+
   // Quem pediu menos movimento não assiste à abertura.
   useEffect(() => {
-    if (reduzir) onComplete();
-  }, [reduzir, onComplete]);
+    if (reduzir) terminar();
+  }, [reduzir, terminar]);
 
   if (reduzir) return null;
 
@@ -130,7 +144,7 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({
 
       <button
         type="button"
-        onClick={onComplete}
+        onClick={terminar}
         className="absolute bottom-[34px] right-[34px] border border-white/30 px-4 py-2 text-sm text-white/80 transition-colors hover:bg-white hover:text-black focus:outline-none focus-visible:ring-[3px] focus-visible:ring-tailor-green/60"
       >
         {skipLabel}
@@ -143,7 +157,7 @@ export const CinematicIntro: React.FC<CinematicIntroProps> = ({
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ duration, ease: 'linear' }}
-        onAnimationComplete={() => setTimeout(onComplete, PHI.b * 1000)}
+        onAnimationComplete={() => { timer.current = setTimeout(terminar, PHI.b * 1000); }}
       />
     </motion.div>
   );

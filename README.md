@@ -8,7 +8,11 @@ Primitivos de marca da Tailor.ia em React: o loader com o ponto verde e a malha 
 npm install @ffid-br/tailor-ui
 ```
 
-Dependências de pares (peer): `react`, `react-dom` e `framer-motion` (10, 11 ou 12). Na prática o framer-motion 10+ exige React 18.
+Dependências de pares (peer): `react` e `react-dom` 18 e `framer-motion` (10, 11 ou 12). O pacote usa `useId` e `useSyncExternalStore`, que só existem no React 18.
+
+Funciona com `import` (ESM) e com `require` (CommonJS, `dist/index.umd.cjs`).
+
+O pacote é pensado para app de página única (SPA). `EntradaApp`, `handoffPendente`, `TailorExplain` e `TailorNovidades` leem `sessionStorage`, `localStorage` ou a URL já no primeiro quadro, de propósito, para a tela não piscar; com renderização no servidor isso gera diferença de hidratação.
 
 ## Configuração no app (Tailwind v4)
 
@@ -340,7 +344,7 @@ Um jeito só em todo app:
 | Modal concluído (ou falhou) | `<TailorResult status="success" title="Contato salvo" onClose={close} />` dentro do painel (`position: relative`) |
 | Inscrição ou cadastro enviado (tela cheia) | `<TailorConfirmation open={nome !== null} title={`${nome}, recebemos sua inscrição.`} steps={[...]} onClose={fechar} />` |
 | Relatório de parceiro carregando | `<TailorLoader logo={...} logoDark={...} progress={p} steps={[...]} messages={[...]} />` |
-| Retorno de ação em qualquer tela | `toast.success`, `toast.error`, `toast.info` |
+| Retorno de ação em qualquer tela | `toast.success`, `toast.error`, `toast.info` (o tempo para com o mouse em cima ou o foco dentro) |
 
 ```tsx
 // uma vez, perto da raiz
@@ -382,6 +386,20 @@ const [nome, setNome] = useState<string | null>(null); // null = fechado
 - `actions`: botões antes do de fechar. Estilize no app (o fundo é preto).
 - Com `prefers-reduced-motion`, abre direto na frase final, sem animação.
 - Para o fim de um modal comum, use `TailorResult`.
+- Enquanto a confirmação está aberta, um `toast` fica escondido atrás dela: o `<dialog>` modal ocupa a camada de cima do navegador, acima de qualquer `z-index`. Dispare o aviso depois de fechar.
+
+### `EquipeCarregando`, `TailorAiMark` e `TailorCreditStatement`
+
+```tsx
+<EquipeCarregando agentes={['vigia', 'agenda', 'diretor', 'pm']} rotulo="Preparando" />
+<TailorAiMark />            {/* "Gerado por IA", com o ponto verde */}
+<TailorAiMark compact />    {/* só o ponto e "IA"; o rótulo vai para leitores de tela */}
+<TailorCreditStatement data={extrato} month={mes} onMonthChange={setMes} onRetry={recarregar} />
+```
+
+- `EquipeCarregando`: um mascote por agente pulando em onda, com `role="status"`. Para espera em que a equipe inteira trabalha.
+- `TailorAiMark`: marca de conteúdo feito por IA. Use em tudo que o modelo escreveu; `label` troca o texto.
+- `TailorCreditStatement`: extrato de créditos do mês (saldo, uso por serviço, dia, conta, pessoa e detalhe). `data` segue o contrato da API de créditos; `loading`, `error` e `onRetry` cobrem os estados; `personLabel` e `accountLabel` traduzem ids; `adminExtras` entra abaixo do saldo.
 
 ## Explicar a tela: TailorExplain, TailorGlossary e TailorTour
 
@@ -526,7 +544,7 @@ Cores só por tokens nomeados (`tailor-green`, `tailor-green-ink`, `black`, `whi
 npm install
 npm test         # vitest + testing-library
 npm run exemplos # página com todos os componentes ao vivo + código (exemplos/)
-npm run build    # dist/: index.es.js, index.umd.js, types/, style.css, theme.css, logos
+npm run build    # dist/: index.es.js, index.umd.cjs, types/, style.css, theme.css, logos
 ```
 
 Página pública: https://ffid-br.github.io/tailor-ui/ (publicada pelo workflow `exemplos.yml` a cada push na `main`).
@@ -545,6 +563,41 @@ const NOVIDADES: TailorNovidade[] = [ // mais recente primeiro
 Gatilho com contador verde das não vistas (9+); abrir marca como visto (localStorage `tailor-novidades:<chave>:<usuario>`). Para botão próprio: `useNovidades` (`{ naoVistas, marcarVistas }`) + `TailorNovidadesDialog` (`aberto`, `onFechar`, `novidades`, `limite = 5`). Substitui os avisos "O que mudou" nas telas.
 
 ## Mudanças
+
+### 0.26.0
+
+Correções de uma validação geral do pacote. Duas mudam o contrato:
+
+- **React 18 obrigatório** no `peerDependencies` (antes aceitava 16 e 17, mas `TailorField`, `TailorToaster`, `TailorTour` e outros já quebravam neles).
+- **`require` volta a funcionar**: o build CommonJS passa a ser `dist/index.umd.cjs`. Com `"type": "module"`, o `.js` era lido como ESM e o `require` devolvia um objeto vazio.
+
+Comportamento:
+
+- `TailorButton`: em `loading`, um `type="submit"` não envia mais o formulário.
+- `TailorTable`: data `AAAA-MM-DD` mostra o próprio dia (no Brasil saía o anterior); número que chega como texto é formatado e ordenado como número; clique em botão ou link dentro da célula não dispara `onRowClick`.
+- `TailorConfirmation`: `onClose` uma vez só (eram duas pelo botão); Esc passa por `onClose`; id do título por instância; abre mesmo sem `showModal`.
+- `CinematicIntro`: `onComplete` uma vez só, e nunca depois de desmontar.
+- `TailorToaster`: o tempo para com o mouse em cima ou o foco dentro.
+- `TailorSidebar`: gaveta fecha ao passar do breakpoint (a página ficava sem rolagem), foco preso também a partir do painel, setas não roubam o teclado de campos no menu do usuário, ações do menu usam o `renderLink` e fecham a gaveta, ArrowUp no botão vai ao último item, ids dos grupos únicos.
+- `TailorAppLauncher`: prazo de 8 s para `montarUrl` (a aba ficava em branco para sempre) e destino só `http:`/`https:`.
+- `TailorCreditStatement`: ids por instância, setas nas abas e mês antigo no seletor.
+- `TailorMonogram`: foto nova é tentada depois de uma que falhou.
+- Idioma `pt` e `pt-PT` ficam em português; texto `undefined` em `messages` não apaga o padrão.
+- `TailorGlossary`: abre no primeiro toque. `TailorInsight`: o voto zera quando a leitura é regerada. `TailorTour`: seletor inválido pula o passo em vez de quebrar.
+- Acessibilidade: `TailorAiMark compact` e `TailorBrandMark` com `role="img"`, `TailorLoader overlay` com nome, `aria-controls` só quando o alvo existe.
+
+### 0.21.0 a 0.24.2
+
+Sem registro aqui: veja o histórico do git (`git log v0.20.0..`) e os PRs #24 a #34.
+
+### 0.25.2
+
+- Mascote em vetor: com tema, acessório ou objeto o corpo não encolhe mais (o quadro era trocado por um maior); o que sai do quadro vira margem do SVG.
+- Mascote em vetor: balão e selo seguem a `superficie` (no escuro eram preto no preto) e o selo fica por cima do balão.
+- Pilot: com acessório, o quepe sai e o verde vira o distintivo no peito (eram dois chapéus empilhados).
+- `EquipeDock`: abas em grade que quebra em linhas (com muitos agentes saíam do painel), setas/Home/End trocam de aba e Esc fecha devolvendo o foco ao botão.
+- Um ouvinte de mouse só para o olhar de todos os mascotes da tela.
+- Simulador: o código copiado bate com o que aparece (tamanho no pixel, agente sem pixel depois de escolher pixel, fala com aspas).
 
 ### 0.25.1
 

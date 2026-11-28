@@ -78,6 +78,52 @@ describe('TailorAppLauncher', () => {
     Object.defineProperty(window, 'location', { value: original, configurable: true });
   });
 
+  it('montarUrl que nunca resolve: passado o prazo de 8 s a aba recebe a URL sem token e o aviso some', async () => {
+    vi.useFakeTimers();
+    try {
+      const aba = { opener: 'x', location: { href: '' }, close: vi.fn() };
+      const open = vi.spyOn(window, 'open').mockReturnValue(aba as unknown as Window);
+      render(<TailorAppLauncher apps={APPS} atual="accounts" montarUrl={() => new Promise<string>(() => {})} />);
+      abrir();
+      fireEvent.click(screen.getByText('Marketing'));
+      expect(screen.getByText('Abrindo Marketing')).toBeInTheDocument();
+      await vi.advanceTimersByTimeAsync(8000);
+      expect(aba.location.href).toBe('https://pilot.test');
+      expect(screen.queryByText('Abrindo Marketing')).toBeNull();
+      open.mockRestore();
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('montarUrl que devolve javascript: cai para a URL do item, nunca a javascript:', async () => {
+    const aba = { opener: 'x', location: { href: '' }, close: vi.fn() };
+    const open = vi.spyOn(window, 'open').mockReturnValue(aba as unknown as Window);
+    render(<TailorAppLauncher apps={APPS} atual="accounts" montarUrl={() => 'javascript:alert(1)'} />);
+    abrir();
+    fireEvent.click(screen.getByText('Marketing'));
+    await waitFor(() => expect(aba.location.href).toBe('https://pilot.test'));
+    open.mockRestore();
+  });
+
+  it('item com url javascript: não vira link e, com montarUrl, fecha a aba em branco sem navegar', async () => {
+    const apps = [{ chave: 'pilot', url: 'javascript:alert(1)' }];
+    const { unmount } = render(<TailorAppLauncher apps={apps} atual="accounts" />);
+    abrir();
+    expect(screen.getByText('Marketing').closest('a')).not.toHaveAttribute('href');
+    unmount();
+
+    const aba = { opener: 'x', location: { href: '' }, close: vi.fn() };
+    const open = vi.spyOn(window, 'open').mockReturnValue(aba as unknown as Window);
+    render(<TailorAppLauncher apps={apps} atual="accounts" montarUrl={(u) => u} />);
+    abrir();
+    fireEvent.click(screen.getByText('Marketing'));
+    await waitFor(() => expect(aba.close).toHaveBeenCalled());
+    expect(aba.location.href).toBe('');
+    expect(screen.queryByText('Abrindo Marketing')).toBeNull();
+    open.mockRestore();
+  });
+
   it('Esc fecha e devolve o foco ao botão; carregando mostra o esqueleto; sem apps não renderiza', () => {
     const { container, rerender } = render(<TailorAppLauncher apps={APPS} atual="pilot" />);
     abrir();

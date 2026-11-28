@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useId, useRef } from 'react';
 import { cn } from '../cn';
 import { useTailorLocale } from '../i18n';
 
@@ -45,12 +45,18 @@ export type TailorConfirmationProps = {
 export function TailorConfirmation({ open, title, overline, description, nodes = NOS_PADRAO, steps = [], actions, onClose, closeLabel, className }: TailorConfirmationProps) {
   const { messages } = useTailorLocale();
   const ref = useRef<HTMLDialogElement>(null);
+  const idTitulo = useId();
 
   useEffect(() => {
     const d = ref.current;
     if (!d) return;
-    if (open && !d.open) d.showModal?.();
-    if (!open && d.open) d.close?.();
+    if (open && !d.open) {
+      // Navegador sem showModal: abre como dialog comum em vez de ficar invisível.
+      if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', '');
+    }
+    if (!open && d.open) {
+      if (typeof d.close === 'function') d.close(); else d.removeAttribute('open');
+    }
   }, [open]);
 
   const nos = nodes.slice(0, LUGARES.length).map((nome, i) => ({ nome, ...LUGARES[i] }));
@@ -60,8 +66,10 @@ export function TailorConfirmation({ open, title, overline, description, nodes =
   return (
     <dialog
       ref={ref}
-      onClose={onClose}
-      aria-labelledby="tailor-confirmation-title"
+      // Esc: o pai decide (onClose) e o `open` manda. Ouvir o evento `close` do dialog chamava onClose
+      // duas vezes ao fechar pelo botão, e deixar o Esc fechar sozinho descasava do `open`.
+      onCancel={(e) => { e.preventDefault(); onClose(); }}
+      aria-labelledby={open ? idTitulo : undefined}
       className={cn('tailor-confirmation', className)}
       style={{ '--tailor-confirmation-t': `${recuo}s` } as React.CSSProperties}
     >
@@ -103,7 +111,7 @@ export function TailorConfirmation({ open, title, overline, description, nodes =
           <div className="tailor-confirmation__final">
             <div>
               {overline && <p className="tailor-confirmation__overline"><span aria-hidden="true" />{overline}</p>}
-              <h2 id="tailor-confirmation-title" className="tailor-confirmation__title" aria-label={title}>
+              <h2 id={idTitulo} className="tailor-confirmation__title" aria-label={title}>
                 {/* Palavra inteira num bloco sem quebra; as letras acendem uma a uma. */}
                 {title.split(' ').map((palavra, w, todas) => {
                   const antes = todas.slice(0, w).join(' ').length + (w ? 1 : 0);

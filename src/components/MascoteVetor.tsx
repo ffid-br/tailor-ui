@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { prefersReducedMotion } from '../reducedMotion';
 
 /**
  * Mascotes em vetor (estilo companheiro): olhos seguem o cursor e piscam; a
@@ -23,6 +24,8 @@ type Agente = {
   lente?: boolean;
   corpo: React.ReactNode;
   verde: React.ReactNode;
+  /** Quem já usa chapéu: com acessório, o chapéu sai e o acessório assenta na cabeça. O verde muda de lugar. */
+  semChapeu?: { topo: number; corpo: React.ReactNode; verde: React.ReactNode };
 };
 
 const AGENTES = {
@@ -88,6 +91,12 @@ const AGENTES = {
       <path d="M48 78 H172 Q172 88 162 88 H58 Q48 88 48 78 Z" fill={OLHO} stroke={CORPO} strokeWidth="3" />
     </>,
     verde: <circle cx="110" cy="60" r="8" fill={VERDE} />,
+    // com gorro, coroa ou capacete o quepe sai (eram dois chapéus empilhados) e o verde vira o distintivo no peito
+    semChapeu: {
+      topo: 70,
+      corpo: <rect x="58" y="70" width="104" height="110" rx="40" fill={CORPO} />,
+      verde: <circle cx="110" cy="160" r="8" fill={VERDE} />,
+    },
   },
   flow: {
     topo: 68, apoio: [164, 130], olhos: { l: 90, r: 130, y: 108 },
@@ -145,10 +154,12 @@ const AGENTES = {
 
 export type ChaveDoAgenteVetor = keyof typeof AGENTES;
 
-/** Quadro com folga para acessório (em cima) e objeto (à direita). */
-const QUADRO_CHEIO = [0, -40, 220, 240];
-/** Sem acessório nem objeto, o corpo ocupa o quadro: no dock, em 24px, o cheio deixava o corpo com metade da altura. */
-const QUADRO_JUSTO = [36, 44, 148, 144];
+/**
+ * O quadro é sempre o do corpo: acessório (em cima) e objeto (à direita) saem para fora dele, e o
+ * SVG ganha margem do tamanho do que sobra. Antes o tema trocava o quadro por um maior e o corpo
+ * encolhia um terço com a mesma largura pedida.
+ */
+const QUADRO = [36, 44, 148, 144];
 
 type ModoDoOlho = 'aberto' | 'grande' | 'feliz' | 'fechado' | 'x' | 'bravo' | 'triste' | 'meio';
 
@@ -212,6 +223,8 @@ const ACESSORIOS = {
 };
 
 export type AcessorioDoMascote = keyof typeof ACESSORIOS;
+/** Quanto cada acessório sobe acima do topo da cabeça (unidades do desenho). */
+const ALTURA_DO_ACESSORIO: Record<AcessorioDoMascote, number> = { gorro: 60, orelhas: 64, festa: 60, bruxa: 64, bone: 32, capacete: 24, coroa: 34 };
 
 /** Desenhados com o canto de apoio em (0, 0), encostados no lado direito do corpo. */
 const OBJETOS = {
@@ -251,6 +264,8 @@ const OBJETOS = {
 };
 
 export type ObjetoDoMascote = keyof typeof OBJETOS;
+/** Quanto cada objeto avança à direita do ponto de apoio. */
+const LARGURA_DO_OBJETO: Record<ObjetoDoMascote, number> = { presente: 36, ovo: 33, bolo: 38, abobora: 38, bola: 36, sabre: 38, trofeu: 34 };
 
 /** Tema = acessório + objeto num nome só. */
 const TEMAS = {
@@ -300,32 +315,45 @@ export type MascoteVetorProps = {
   tamanho: number;
 };
 
+// O olhar segue o cursor. Um ouvinte só para todos os mascotes da tela, um quadro de animação por
+// movimento, e só variáveis CSS (sem re-render).
+const olhando = new Set<SVGSVGElement>();
+let quadroDoOlhar = 0;
+const seguir = (e: PointerEvent) => {
+  cancelAnimationFrame(quadroDoOlhar);
+  quadroDoOlhar = requestAnimationFrame(() => {
+    for (const svg of olhando) {
+      const r = svg.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height * 0.45);
+      const d = Math.hypot(dx, dy) || 1, k = (Math.min(1, d / 300) * 5) / d;
+      svg.style.setProperty('--tailor-mv-x', `${dx * k}px`);
+      svg.style.setProperty('--tailor-mv-y', `${dy * k}px`);
+    }
+  });
+};
+
 /** Só o desenho; rótulo acessível, selo e estado ficam no `AgenteMascote`. */
 export function MascoteVetor({ agente, pose, expressao, tema, acessorio, objeto, fala, tamanho }: MascoteVetorProps) {
-  const a: Agente = AGENTES[agente];
+  const base: Agente = AGENTES[agente];
   const [olhoE, olhoD] = EXPRESSOES[expressao ?? OLHAR_DA_POSE[pose]];
   const aces = acessorio ?? (tema && TEMAS[tema][0]);
   const obj = objeto ?? (tema && TEMAS[tema][1]);
+  const a = aces && base.semChapeu ? { ...base, ...base.semChapeu } : base;
   const ref = useRef<SVGSVGElement>(null);
-  const caixa = aces || obj ? QUADRO_CHEIO : QUADRO_JUSTO;
+  const escala = tamanho / QUADRO[2];
+  // O que sai do quadro vira margem, para o acessório não cobrir o que está em cima nem o objeto o que está ao lado.
+  const sobraEmCima = aces ? Math.max(0, QUADRO[1] - (a.topo + 2 - ALTURA_DO_ACESSORIO[aces])) : 0;
+  const sobraADireita = obj ? Math.max(0, a.apoio[0] + 8 + LARGURA_DO_OBJETO[obj] - (QUADRO[0] + QUADRO[2])) : 0;
 
-  // O olhar segue o cursor: só variáveis CSS, sem re-render.
   useEffect(() => {
     const svg = ref.current;
-    if (!svg || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    let quadro = 0;
-    const mover = (e: PointerEvent) => {
-      cancelAnimationFrame(quadro);
-      quadro = requestAnimationFrame(() => {
-        const r = svg.getBoundingClientRect();
-        const dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height * 0.45);
-        const d = Math.hypot(dx, dy) || 1, k = (Math.min(1, d / 300) * 5) / d;
-        svg.style.setProperty('--tailor-mv-x', `${dx * k}px`);
-        svg.style.setProperty('--tailor-mv-y', `${dy * k}px`);
-      });
+    if (!svg || prefersReducedMotion()) return;
+    if (!olhando.size) addEventListener('pointermove', seguir);
+    olhando.add(svg);
+    return () => {
+      olhando.delete(svg);
+      if (!olhando.size) { removeEventListener('pointermove', seguir); cancelAnimationFrame(quadroDoOlhar); }
     };
-    addEventListener('pointermove', mover);
-    return () => { removeEventListener('pointermove', mover); cancelAnimationFrame(quadro); };
   }, []);
 
   return (
@@ -335,7 +363,8 @@ export function MascoteVetor({ agente, pose, expressao, tema, acessorio, objeto,
       ) : fala && pose !== 'dormindo' ? (
         <span className="tailor-mv__balao" aria-hidden="true">{fala}</span>
       ) : null}
-      <svg ref={ref} viewBox={caixa.join(' ')} width={tamanho} height={(tamanho * caixa[3]) / caixa[2]} className="block overflow-visible" aria-hidden="true">
+      <svg ref={ref} viewBox={QUADRO.join(' ')} width={tamanho} height={(tamanho * QUADRO[3]) / QUADRO[2]} className="block overflow-visible" aria-hidden="true"
+        style={sobraEmCima || sobraADireita ? { marginTop: sobraEmCima * escala, marginRight: sobraADireita * escala } : undefined}>
         <g className="tailor-mv__corpo">
           {a.corpo}
           <g className="tailor-mv__verde">{a.verde}</g>

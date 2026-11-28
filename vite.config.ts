@@ -17,7 +17,8 @@ export default defineConfig({
       entry: resolve('src/index.ts'),
       name: 'TailorUI',
       formats: ['es', 'umd'],
-      fileName: (format) => `index.${format}.js`,
+      // O pacote é "type": "module": um .js seria lido como ESM e o require() devolvia um objeto vazio.
+      fileName: (format) => (format === 'umd' ? 'index.umd.cjs' : `index.${format}.js`),
     },
     rollupOptions: {
       external: ['react', 'react-dom', 'react/jsx-runtime', 'framer-motion'],

@@ -188,7 +188,7 @@ export const TailorLoader: React.FC<TailorLoaderProps> = ({
   if (variant === 'overlay') {
     // A entrada do login: preto, ponto no centro, malha nascendo; o texto fica abaixo do ponto.
     return (
-      <div className="fixed inset-0 z-[var(--tailor-z-palette)] cursor-wait bg-black text-white" aria-modal="true" role="dialog">
+      <div className="fixed inset-0 z-[var(--tailor-z-palette)] cursor-wait bg-black text-white" aria-modal="true" role="dialog" aria-label={label}>
         <PontoMalha />
         {logo && (
           <div className="absolute inset-x-0 bottom-1/2 mb-tailor-xl flex justify-center px-tailor-md">
