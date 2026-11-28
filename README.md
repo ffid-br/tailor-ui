@@ -546,6 +546,10 @@ Gatilho com contador verde das não vistas (9+); abrir marca como visto (localSt
 
 ## Mudanças
 
+### 0.25.1
+
+- Ícone do Relacionamento (R): o ponto passa de preto para branco. Preto como a letra, ele encostava na perna do R e sumia.
+
 ### 0.25.0
 
 - `TailorConfirmation`: confirmação de tela cheia para o fim de uma inscrição ou cadastro (a rede de agentes recebe quem enviou). Veio da página do evento de 30/11/2026.

@@ -45,9 +45,10 @@ const L = {
 };
 
 // Letra primeiro, cor depois: sete combinações e sete letras, nenhum par se confunde em 16px.
+// O ponto nunca tem a cor da letra: no R ele encosta na perna e, da mesma cor, sumia.
 export const TAILOR_APPS: Record<TailorAppId, TailorApp> = {
   accounts: { id: 'accounts', nome: 'Accounts', chaves: ['accounts'], favicon: 'accounts.svg', letra: 'C', glifo: L.C, tile: PRETO, tinta: BRANCO, ponto: VERDE },
-  crm: { id: 'crm', nome: 'Relacionamento', chaves: ['crm', 'ffid.ai.studio'], favicon: 'crm.svg', letra: 'R', glifo: L.R, tile: VERDE, tinta: PRETO, ponto: PRETO },
+  crm: { id: 'crm', nome: 'Relacionamento', chaves: ['crm', 'ffid.ai.studio'], favicon: 'crm.svg', letra: 'R', glifo: L.R, tile: VERDE, tinta: PRETO, ponto: BRANCO },
   pilot: { id: 'pilot', nome: 'Marketing', chaves: ['pilot'], favicon: 'pilot.svg', letra: 'M', glifo: L.M, tile: VERDE_INK, tinta: BRANCO, ponto: VERDE },
   bi: { id: 'bi', nome: 'BI', chaves: ['bi'], favicon: 'bi.svg', letra: 'B', glifo: L.B, tile: CINZA_ESCURO, tinta: BRANCO, ponto: VERDE },
   genius: { id: 'genius', nome: 'Gestão', chaves: ['gpt', 'genius'], favicon: 'genius.svg', letra: 'G', glifo: L.G, tile: PRETO, tinta: VERDE, ponto: BRANCO },
