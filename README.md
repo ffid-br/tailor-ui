@@ -546,6 +546,15 @@ Gatilho com contador verde das não vistas (9+); abrir marca como visto (localSt
 
 ## Mudanças
 
+### 0.25.2
+
+- Mascote em vetor: com tema, acessório ou objeto o corpo não encolhe mais (o quadro era trocado por um maior); o que sai do quadro vira margem do SVG.
+- Mascote em vetor: balão e selo seguem a `superficie` (no escuro eram preto no preto) e o selo fica por cima do balão.
+- Pilot: com acessório, o quepe sai e o verde vira o distintivo no peito (eram dois chapéus empilhados).
+- `EquipeDock`: abas em grade que quebra em linhas (com muitos agentes saíam do painel), setas/Home/End trocam de aba e Esc fecha devolvendo o foco ao botão.
+- Um ouvinte de mouse só para o olhar de todos os mascotes da tela.
+- Simulador: o código copiado bate com o que aparece (tamanho no pixel, agente sem pixel depois de escolher pixel, fala com aspas).
+
 ### 0.25.1
 
 - Ícone do Relacionamento (R): o ponto passa de preto para branco. Preto como a letra, ele encostava na perna do R e sumia.

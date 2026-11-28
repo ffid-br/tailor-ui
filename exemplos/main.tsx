@@ -445,9 +445,9 @@ function App() {
       <div className="min-w-0 flex-1">
         <TailorMobileBar produto="UI" onAbrirMenu={() => setAberto(true)} menuAberto={aberto} />
         {hash === 'simulador' ? (
-        <main className="mx-auto max-w-6xl space-y-6 px-4 py-10 sm:px-8">
+        <main className="mx-auto max-w-6xl space-y-6 px-4 pb-28 pt-10 sm:px-8">
           <header className="space-y-2">
-            <h1 className="text-3xl font-bold text-black dark:text-white">Simulador de mascotes</h1>
+            <h1 className="text-3xl font-medium text-black dark:text-white">Simulador de mascotes</h1>
             <p className="text-neutral-600 dark:text-neutral-400">
               Monte qualquer mascote com o componente de verdade e copie o código. Link direto: <code>#simulador</code>.
             </p>
@@ -455,7 +455,7 @@ function App() {
           <Simulador />
         </main>
         ) : (
-        <main className="mx-auto max-w-4xl space-y-16 px-4 py-10 sm:px-8">
+        <main className="mx-auto max-w-4xl space-y-16 px-4 pb-28 pt-10 sm:px-8">
           <header className="space-y-2">
             <h1 className="text-3xl font-bold text-black dark:text-white">@ffid-br/tailor-ui</h1>
             <p className="text-neutral-600 dark:text-neutral-400">
@@ -789,12 +789,12 @@ const columns: TailorTableColumn<Corretor>[] = [
             </Exemplo>
             <Exemplo
               titulo="equipe"
-              codigo={`{(['desk', 'pergunte', 'pm', 'diretor', 'sdr', 'cred', 'score', 'pilot', 'flow', 'bi', 'rh'] as const).map((a) => (
+              codigo={`{(['desk', 'pergunte', 'pm', 'diretor', 'sdr', 'cred', 'score', 'pilot', 'flow', 'bi', 'rh', 'cs', 'vigia', 'agenda'] as const).map((a) => (
   <AgenteMascote key={a} agente={a} nome={a} estilo="vetor" estado="parado" tamanho={64} />
 ))}`}
             >
               <div className="flex flex-wrap items-end gap-6">
-                {(['desk', 'pergunte', 'pm', 'diretor', 'sdr', 'cred', 'score', 'pilot', 'flow', 'bi', 'rh'] as const).map((a) => (
+                {(['desk', 'pergunte', 'pm', 'diretor', 'sdr', 'cred', 'score', 'pilot', 'flow', 'bi', 'rh', 'cs', 'vigia', 'agenda'] as const).map((a) => (
                   <AgenteMascote key={a} agente={a} nome={a} estilo="vetor" estado="parado" tamanho={64} />
                 ))}
               </div>

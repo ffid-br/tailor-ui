@@ -534,9 +534,14 @@ textarea.tailor-field__control { padding: var(--tailor-space-xs) var(--tailor-sp
 .tailor-mv__verde { animation: tailor-mv-pulso 2.4s ease-in-out infinite; }
 .tailor-mv__balao {
   position: absolute; left: 58%; bottom: 88%; z-index: 1; width: max-content; max-width: 180px;
-  background: var(--tailor-black); color: var(--tailor-white); padding: var(--tailor-space-xs) 10px;
+  /* segue a superfície do mascote: no escuro, balão branco com texto preto (preto no preto sumia) */
+  background: var(--tailor-mv-corpo, var(--tailor-black)); color: var(--tailor-mv-olho, var(--tailor-white)); padding: var(--tailor-space-xs) 10px;
   font: 500 12px/1.35 var(--font-tailor, "Raleway", system-ui, sans-serif); text-align: left;
 }
+/* O selo do vetor também segue a superfície e fica por cima do balão (antes sumia atrás dele). */
+.tailor-mv .tailor-mascote__selo { z-index: 2; background: var(--tailor-mv-corpo, var(--tailor-black)); color: var(--tailor-mv-olho, var(--tailor-white)); }
+/* Com selo, o balão sobe: os dois disputavam o canto de cima à direita e o selo tapava a fala. */
+.tailor-mv:has(.tailor-mascote__selo) .tailor-mv__balao { bottom: calc(100% + 14px); }
 .tailor-mv__balao::after { content: ""; position: absolute; left: 10px; bottom: -5px; width: 10px; height: 10px; background: inherit; transform: rotate(45deg); }
 .tailor-mv__pontos > span { display: inline-block; width: 6px; height: 6px; margin: 0 2px; background: var(--tailor-green); animation: tailor-mv-ponto 1.4s infinite; }
 .tailor-mv__pontos > span:nth-child(2) { animation-delay: 0.2s; }

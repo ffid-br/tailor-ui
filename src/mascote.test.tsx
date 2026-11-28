@@ -75,6 +75,33 @@ describe('EquipeDock', () => {
   });
 });
 
+describe('EquipeDock pelo teclado', () => {
+  const agentes = (['desk', 'sdr', 'cred'] as const).map((chave) => ({ chave, nome: chave }));
+
+  it('setas, Home e End trocam a aba e levam o foco; só a aba atual entra no Tab', () => {
+    render(<EquipeDock estilo="vetor" agentes={agentes} abertoInicial />);
+    const abas = screen.getAllByRole('tab');
+    expect(abas.map((a) => a.getAttribute('tabindex'))).toEqual(['0', '-1', '-1']);
+    abas[0].focus();
+    fireEvent.keyDown(abas[0], { key: 'ArrowRight' });
+    expect(abas[1]).toHaveAttribute('aria-selected', 'true');
+    expect(abas[1]).toHaveFocus();
+    fireEvent.keyDown(abas[1], { key: 'End' });
+    expect(abas[2]).toHaveFocus();
+    fireEvent.keyDown(abas[2], { key: 'ArrowRight' });
+    expect(abas[0]).toHaveAttribute('aria-selected', 'true');
+    fireEvent.keyDown(abas[0], { key: 'ArrowLeft' });
+    expect(abas[2]).toHaveFocus();
+  });
+
+  it('Esc fecha o painel e devolve o foco ao botão', () => {
+    render(<EquipeDock agentes={agentes} abertoInicial />);
+    fireEvent.keyDown(screen.getAllByRole('tab')[0], { key: 'Escape' });
+    expect(screen.queryByRole('tablist')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Abrir equipe' })).toHaveFocus();
+  });
+});
+
 describe('recorte do vetor', () => {
   it('sem tema, o quadro é justo e o corpo ocupa a largura', () => {
     const { container } = render(<AgenteMascote agente="diretor" nome="Diretor" estilo="vetor" tamanho={24} />);
@@ -83,9 +110,23 @@ describe('recorte do vetor', () => {
     expect(Number(svg.getAttribute('height'))).toBeCloseTo((24 * 144) / 148);
   });
 
-  it('com tema, volta ao quadro cheio para caber acessório e objeto', () => {
-    const { container } = render(<AgenteMascote agente="desk" nome="Desk" estilo="vetor" tema="natal" />);
-    expect(container.querySelector('svg')).toHaveAttribute('viewBox', '0 -40 220 240');
+  it('com tema, o quadro e o tamanho do corpo não mudam: o que sobra vira margem', () => {
+    const { container } = render(<AgenteMascote agente="desk" nome="Desk" estilo="vetor" tema="natal" tamanho={148} />);
+    const svg = container.querySelector('svg')!;
+    expect(svg).toHaveAttribute('viewBox', '36 44 148 144');
+    expect(svg).toHaveAttribute('width', '148');
+    // gorro: 44 - (70 + 2 - 60) = 32 acima; presente: 165 + 8 + 36 - 184 = 25 à direita (escala 1)
+    expect(svg.style.marginTop).toBe('32px');
+    expect(svg.style.marginRight).toBe('25px');
+  });
+
+  it('quem já usa chapéu troca o chapéu pelo acessório, sem empilhar', () => {
+    const quepe = 'path[d^="M54 78"]';
+    const semTema = render(<AgenteMascote agente="pilot" nome="Pilot" estado="parado" />);
+    expect(semTema.container.querySelector(quepe)).not.toBeNull();
+    const natal = render(<AgenteMascote agente="pilot" nome="Pilot" estado="parado" tema="natal" />);
+    expect(natal.container.querySelector(quepe)).toBeNull();
+    expect(natal.container.querySelector('.tailor-mv__verde circle')).toHaveAttribute('cy', '160');
   });
 });
 
