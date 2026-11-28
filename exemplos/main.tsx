@@ -21,6 +21,7 @@ import {
   toast,
   TailorTypewriter,
   TailorResult,
+  TailorConfirmation,
   TailorExplain,
   TailorGlossary,
   TailorTour,
@@ -293,6 +294,25 @@ function Exemplo({ titulo, codigo, children, escuro }: { titulo: string; codigo:
 }
 
 /** Simula a validação do token: 2,6s e some; ou recusa, e oferece "Entrar de novo". */
+function ConfirmacaoDemo() {
+  const [nome, setNome] = useState<string | null>(null);
+  const botao = 'rounded-md bg-black px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-800 dark:bg-white dark:text-black';
+  return (
+    <>
+      <button type="button" className={botao} onClick={() => setNome('Maria')}>Tocar a confirmação</button>
+      <TailorConfirmation
+        open={nome !== null}
+        overline="Inscrição recebida"
+        title={`${nome ?? ''}, recebemos sua inscrição.`}
+        description="Nossos agentes já estão cuidando de você: a confirmação chega pelo WhatsApp."
+        steps={['inscrição recebida', 'dados conferidos', 'pedido de vaga registrado', 'confirmação a caminho do seu WhatsApp']}
+        closeLabel="Voltar à página"
+        onClose={() => setNome(null)}
+      />
+    </>
+  );
+}
+
 function HandoffDemo() {
   const botao = 'rounded-md bg-black px-4 py-2 text-sm font-semibold text-white hover:bg-neutral-800 dark:bg-white dark:text-black';
   const [estado, setEstado] = useState<'parado' | 'validando' | 'recusado'>('parado');
@@ -346,6 +366,7 @@ const SECOES = [
   { id: 'botao', rotulo: 'TailorButton', icone: Quadrado },
   { id: 'explica', rotulo: 'Explicar a tela', icone: Quadrado },
   { id: 'feedback', rotulo: 'Avisos e esqueleto', icone: Circulo },
+  { id: 'confirmacao', rotulo: 'TailorConfirmation', icone: Circulo },
   { id: 'intro', rotulo: 'CinematicIntro', icone: Quadrado },
   { id: 'ponto', rotulo: 'PontoMalha', icone: Circulo },
   { id: 'marca', rotulo: 'TailorBrandMark', icone: Quadrado },
@@ -661,6 +682,22 @@ const columns: TailorTableColumn<Corretor>[] = [
                 <TailorSkeleton shape="table" columns={4} lines={4} />
                 <TailorSkeleton shape="block" />
               </div>
+            </Exemplo>
+          </Secao>
+
+          <Secao id="confirmacao" titulo="TailorConfirmation" descricao="Confirmação de tela cheia para o fim de uma inscrição ou cadastro. Com menos movimento, abre direto na frase final.">
+            <Exemplo
+              titulo="inscrição recebida"
+              codigo={`
+<TailorConfirmation
+  open={nome !== null}
+  overline="Inscrição recebida"
+  title={\`\${nome}, recebemos sua inscrição.\`}
+  steps={['inscrição recebida', 'dados conferidos', 'confirmação a caminho']}
+  onClose={() => setNome(null)}
+/>`}
+            >
+              <ConfirmacaoDemo />
             </Exemplo>
           </Secao>
 

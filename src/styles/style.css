@@ -730,3 +730,78 @@ a.tailor-btn { text-decoration: none; }
 .tailor-credit__bar-value { font-variant-numeric: tabular-nums; text-align: right; min-width: 56px; }
 .tailor-credit__empty, .tailor-credit__error { margin: 0; padding: var(--tailor-space-lg) 0; text-align: center; color: var(--tailor-brand-text-muted); }
 .tailor-credit__error { display: grid; justify-items: center; gap: var(--tailor-space-sm); }
+
+/* TailorConfirmation: confirmação de tela cheia. Quem enviou "entra" na rede de agentes: varredura,
+   anéis a partir do ponto, rede desenhada até os nós com o console narrando, e a frase final.
+   --tailor-confirmation-t é o instante (vem do número de passos) em que a rede recua e a frase entra. */
+.tailor-confirmation {
+  --tailor-confirmation-t: 3.3s;
+  --tailor-confirmation-fio: color-mix(in srgb, var(--tailor-white) 5%, transparent);
+  width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; overflow: hidden;
+  background: var(--tailor-black); color: var(--tailor-white); font-family: var(--tailor-font);
+}
+.tailor-confirmation::backdrop { background: var(--tailor-black); }
+.tailor-confirmation[open] { animation: tailor-confirmation-fade 0.4s ease both; }
+.tailor-confirmation__stage { position: relative; width: 100%; height: 100%; }
+.tailor-confirmation__grid {
+  position: absolute; inset: -1px; pointer-events: none; opacity: 0;
+  background-image: linear-gradient(var(--tailor-confirmation-fio) 1px, transparent 1px), linear-gradient(90deg, var(--tailor-confirmation-fio) 1px, transparent 1px);
+  background-size: 48px 48px; animation: tailor-confirmation-fade 0.8s ease 0.2s forwards;
+}
+.tailor-confirmation__scan {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, transparent 40%, var(--tailor-green-a40) 50%, transparent 60%) no-repeat; background-size: 100% 40%;
+  animation: tailor-confirmation-scan 0.9s var(--tailor-ease-in-out) both;
+}
+.tailor-confirmation__net { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; animation: tailor-confirmation-back 1s var(--tailor-ease-in-out) var(--tailor-confirmation-t) forwards; }
+.tailor-confirmation__net svg { width: min(78vh, 92vw); height: min(78vh, 92vw); }
+.tailor-confirmation__ring { fill: none; stroke: var(--tailor-green); stroke-width: 1.5; transform-box: fill-box; transform-origin: center; opacity: 0; animation: tailor-confirmation-ring 1.6s var(--tailor-ease-out) forwards; }
+.tailor-confirmation__center { fill: var(--tailor-green); transform-box: fill-box; transform-origin: center; animation: tailor-confirmation-pulse 1.2s ease-in-out 0.3s infinite; }
+.tailor-confirmation__line { fill: none; stroke: var(--tailor-green); stroke-opacity: 0.7; stroke-width: 1.5; stroke-dasharray: 1; stroke-dashoffset: 1; animation: tailor-confirmation-draw 0.7s var(--tailor-ease-in-out) forwards; }
+.tailor-confirmation__node { opacity: 0; animation: tailor-confirmation-up 0.4s ease forwards; }
+.tailor-confirmation__node-box { fill: var(--tailor-black); stroke: var(--tailor-green); stroke-width: 1.5; }
+.tailor-confirmation__node-dot { fill: var(--tailor-green); }
+.tailor-confirmation__node text { fill: var(--tailor-white); font-size: 14px; letter-spacing: 3px; text-transform: uppercase; }
+.tailor-confirmation__console {
+  position: absolute; bottom: 34px; left: 50%; width: min(520px, calc(100vw - 32px)); transform: translateX(-50%);
+  font-family: var(--tailor-font-mono); font-size: 13px; line-height: 28px; color: color-mix(in srgb, var(--tailor-white) 70%, transparent);
+  animation: tailor-confirmation-out 0.6s ease var(--tailor-confirmation-t) forwards;
+}
+.tailor-confirmation__step { opacity: 0; animation: tailor-confirmation-up 0.35s ease forwards; }
+.tailor-confirmation__step > span { color: color-mix(in srgb, var(--tailor-white) 30%, transparent); }
+.tailor-confirmation__step--last { color: var(--tailor-green); }
+.tailor-confirmation__final {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 0 24px; text-align: center; opacity: 0;
+  animation: tailor-confirmation-final 0.9s var(--tailor-ease-out) calc(var(--tailor-confirmation-t) + 0.4s) forwards;
+}
+.tailor-confirmation__final > div { max-width: 768px; }
+.tailor-confirmation__overline { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.3em; color: var(--tailor-green); }
+.tailor-confirmation__overline > span { width: 8px; height: 8px; background: var(--tailor-green); }
+.tailor-confirmation__title { margin: 24px 0 0; font-size: clamp(36px, 6.5vw, 84px); font-weight: 300; line-height: 0.95; text-transform: uppercase; color: var(--tailor-white); }
+.tailor-confirmation__word { display: inline-block; white-space: nowrap; }
+.tailor-confirmation__letter { display: inline-block; opacity: 0; animation: tailor-confirmation-fade 0.5s ease forwards; }
+.tailor-confirmation__description { max-width: 576px; margin: 24px auto 0; font-size: 18px; line-height: 1.618; color: color-mix(in srgb, var(--tailor-white) 75%, transparent); }
+.tailor-confirmation__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 40px; }
+.tailor-confirmation__close {
+  padding: 12px 24px; border: 1px solid color-mix(in srgb, var(--tailor-white) 40%, transparent); background: transparent;
+  color: var(--tailor-white); font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; transition: border-color 0.2s var(--tailor-ease-out);
+}
+.tailor-confirmation__close:hover { border-color: var(--tailor-white); }
+.tailor-confirmation__close:focus-visible { outline: 2px solid var(--tailor-green); outline-offset: 4px; }
+@keyframes tailor-confirmation-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes tailor-confirmation-scan { from { background-position: 0 -60%; opacity: 1; } to { background-position: 0 160%; opacity: 0; } }
+@keyframes tailor-confirmation-ring { 0% { opacity: 0.9; transform: scale(0.1); } 100% { opacity: 0; transform: scale(3.2); } }
+@keyframes tailor-confirmation-pulse { 50% { transform: scale(1.35); } }
+@keyframes tailor-confirmation-draw { to { stroke-dashoffset: 0; } }
+@keyframes tailor-confirmation-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes tailor-confirmation-back { to { opacity: 0.12; transform: scale(0.82); } }
+@keyframes tailor-confirmation-out { to { opacity: 0; visibility: hidden; } }
+@keyframes tailor-confirmation-final { from { opacity: 0; transform: translateY(28px) scale(0.98); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .tailor-confirmation[open], .tailor-confirmation__grid, .tailor-confirmation__net, .tailor-confirmation__center, .tailor-confirmation__line,
+  .tailor-confirmation__node, .tailor-confirmation__final, .tailor-confirmation__letter { animation: none; }
+  .tailor-confirmation__scan, .tailor-confirmation__ring, .tailor-confirmation__console { display: none; }
+  .tailor-confirmation__grid, .tailor-confirmation__node, .tailor-confirmation__final, .tailor-confirmation__letter { opacity: 1; }
+  .tailor-confirmation__line { stroke-dashoffset: 0; }
+  .tailor-confirmation__net { opacity: 0.12; transform: scale(0.82); }
+}
