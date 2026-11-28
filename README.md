@@ -338,6 +338,7 @@ Um jeito só em todo app:
 | Botão salvando | `<TailorLoader variant="compact" label="Salvando" />` dentro do botão |
 | Formulário salvo | `<TailorLoader success label="Contato salvo" />` no lugar do formulário + `toast.success(...)` |
 | Modal concluído (ou falhou) | `<TailorResult status="success" title="Contato salvo" onClose={close} />` dentro do painel (`position: relative`) |
+| Inscrição ou cadastro enviado (tela cheia) | `<TailorConfirmation open={nome !== null} title={`${nome}, recebemos sua inscrição.`} steps={[...]} onClose={fechar} />` |
 | Relatório de parceiro carregando | `<TailorLoader logo={...} logoDark={...} progress={p} steps={[...]} messages={[...]} />` |
 | Retorno de ação em qualquer tela | `toast.success`, `toast.error`, `toast.info` |
 
@@ -353,6 +354,34 @@ toast.error('Não deu para salvar', { description: 'Sem conexão. Tente de novo.
 `<TailorTypewriter texts={[...]} />` é o efeito do ponto escrevendo, solto, para usar onde quiser.
 
 Num botão da cor da marca, troque a cor do ponto do loader: `className="[--tailor-loader-dot:#000]"`.
+
+### `TailorConfirmation`: confirmação de tela cheia
+
+Para o fim de uma inscrição ou cadastro. Quem enviou "entra" na rede de agentes: uma varredura passa, o ponto verde abre em anéis, a rede se desenha até os nós enquanto o console narra o caminho, e tudo recua para mostrar a frase final com o nome da pessoa. Nasceu na página do evento "A nova era da Inteligência Artificial" (30/11/2026).
+
+```tsx
+import { TailorConfirmation } from '@ffid-br/tailor-ui';
+
+const [nome, setNome] = useState<string | null>(null); // null = fechado
+
+<TailorConfirmation
+  open={nome !== null}
+  overline="Inscrição recebida"
+  title={nome ? `${nome}, recebemos sua inscrição.` : 'Recebemos sua inscrição.'}
+  description="Nossos agentes já estão cuidando de você: a confirmação chega pelo WhatsApp."
+  steps={['inscrição recebida', 'dados conferidos', 'pedido de vaga registrado', 'confirmação a caminho do seu WhatsApp']}
+  actions={<a href={agenda}>Salvar na agenda</a>}
+  closeLabel="Voltar à página"
+  onClose={() => setNome(null)}
+/>
+```
+
+- É um `<dialog>` nativo aberto com `showModal`: foco preso, Esc fecha (chama `onClose`).
+- `nodes`: até seis nomes para os nós da rede. Padrão: WhatsApp, Agente de Pré-vendas, CRM, Agenda, Tailor.ia BI e MCP.
+- `steps`: o que o console narra. O número de passos dita o tempo: a rede recua 0,9 s + 0,6 s por passo depois de abrir (mínimo 2,1 s). A última linha sai em verde.
+- `actions`: botões antes do de fechar. Estilize no app (o fundo é preto).
+- Com `prefers-reduced-motion`, abre direto na frase final, sem animação.
+- Para o fim de um modal comum, use `TailorResult`.
 
 ## Explicar a tela: TailorExplain, TailorGlossary e TailorTour
 
@@ -516,6 +545,10 @@ const NOVIDADES: TailorNovidade[] = [ // mais recente primeiro
 Gatilho com contador verde das não vistas (9+); abrir marca como visto (localStorage `tailor-novidades:<chave>:<usuario>`). Para botão próprio: `useNovidades` (`{ naoVistas, marcarVistas }`) + `TailorNovidadesDialog` (`aberto`, `onFechar`, `novidades`, `limite = 5`). Substitui os avisos "O que mudou" nas telas.
 
 ## Mudanças
+
+### 0.25.0
+
+- `TailorConfirmation`: confirmação de tela cheia para o fim de uma inscrição ou cadastro (a rede de agentes recebe quem enviou). Veio da página do evento de 30/11/2026.
 
 ### 0.20.0
 

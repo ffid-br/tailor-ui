@@ -58,6 +58,8 @@ export { TailorTypewriter } from './components/TailorTypewriter';
 export type { TailorTypewriterProps } from './components/TailorTypewriter';
 export { TailorResult } from './components/TailorResult';
 export type { TailorResultProps } from './components/TailorResult';
+export { TailorConfirmation } from './components/TailorConfirmation';
+export type { TailorConfirmationProps } from './components/TailorConfirmation';
 export { TailorLocaleProvider, useTailorLocale, TAILOR_MESSAGES } from './i18n';
 export type { TailorLocaleProviderProps, TailorLocale, TailorMessages } from './i18n';
 export { TailorField } from './components/TailorField';

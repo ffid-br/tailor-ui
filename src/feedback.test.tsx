@@ -1,5 +1,5 @@
 import { act, render, screen, fireEvent } from '@testing-library/react';
-import { TailorButton, TailorField, TailorToaster, TailorResult, TailorTypewriter, TailorSkeleton, toast } from './index';
+import { TailorButton, TailorConfirmation, TailorField, TailorToaster, TailorResult, TailorTypewriter, TailorSkeleton, toast } from './index';
 
 describe('TailorToaster', () => {
   it('mostra sucesso como status e erro como alert; fecha no botão', () => {
@@ -61,6 +61,30 @@ describe('TailorResult', () => {
     expect(screen.getByRole('alert')).toHaveTextContent('Falhou');
     expect(screen.getByRole('button', { name: 'Tentar de novo' })).toBeInTheDocument();
     vi.useRealTimers();
+  });
+});
+
+describe('TailorConfirmation', () => {
+  it('fechado não mostra nada; aberto traz o título, os nós, os passos e fecha no botão', () => {
+    const fechar = vi.fn();
+    const { rerender, container } = render(<TailorConfirmation open={false} title="Maria, recebemos." onClose={fechar} />);
+    expect(container.querySelector('.tailor-confirmation__stage')).toBeNull();
+    rerender(
+      <TailorConfirmation open title="Maria, recebemos." overline="Inscrição recebida" description="A confirmação chega pelo WhatsApp."
+        nodes={['WhatsApp', 'CRM', 'Agenda', 'BI', 'MCP', 'Pré-vendas', 'sobra']} steps={['recebido', 'conferido']} actions={<a href="#agenda">Salvar na agenda</a>} onClose={fechar} />,
+    );
+    // jsdom não abre <dialog>: o conteúdo é conferido pelo DOM, sem depender de papel acessível.
+    expect(container.querySelector('h2')).toHaveAttribute('aria-label', 'Maria, recebemos.');
+    expect(container.querySelectorAll('.tailor-confirmation__letter')).toHaveLength('Maria,recebemos.'.length);
+    expect(container.querySelectorAll('.tailor-confirmation__node')).toHaveLength(6);
+    expect(container.querySelectorAll('.tailor-confirmation__step')).toHaveLength(2);
+    expect(container.querySelector('.tailor-confirmation__step--last')).toHaveTextContent('02 › conferido');
+    expect(container).toHaveTextContent('Inscrição recebida');
+    expect(container).toHaveTextContent('Salvar na agenda');
+    // 2 passos: 0,9 + 2 × 0,6 = 2,1 s até a rede recuar.
+    expect((container.querySelector('dialog') as HTMLElement).style.getPropertyValue('--tailor-confirmation-t')).toBe('2.1s');
+    fireEvent.click(container.querySelector('.tailor-confirmation__close')!);
+    expect(fechar).toHaveBeenCalledTimes(1);
   });
 });
 
